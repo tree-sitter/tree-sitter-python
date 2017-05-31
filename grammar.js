@@ -499,9 +499,9 @@ module.exports = grammar({
       ))
     )),
 
-    _not_in: $ => seq('not', 'in'),
+    _notin: $ => seq('not', 'in'),
 
-    _is_not: $ => seq('is', 'not'),
+    _isnot: $ => seq('is', 'not'),
 
     lambda: $ => seq(
       'lambda',

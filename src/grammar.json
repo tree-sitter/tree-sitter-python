@@ -2406,7 +2406,7 @@
         ]
       }
     },
-    "_not_in": {
+    "_notin": {
       "type": "SEQ",
       "members": [
         {
@@ -2419,7 +2419,7 @@
         }
       ]
     },
-    "_is_not": {
+    "_isnot": {
       "type": "SEQ",
       "members": [
         {
