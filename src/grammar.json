@@ -2365,34 +2365,16 @@
                       "value": "in"
                     },
                     {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "STRING",
-                          "value": "not"
-                        },
-                        {
-                          "type": "STRING",
-                          "value": "in"
-                        }
-                      ]
-                    },
-                    {
                       "type": "STRING",
                       "value": "is"
                     },
                     {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "STRING",
-                          "value": "is"
-                        },
-                        {
-                          "type": "STRING",
-                          "value": "not"
-                        }
-                      ]
+                      "type": "SYMBOL",
+                      "name": "_not_in"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_is_not"
                     }
                   ]
                 },
@@ -2406,7 +2388,7 @@
         ]
       }
     },
-    "_notin": {
+    "_not_in": {
       "type": "SEQ",
       "members": [
         {
@@ -2419,7 +2401,7 @@
         }
       ]
     },
-    "_isnot": {
+    "_is_not": {
       "type": "SEQ",
       "members": [
         {
