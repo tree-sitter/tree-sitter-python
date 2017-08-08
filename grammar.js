@@ -1,10 +1,13 @@
 const PREC = {
   // this resolves a conflict between the usage of ':' in a lambda vs in a
   // typed parameter. In the case of a lambda, we don't allow typed parameters.
+  lambda: -2,
   typed_parameter: -1,
   conditional: -1,
 
+  expression_statement: 1,
   not: 1,
+  parameter: 1,
   compare: 2,
   or: 10,
   and: 11,
@@ -36,7 +39,6 @@ module.exports = grammar({
   conflicts: $ => [
     [$._primary_expression, $.print_statement],
     [$._primary_expression, $.exec_statement],
-    [$.old_lambda, $._expression],
   ],
 
   inline: $ => [
@@ -123,10 +125,9 @@ module.exports = grammar({
         $.chevron,
         seq(
           optional(seq($.chevron, ',')),
-          commaSep1($._expression)
+          $.expression_list
         ),
-        $._expression,
-        commaSep1($._expression)
+        $.expression_list
       ),
       optional(',')
     ),
@@ -138,17 +139,16 @@ module.exports = grammar({
 
     assert_statement: $ => seq(
       'assert',
-      $._expression,
-      repeat(seq(',', $._expression))
+      $.expression_list
     ),
 
-    expression_statement: $ => choice(
+    expression_statement: $ => prec(PREC.expression_statement, choice(
       $._expression,
-      seq(commaSep1($._expression), optional(',')),
+      $.expression_list,
       $.assignment,
       $.augmented_assignment,
       $.yield
-    ),
+    )),
 
     return_statement: $ => seq(
       'return',
@@ -264,13 +264,13 @@ module.exports = grammar({
       $._suite
     ),
 
-    with_item: $ => seq(
-      $._expression,
+    with_item: $ => prec.right(seq(
+      commaSep1($.expression_statement),
       optional(seq(
         'as',
-        $._expression
+        $.expression_statement
       ))
-    ),
+    )),
 
     async_function_definition: $ => seq(
       'async',
@@ -329,16 +329,25 @@ module.exports = grammar({
       $._expression
     )),
 
-    list_splat_parameter: $ => seq(
+    _list_splat_expression: $ => prec(PREC.parameter, seq(
       '*',
-      optional($.identifier)
-    ),
+      optional(choice(
+        seq('(',')'),
+        optional($._expression)
+    )))),
 
-    dictionary_splat_parameter: $ => seq(
+    _dictionary_splat_expression: $ => prec(PREC.parameter, seq(
       '*',
       '*',
-      $.identifier
-    ),
+      choice(
+        seq('{','}'),
+        $._expression
+      )
+    )),
+
+    list_splat_parameter: $ => $._list_splat_expression,
+
+    dictionary_splat_parameter: $ => $._dictionary_splat_expression,
 
     global_statement: $ => seq(
       'global',
@@ -356,7 +365,7 @@ module.exports = grammar({
       optional(
         seq(
           'in',
-          commaSep1($._expression)
+          $.expression_list
         )
       )
     ),
@@ -413,23 +422,23 @@ module.exports = grammar({
       optional(',')
     ),
 
-    expression_list: $ => seq(
+    expression_list: $ => prec.right(seq(
       commaSep1($._expression),
       optional(',')
-    ),
+    )),
 
     dotted_name: $ => sep1($.identifier, '.'),
 
     // Expressions
-    _iterator_expression: $ => prec(1, choice(
+    _expression_within_for_in_clause: $ => prec(1, choice(
       $.comparison_operator,
       $.not_operator,
       $.boolean_operator,
       $.await,
-      alias($.old_lambda, $.lambda),
+      alias($.lambda_within_for_in_clause, $.lambda),
       $._primary_expression
     )),
-    
+
     _expression: $ => choice(
       $.comparison_operator,
       $.not_operator,
@@ -465,6 +474,8 @@ module.exports = grammar({
       $.generator_expression,
       $.ellipsis
     ),
+
+    empty_expression: $ => seq('(',')'),
 
     not_operator: $ => prec(PREC.not, seq('not', $._expression)),
 
@@ -514,19 +525,19 @@ module.exports = grammar({
       ))
     )),
 
-    lambda: $ => prec(-2, seq(
+    lambda: $ => prec(PREC.lambda, seq(
       'lambda',
       optional($.lambda_parameters),
       ':',
       $._expression
     )),
-    
-    old_lambda: $ => prec(0, seq(
+
+    lambda_within_for_in_clause: $ => seq(
       'lambda',
       optional($.lambda_parameters),
       ':',
-      $._iterator_expression
-    )),
+      $._expression_within_for_in_clause
+    ),
 
     assignment: $ => seq(
       $.expression_list,
@@ -552,7 +563,7 @@ module.exports = grammar({
       choice(
         seq(
           'from',
-          $._expression
+          $.expression_statement
         ),
         optional($.expression_list)
       )
@@ -607,15 +618,9 @@ module.exports = grammar({
       $._expression
     ),
 
-    list_splat_argument: $ => seq(
-      '*',
-      $._expression
-    ),
+    list_splat_argument: $ => $._list_splat_expression,
 
-    dictionary_splat_argument: $ => seq(
-      '**',
-      $._expression
-    ),
+    dictionary_splat_argument: $ => $._dictionary_splat_expression,
 
     // Literals
 
@@ -625,7 +630,7 @@ module.exports = grammar({
       optional(','),
       ']'
     ),
-    
+
     _comprehension_body: $ => seq(
       $.for_in_clause,
       repeat(choice(
@@ -634,7 +639,6 @@ module.exports = grammar({
       ))
     ),
 
-    // [ x for x in [[1,2,3],[4,5,6],[7,8,9]] for y in [1,2,3] if True ]    
     list_comprehension: $ => seq(
       '[',
       $._expression,
@@ -680,10 +684,8 @@ module.exports = grammar({
 
     tuple: $ => seq(
       '(',
-      optional(seq(
-        commaSep1($._expression),
-        optional(',')
-      )),
+      commaSep1($._expression),
+      optional(','),
       ')'
     ),
 
@@ -693,15 +695,15 @@ module.exports = grammar({
       $._comprehension_body,
       ')'
     ),
-    
+
     for_in_clause: $ => seq(
       'for',
       $.variables,
       'in',
-      commaSep1($._iterator_expression),
+      commaSep1($._expression_within_for_in_clause),
       optional(',')
     ),
-    
+
     if_clause: $ => seq(
       'if',
       $._expression
@@ -714,7 +716,7 @@ module.exports = grammar({
       'else',
       $._expression
     )),
-    
+
     concatenated_string: $ => seq(
       $.string,
       repeat1($.string)

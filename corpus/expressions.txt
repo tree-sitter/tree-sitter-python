@@ -187,12 +187,20 @@ exec("""exec _code_ in _globs_, _locs_""")
 Calls with splats
 =====================================
 
+a(*())
+a(**{})
 a(*b)
 c(d, *e, **g)
 
 ---
 
 (module
+  (expression_statement (call
+    (identifier)
+    (argument_list (list_splat_argument))))
+  (expression_statement (call
+    (identifier)
+    (argument_list (dictionary_splat_argument))))
   (expression_statement (call
     (identifier)
     (argument_list
@@ -378,7 +386,7 @@ yield from a
       (expression_list (identifier))
       (yield (expression_list (integer)))))
   (expression_statement
-    (yield (identifier))))
+    (yield (expression_statement (identifier)))))
 
 ====================================================
 lambdas

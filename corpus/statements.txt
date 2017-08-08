@@ -50,13 +50,15 @@ print 0 or 1
 ---
 
 (module
-  (print_statement (identifier))
-  (print_statement (identifier) (identifier))
+  (print_statement (expression_list (identifier)))
+  (print_statement (expression_list (identifier) (identifier)))
   (print_statement
-    (boolean_operator (integer) (integer))
-    (boolean_operator (integer) (integer)))
+    (expression_list
+      (boolean_operator (integer) (integer))
+      (boolean_operator (integer) (integer))))
   (print_statement
-    (boolean_operator (integer) (integer))))
+    (expression_list
+      (boolean_operator (integer) (integer)))))
 
 =====================================
 Print statements with redirection
@@ -69,7 +71,7 @@ print >> a, "b", "c"
 
 (module
   (print_statement (chevron (identifier)))
-  (print_statement (chevron (identifier)) (string) (string)))
+  (print_statement (chevron (identifier)) (expression_list (string) (string))))
 
 =====================================
 Assert statements
@@ -81,8 +83,8 @@ assert b, c
 ---
 
 (module
-  (assert_statement (identifier))
-  (assert_statement (identifier) (identifier)))
+  (assert_statement (expression_list (identifier)))
+  (assert_statement (expression_list (identifier) (identifier))))
 
 =====================================
 Expression statements
@@ -98,8 +100,8 @@ b + c
 (module
   (expression_statement (identifier))
   (expression_statement (binary_operator (identifier) (identifier)))
-  (expression_statement (integer) (integer) (integer))
-  (expression_statement (integer) (integer) (integer)))
+  (expression_statement (expression_list (integer) (integer) (integer)))
+  (expression_statement (expression_list (integer) (integer) (integer))))
 
 =====================================
 Delete statements
@@ -269,13 +271,13 @@ for x, in [(1,), (2,), (3,)]:
   (for_statement
     (variables (identifier) (identifier))
     (expression_list (identifier))
-    (print_statement (identifier))
+    (print_statement (expression_list (identifier)))
     (for_statement
       (variables (identifier) (identifier))
       (expression_list (identifier))
-      (print_statement (identifier)))
+      (print_statement (expression_list (identifier))))
     (else_clause
-      (print_statement (identifier))))
+      (print_statement (expression_list (identifier)))))
   (for_statement
     (variables (identifier))
     (expression_list (list (tuple (integer)) (tuple (integer)) (tuple (integer))))
@@ -336,7 +338,9 @@ with a as b:
 
 (module
   (with_statement
-    (with_item (identifier) (identifier))
+    (with_item
+      (expression_statement (identifier))
+      (expression_statement (identifier)))
     (expression_statement (identifier))))
 
 =====================================
@@ -682,11 +686,11 @@ print c
 ---
 
 (module
-  (print_statement (identifier))
+  (print_statement (expression_list (identifier)))
   (comment)
-  (print_statement (identifier))
+  (print_statement (expression_list (identifier)))
   (comment)
-  (print_statement (identifier)))
+  (print_statement (expression_list (identifier))))
 
 ====================================================
 Comments at different indentation levels
@@ -719,7 +723,7 @@ print "a"
   # We need to recognize the newline *preceding* this comment, because there's no newline after it
 ---
 
-(module (print_statement (string)) (comment))
+(module (print_statement (expression_list (string))) (comment))
 
 ====================================================
 Global statements
@@ -746,8 +750,8 @@ exec 'x+=1' in a, b
 
 (module
   (exec_statement (string))
-  (exec_statement (string) (none))
-  (exec_statement (string) (identifier) (identifier)))
+  (exec_statement (string) (expression_list (none)))
+  (exec_statement (string) (expression_list (identifier) (identifier))))
 
 ==================================================
 Extra newlines
