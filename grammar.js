@@ -6,8 +6,8 @@ const PREC = {
   typed_parameter: -1,
   conditional: -1,
 
-  parameters: 1,
   expression_statement: 1,
+  parameters: 1,
   not: 1,
   parameter: 1,
   compare: 2,
@@ -71,7 +71,7 @@ module.exports = grammar({
       $.import_from_statement,
       $.print_statement,
       $.assert_statement,
-      $._expression_statement,
+      $.expression_statement,
       $.return_statement,
       $.delete_statement,
       $.raise_statement,
@@ -144,7 +144,7 @@ module.exports = grammar({
       $.expression_list
     ),
 
-    _expression_statement: $ => prec(PREC.expression_statement, choice(
+    expression_statement: $ => prec(PREC.expression_statement, choice(
       $._expression,
       $.expression_list,
       $.assignment,
@@ -267,10 +267,10 @@ module.exports = grammar({
     ),
 
     with_item: $ => prec.right(seq(
-      commaSep1($._expression_statement),
+      $._expression,
       optional(seq(
         'as',
-        $._expression_statement
+        $._expression
       ))
     )),
 
@@ -340,18 +340,13 @@ module.exports = grammar({
 
     _list_splat_expression: $ => prec(PREC.parameter, seq(
       '*',
-      optional(choice(
-        seq('(',')'),
-        optional($._expression)
-    )))),
+      optional($._expression)
+    )),
 
     _dictionary_splat_expression: $ => prec(PREC.parameter, seq(
       '*',
       '*',
-      choice(
-        seq('{','}'),
-        $._expression
-      )
+      $._expression
     )),
 
     list_splat_parameter: $ => $._list_splat_expression,
@@ -476,11 +471,10 @@ module.exports = grammar({
       $.set,
       $.set_comprehension,
       $.tuple,
+      $.parenthesized_expression,
       $.generator_expression,
       $.ellipsis
     ),
-
-    empty_expression: $ => seq('(',')'),
 
     not_operator: $ => prec(PREC.not, seq('not', $._expression)),
 
@@ -563,16 +557,16 @@ module.exports = grammar({
       $.yield
     ),
 
-    yield: $ => prec(3, seq(
+    yield: $ => seq(
       'yield',
       choice(
         seq(
           'from',
-          $._expression_statement
+          $._expression
         ),
-        optional($._expression_statement)
+        optional($.expression_list)
       )
-    )),
+    ),
 
     attribute: $ => seq(
       $._primary_expression,
@@ -687,9 +681,15 @@ module.exports = grammar({
       '}'
     ),
 
+    parenthesized_expression: $ => prec(PREC.tuple + 1, seq(
+      '(',
+      choice($._expression, $.yield),
+      ')'
+    )),
+
     tuple: $ => prec(PREC.tuple, seq(
       '(',
-      optional(commaSep1($._expression)),
+      optional(commaSep1(choice($._expression, $.yield))),
       optional(','),
       ')'
     )),

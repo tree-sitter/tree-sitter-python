@@ -9,9 +9,9 @@ c[4, 5,]
 ---
 
 (module
-  (subscript (identifier) (integer))
-  (subscript (identifier) (integer) (integer))
-  (subscript (identifier) (integer) (integer)))
+  (expression_statement (subscript (identifier) (integer)))
+  (expression_statement (subscript (identifier) (integer) (integer)))
+  (expression_statement (subscript (identifier) (integer) (integer))))
 
 
 =====================================
@@ -26,19 +26,19 @@ c[::]
 ---
 
 (module
-  (subscript
-    (identifier)
-    (slice))
-  (subscript
-    (identifier)
-    (slice (integer)))
-  (subscript
-    (identifier)
-    (slice (integer) (integer))
-    (ellipsis))
-  (subscript
+  (expression_statement (subscript
     (identifier)
     (slice)))
+  (expression_statement (subscript
+    (identifier)
+    (slice (integer))))
+  (expression_statement (subscript
+    (identifier)
+    (slice (integer) (integer))
+    (ellipsis)))
+  (expression_statement (subscript
+    (identifier)
+    (slice))))
 
 =====================================
 Attribute references
@@ -49,9 +49,9 @@ a.b.c
 ---
 
 (module
-  (attribute
+  (expression_statement (attribute
     (attribute (identifier) (identifier))
-    (identifier)))
+    (identifier))))
 
 =====================================
 Await expressions
@@ -63,9 +63,9 @@ return await i(j, 5)
 ---
 
 (module
-  (await (call
+  (expression_statement (await (call
     (identifier)
-    (argument_list (identifier) (integer))))
+    (argument_list (identifier) (integer)))))
   (return_statement
     (expression_list
       (await (call
@@ -84,20 +84,20 @@ i(j, 5,)
 ---
 
 (module
-  (call
+  (expression_statement (call
     (identifier)
-    (argument_list))
-  (call
+    (argument_list)))
+  (expression_statement (call
     (identifier)
-    (argument_list (integer)))
-  (call
+    (argument_list (integer))))
+  (expression_statement (call
     (identifier)
     (argument_list
       (identifier)
-      (keyword_argument (identifier) (identifier))))
-  (call
+      (keyword_argument (identifier) (identifier)))))
+  (expression_statement (call
     (identifier)
-    (argument_list (identifier) (integer))))
+    (argument_list (identifier) (integer)))))
 
 =====================================
 Print used as an identifier
@@ -121,38 +121,38 @@ def print():
 ---
 
 (module
-  (call
+  (expression_statement (call
     (identifier)
-    (argument_list (identifier) (keyword_argument (identifier) (identifier))))
-  (call
+    (argument_list (identifier) (keyword_argument (identifier) (identifier)))))
+  (expression_statement (call
     (identifier)
-    (argument_list (identifier) (list_splat_argument (identifier))))
-  (call
+    (argument_list (identifier) (list_splat_argument (identifier)))))
+  (expression_statement (call
     (identifier)
-    (argument_list (list_splat_argument (identifier)) (dictionary_splat_argument (identifier))))
-  (call
+    (argument_list (list_splat_argument (identifier)) (dictionary_splat_argument (identifier)))))
+  (expression_statement (call
     (identifier)
-    (argument_list (identifier)))
+    (argument_list (identifier))))
   (function_definition
     (identifier)
     (parameters (identifier))
-    (identifier))
+    (expression_statement (identifier)))
   (function_definition
     (identifier)
     (parameters (default_parameter (identifier) (identifier)))
-    (identifier))
+    (expression_statement (identifier)))
   (function_definition
     (identifier)
     (parameters (list_splat_parameter (identifier)))
-    (identifier))
+    (expression_statement (identifier)))
   (function_definition
     (identifier)
     (parameters (dictionary_splat_parameter (identifier)))
-    (identifier))
+    (expression_statement (identifier)))
   (function_definition
     (identifier)
     (parameters)
-    (identifier)))
+    (expression_statement (identifier))))
 
 
 =====================================
@@ -165,13 +165,13 @@ exec("""exec _code_ in _globs_, _locs_""")
 ---
 
 (module
-  (call
+  (expression_statement (call
     (identifier)
     (argument_list
       (string)
       (dictionary (pair (string) (none)))
-      (identifier)))
-  (call (identifier) (argument_list (string))))
+      (identifier))))
+  (expression_statement (call (identifier) (argument_list (string)))))
 
 =====================================
 Calls with splats
@@ -185,22 +185,22 @@ c(d, *e, **g)
 ---
 
 (module
-  (call
+  (expression_statement (call
     (identifier)
-    (argument_list (list_splat_argument)))
-  (call
+    (argument_list (list_splat_argument (tuple)))))
+  (expression_statement (call
     (identifier)
-    (argument_list (dictionary_splat_argument)))
-  (call
+    (argument_list (dictionary_splat_argument (dictionary)))))
+  (expression_statement (call
     (identifier)
     (argument_list
-      (list_splat_argument (identifier))))
-  (call
+      (list_splat_argument (identifier)))))
+  (expression_statement (call
     (identifier)
     (argument_list
       (identifier)
       (list_splat_argument (identifier))
-      (dictionary_splat_argument (identifier)))))
+      (dictionary_splat_argument (identifier))))))
 
 =====================================
 Math operators
@@ -214,20 +214,21 @@ a + b * c ** d - e / 5
 ---
 
 (module
-  (binary_operator
+  (expression_statement
     (binary_operator
-      (identifier)
       (binary_operator
         (identifier)
         (binary_operator
           (identifier)
-          (identifier))))
-    (binary_operator
-      (identifier)
-      (integer)))
-  (unary_operator (integer))
-  (unary_operator (identifier))
-  (unary_operator (identifier)))
+          (binary_operator
+            (identifier)
+            (identifier))))
+      (binary_operator
+        (identifier)
+        (integer))))
+  (expression_statement (unary_operator (integer)))
+  (expression_statement (unary_operator (identifier)))
+  (expression_statement (unary_operator (identifier))))
 
 =====================================
 Bitwise operators
@@ -238,15 +239,16 @@ a << b | c >> d & e
 ---
 
 (module
-  (binary_operator
-    (binary_operator
-      (identifier)
-      (identifier))
+  (expression_statement
     (binary_operator
       (binary_operator
         (identifier)
         (identifier))
-      (identifier))))
+      (binary_operator
+        (binary_operator
+          (identifier)
+          (identifier))
+        (identifier)))))
 
 =====================================
 Boolean operators
@@ -258,12 +260,14 @@ not d
 ---
 
 (module
-  (boolean_operator
-    (identifier)
+  (expression_statement
     (boolean_operator
       (identifier)
-      (identifier)))
-  (not_operator (identifier)))
+      (boolean_operator
+        (identifier)
+        (identifier))))
+  (expression_statement
+    (not_operator (identifier))))
 
 =====================================
 Comparison operators
@@ -275,16 +279,18 @@ not a == b or c == d
 ---
 
 (module
-  (comparison_operator
-    (identifier)
-    (identifier)
-    (identifier)
-    (identifier)
-    (identifier)
-    (identifier))
-  (not_operator (boolean_operator
-    (comparison_operator (identifier) (identifier))
-    (comparison_operator (identifier) (identifier)))))
+  (expression_statement
+    (comparison_operator
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (not_operator (boolean_operator
+      (comparison_operator (identifier) (identifier))
+      (comparison_operator (identifier) (identifier))))))
 
 ====================================================
 Assignments
@@ -298,30 +304,30 @@ a[b] = c = d
 ---
 
 (module
-  (assignment
+  (expression_statement (assignment
     (expression_list
       (identifier))
     (expression_list
-      (integer)))
-  (assignment
+      (integer))))
+  (expression_statement (assignment
     (expression_list
       (identifier)
       (identifier))
     (expression_list
       (integer)
-      (integer)))
-  (assignment
+      (integer))))
+  (expression_statement (assignment
     (expression_list
       (identifier))
     (expression_list
       (integer)
-      (integer)))
-  (assignment
+      (integer))))
+  (expression_statement (assignment
     (expression_list
       (subscript (identifier) (identifier)))
     (assignment
       (expression_list (identifier))
-      (expression_list (identifier)))))
+      (expression_list (identifier))))))
 
 ====================================================
 Augmented assignments
@@ -334,15 +340,15 @@ c //= 1
 ---
 
 (module
-  (augmented_assignment
-    (expression_list (identifier))
-    (expression_list (integer)))
-  (augmented_assignment
-    (expression_list (identifier))
-    (expression_list (integer)))
-  (augmented_assignment
+  (expression_statement (augmented_assignment
     (expression_list (identifier))
     (expression_list (integer))))
+  (expression_statement (augmented_assignment
+    (expression_list (identifier))
+    (expression_list (integer))))
+  (expression_statement (augmented_assignment
+    (expression_list (identifier))
+    (expression_list (integer)))))
 
 ====================================================
 Yield expressions
@@ -353,17 +359,27 @@ def example():
   yield 1
   x = yield 2
   yield from a
+  yield from (yield from (x for x in range(1, 10)))
 
 ---
 
 (module
   (function_definition (identifier) (parameters)
-    (yield)
-    (yield (integer))
-    (assignment
-      (expression_list (identifier))
-      (yield (integer)))
-    (yield (identifier))))
+    (expression_statement (yield))
+    (expression_statement (yield (expression_list (integer))))
+    (expression_statement
+      (assignment
+        (expression_list (identifier))
+        (yield (expression_list (integer)))))
+    (expression_statement (yield (identifier)))
+    (expression_statement (yield
+      (parenthesized_expression
+        (yield
+          (generator_expression
+            (identifier)
+            (for_in_clause
+            (variables (identifier))
+            (call (identifier) (argument_list (integer) (integer)))))))))))
 
 ====================================================
 lambdas
@@ -379,31 +395,31 @@ lambda (): True
 ---
 
 (module
-  (lambda
+  (expression_statement (lambda
     (lambda_parameters
       (identifier)
       (identifier))
     (call
       (identifier)
       (argument_list
-        (binary_operator (string) (identifier)))))
-  (lambda (true))
-  (lambda
+        (binary_operator (string) (identifier))))))
+  (expression_statement (lambda (true)))
+  (expression_statement (lambda
     (lambda_parameters
       (identifier)
       (default_parameter (identifier) (identifier))
       (list_splat_parameter (identifier))
       (dictionary_splat_parameter (identifier)))
-    (identifier))
-  (lambda
+    (identifier)))
+  (expression_statement (lambda
     (lambda_parameters (identifier) (identifier))
-    (tuple (identifier) (identifier)))
-  (lambda
+    (tuple (identifier) (identifier))))
+  (expression_statement (lambda
     (lambda_parameters (tuple (identifier) (identifier)))
-    (tuple (identifier) (identifier)))
-  (lambda
+    (tuple (identifier) (identifier))))
+  (expression_statement (lambda
     (lambda_parameters)
-    (true)))
+    (true))))
 
 =====================================
 Conditional if expressions
@@ -416,11 +432,12 @@ slice(1,1,1) if a else d
 ---
 
 (module
-  (assignment
-    (expression_list (identifier))
-    (expression_list
-      (conditional_expression (identifier) (identifier) (identifier))))
-  (conditional_expression (call (identifier) (argument_list)) (identifier) (identifier))
-  (conditional_expression
+  (expression_statement
+    (assignment
+      (expression_list (identifier))
+      (expression_list
+        (conditional_expression (identifier) (identifier) (identifier)))))
+  (expression_statement (conditional_expression (call (identifier) (argument_list)) (identifier) (identifier)))
+  (expression_statement (conditional_expression
     (call (identifier) (argument_list (integer) (integer) (integer)))
-		(identifier) (identifier)))
+		(identifier) (identifier))))
