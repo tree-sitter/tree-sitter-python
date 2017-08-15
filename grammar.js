@@ -2,9 +2,11 @@ const PREC = {
   // this resolves a conflict between the usage of ':' in a lambda vs in a
   // typed parameter. In the case of a lambda, we don't allow typed parameters.
   lambda: -2,
+  tuple: -1,
   typed_parameter: -1,
   conditional: -1,
 
+  parameters: 1,
   expression_statement: 1,
   not: 1,
   parameter: 1,
@@ -69,7 +71,7 @@ module.exports = grammar({
       $.import_from_statement,
       $.print_statement,
       $.assert_statement,
-      $.expression_statement,
+      $._expression_statement,
       $.return_statement,
       $.delete_statement,
       $.raise_statement,
@@ -142,7 +144,7 @@ module.exports = grammar({
       $.expression_list
     ),
 
-    expression_statement: $ => prec(PREC.expression_statement, choice(
+    _expression_statement: $ => prec(PREC.expression_statement, choice(
       $._expression,
       $.expression_list,
       $.assignment,
@@ -265,10 +267,10 @@ module.exports = grammar({
     ),
 
     with_item: $ => prec.right(seq(
-      commaSep1($.expression_statement),
+      commaSep1($._expression_statement),
       optional(seq(
         'as',
-        $.expression_statement
+        $._expression_statement
       ))
     )),
 
@@ -299,21 +301,28 @@ module.exports = grammar({
       ')'
     ),
 
-    lambda_parameters: $ => $._parameters,
+    lambda_parameters: $ => choice(
+      seq(
+        '(',
+        optional($._parameters),
+        ')'
+      ),
+      $._parameters
+    ),
 
-    _parameters: $ => seq(
+    _parameters: $ => prec(PREC.parameters, seq(
       commaSep1(choice(
         $.identifier,
+        $.keyword_identifier,
         $.tuple,
         $.typed_parameter,
-        $.keyword_identifier,
         $.default_parameter,
         $.typed_default_parameter,
         $.list_splat_parameter,
         $.dictionary_splat_parameter
       )),
       optional(',')
-    ),
+    )),
 
     default_parameter: $ => seq(
       choice($.identifier, $.keyword_identifier),
@@ -431,12 +440,8 @@ module.exports = grammar({
 
     // Expressions
     _expression_within_for_in_clause: $ => prec(1, choice(
-      $.comparison_operator,
-      $.not_operator,
-      $.boolean_operator,
-      $.await,
-      alias($.lambda_within_for_in_clause, $.lambda),
-      $._primary_expression
+      $._expression,
+      alias($.lambda_within_for_in_clause, $.lambda)
     )),
 
     _expression: $ => choice(
@@ -558,16 +563,16 @@ module.exports = grammar({
       $.yield
     ),
 
-    yield: $ => seq(
+    yield: $ => prec(3, seq(
       'yield',
       choice(
         seq(
           'from',
-          $.expression_statement
+          $._expression_statement
         ),
-        optional($.expression_list)
+        optional($._expression_statement)
       )
-    ),
+    )),
 
     attribute: $ => seq(
       $._primary_expression,
@@ -682,12 +687,12 @@ module.exports = grammar({
       '}'
     ),
 
-    tuple: $ => seq(
+    tuple: $ => prec(PREC.tuple, seq(
       '(',
-      commaSep1($._expression),
+      optional(commaSep1($._expression)),
       optional(','),
       ')'
-    ),
+    )),
 
     generator_expression: $ => seq(
       '(',
