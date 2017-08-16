@@ -198,6 +198,11 @@ Lists
 =====================================
 
 [a, b, [c, d]]
+[*()]
+[*[]]
+[*a]
+[*a.b]
+[*a[b].c]
 
 ---
 
@@ -208,7 +213,12 @@ Lists
       (identifier)
       (list
         (identifier)
-        (identifier)))))
+        (identifier))))
+  (expression_statement (list (tuple)))
+  (expression_statement (list (list)))
+  (expression_statement (list (identifier)))
+  (expression_statement (list (attribute (identifier) (identifier))))
+  (expression_statement (list (attribute (subscript (identifier) (identifier)) (identifier)))))
 
 =====================================
 List comprehensions
