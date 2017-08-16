@@ -318,6 +318,7 @@ Sets
 =====================================
 
 {a, b, c,}
+{*{}}
 
 ---
 
@@ -326,7 +327,8 @@ Sets
     (set
       (identifier)
       (identifier)
-      (identifier))))
+      (identifier)))
+  (expression_statement (set (dictionary))))
 
 =====================================
 Set comprehensions
