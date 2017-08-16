@@ -268,6 +268,10 @@ Dictionaries
 
 {a: 1, b: 2}
 {}
+{**{}}
+{**a}
+{**a.b}
+{**a[b].c}
 
 ---
 
@@ -277,7 +281,15 @@ Dictionaries
       (pair (identifier) (integer))
       (pair (identifier) (integer))))
   (expression_statement
-    (dictionary)))
+    (dictionary))
+  (expression_statement
+    (dictionary (dictionary)))
+  (expression_statement
+    (dictionary (identifier)))
+  (expression_statement
+    (dictionary (attribute (identifier) (identifier))))
+  (expression_statement
+    (dictionary (attribute (subscript (identifier) (identifier)) (identifier)))))
 
 =====================================
 Dictionary comprehensions

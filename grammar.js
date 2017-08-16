@@ -654,7 +654,18 @@ module.exports = grammar({
 
     dictionary: $ => seq(
       '{',
-      optional(commaSep1($.pair)),
+      optional(
+        commaSep1(
+          choice(
+            $.pair,
+            seq(
+              '*',
+              '*',
+              $._expression
+            )
+          )
+        )
+      ),
       optional(','),
       '}'
     ),
