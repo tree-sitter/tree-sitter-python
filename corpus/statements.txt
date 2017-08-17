@@ -340,9 +340,7 @@ with a as b:
 
 (module
   (with_statement
-    (with_item
-      (identifier)
-      (identifier))
+    (with_item (identifier) (identifier))
     (expression_statement (identifier))))
 
 =====================================
