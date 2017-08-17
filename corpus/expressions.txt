@@ -406,8 +406,6 @@ lambda b, c: d("e" % f)
 lambda: True
 lambda a, b = c, *d, **e: a
 lambda (a,b): (a, b)
-lambda ((a,b)): (a, b)
-lambda (): True
 
 ---
 
@@ -433,16 +431,8 @@ lambda (): True
       (identifier)))
   (expression_statement
     (lambda
-      (lambda_parameters (identifier) (identifier))
-      (tuple (identifier) (identifier))))
-  (expression_statement
-    (lambda
       (lambda_parameters (tuple (identifier) (identifier)))
-      (tuple (identifier) (identifier))))
-  (expression_statement
-    (lambda
-      (lambda_parameters)
-      (true))))
+      (tuple (identifier) (identifier)))))
 
 =====================================
 Conditional if expressions

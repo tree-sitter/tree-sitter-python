@@ -2,12 +2,12 @@ const PREC = {
   // this resolves a conflict between the usage of ':' in a lambda vs in a
   // typed parameter. In the case of a lambda, we don't allow typed parameters.
   lambda: -2,
-  tuple: -1,
   typed_parameter: -1,
   conditional: -1,
 
   expression_statement: 1,
   parameters: 1,
+  parenthesized_expression: 1,
   not: 1,
   parameter: 1,
   compare: 2,
@@ -301,14 +301,7 @@ module.exports = grammar({
       ')'
     ),
 
-    lambda_parameters: $ => choice(
-      seq(
-        '(',
-        optional($._parameters),
-        ')'
-      ),
-      $._parameters
-    ),
+    lambda_parameters: $ => $._parameters,
 
     _parameters: $ => prec(PREC.parameters, seq(
       commaSep1(choice(
@@ -702,18 +695,18 @@ module.exports = grammar({
       '}'
     ),
 
-    parenthesized_expression: $ => prec(PREC.tuple + 1, seq(
+    parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
       '(',
       choice($._expression, $.yield),
       ')'
     )),
 
-    tuple: $ => prec(PREC.tuple, seq(
+    tuple: $ => seq(
       '(',
       optional(commaSep1(choice($._expression, $.yield))),
       optional(','),
       ')'
-    )),
+    ),
 
     generator_expression: $ => seq(
       '(',
