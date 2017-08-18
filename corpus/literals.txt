@@ -323,12 +323,8 @@ Sets
 ---
 
 (module
-  (expression_statement
-    (set
-      (identifier)
-      (identifier)
-      (identifier)))
-  (expression_statement (set (dictionary))))
+  (expression_statement (set (identifier) (identifier) (identifier)))
+  (expression_statement (set (list_splat (dictionary)))))
 
 =====================================
 Set comprehensions
