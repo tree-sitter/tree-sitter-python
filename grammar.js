@@ -141,7 +141,8 @@ module.exports = grammar({
 
     assert_statement: $ => seq(
       'assert',
-      $.expression_list
+      $._expression,
+      repeat(seq(',', $._expression))
     ),
 
     expression_statement: $ => prec(PREC.expression_statement, choice(
