@@ -647,7 +647,7 @@ module.exports = grammar({
       ),
       optional(','),
       '}'
-    ),
+    )),
 
     dictionary_comprehension: $ => seq(
       '{',
