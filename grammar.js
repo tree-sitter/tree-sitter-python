@@ -420,10 +420,9 @@ module.exports = grammar({
     dotted_name: $ => sep1($.identifier, '.'),
 
     // Expressions
-    _expression_within_for_in_clause: $ => prec(1, choice(
+    _expression_within_for_in_clause: $ => choice(
       $._expression,
       alias($.lambda_within_for_in_clause, $.lambda)
-    )),
 
     _expression: $ => choice(
       $.comparison_operator,
