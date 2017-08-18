@@ -7,6 +7,7 @@ const PREC = {
 
   parenthesized_expression: 1,
   attribute: 1,
+  subscript: 1,
   dictionary: 1,
   not: 1,
   compare: 2,
@@ -563,13 +564,13 @@ module.exports = grammar({
       $.identifier
     )),
 
-    subscript: $ => seq(
+    subscript: $ => prec(PREC.subscript, seq(
       $._primary_expression,
       '[',
       commaSep1(choice($._expression, $.slice)),
       optional(','),
       ']'
-    ),
+    )),
 
     slice: $ => seq(
       optional($._expression),
