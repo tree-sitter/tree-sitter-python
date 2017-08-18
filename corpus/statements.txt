@@ -404,8 +404,8 @@ async def d(a:str="default", b=c) -> None:
     (parameters
       (identifier)
       (default_parameter (identifier) (identifier))
-      (list_splat_parameter (identifier))
-      (dictionary_splat_parameter (identifier)))
+      (list_splat (identifier))
+      (dictionary_splat (identifier)))
     (expression_statement (identifier)))
   (async_function_definition
     (identifier)
@@ -495,8 +495,8 @@ def g(h, i, *, j, k=100, **kwarg):
     (parameters
       (identifier)
       (default_parameter (identifier) (identifier))
-      (list_splat_parameter (identifier))
-      (dictionary_splat_parameter (identifier)))
+      (list_splat (identifier))
+      (dictionary_splat (identifier)))
     (expression_statement (identifier)))
   (function_definition
     (identifier)
@@ -509,11 +509,11 @@ def g(h, i, *, j, k=100, **kwarg):
     (return_statement (expression_list (tuple (identifier) (identifier)))))
   (function_definition
     (identifier)
-    (parameters (typed_parameter (list_splat_parameter (identifier)) (type (identifier))))
+    (parameters (typed_parameter (list_splat (identifier)) (type (identifier))))
     (pass_statement))
   (function_definition
     (identifier)
-    (parameters (typed_parameter (dictionary_splat_parameter (identifier)) (type (identifier))))
+    (parameters (typed_parameter (dictionary_splat (identifier)) (type (identifier))))
     (pass_statement))
   (function_definition
     (identifier)
@@ -524,10 +524,10 @@ def g(h, i, *, j, k=100, **kwarg):
     (parameters
       (identifier)
       (identifier)
-      (list_splat_parameter)
+      (list_splat)
       (identifier)
       (default_parameter (identifier) (integer))
-      (dictionary_splat_parameter (identifier)))
+      (dictionary_splat (identifier)))
     (return_statement
       (expression_list
         (identifier)
@@ -647,18 +647,18 @@ class C:
         (decorator
           (dotted_name (identifier))
           (argument_list
-            (list_splat_argument (identifier))))
+            (list_splat (identifier))))
         (decorator
           (dotted_name (identifier))
           (argument_list
-            (dictionary_splat_argument (identifier))))
+            (dictionary_splat (identifier))))
         (decorator
           (dotted_name (identifier))
           (argument_list
             (integer)
             (keyword_argument (identifier) (true))
-            (list_splat_argument (identifier))
-            (dictionary_splat_argument (identifier))))
+            (list_splat (identifier))
+            (dictionary_splat (identifier))))
         (function_definition (identifier) (parameters) (expression_statement (identifier))))
       (decorated_definition
         (decorator
