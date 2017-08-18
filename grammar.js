@@ -5,7 +5,6 @@ const PREC = {
   typed_parameter: -1,
   conditional: -1,
 
-  expression_statement: 1,
   parameters: 1,
   parenthesized_expression: 1,
   not: 1,
@@ -145,13 +144,13 @@ module.exports = grammar({
       repeat(seq(',', $._expression))
     ),
 
-    expression_statement: $ => prec(PREC.expression_statement, choice(
+    expression_statement: $ => choice(
       $._expression,
-      $.expression_list,
+      seq(commaSep1($._expression), optional(',')),
       $.assignment,
       $.augmented_assignment,
       $.yield
-    )),
+    ),
 
     return_statement: $ => seq(
       'return',
