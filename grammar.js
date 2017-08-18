@@ -126,9 +126,10 @@ module.exports = grammar({
         $.chevron,
         seq(
           optional(seq($.chevron, ',')),
-          $.expression_list
+          commaSep1($._expression)
         ),
-        $.expression_list
+        $._expression,
+        commaSep1($._expression)
       ),
       optional(',')
     ),
