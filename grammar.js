@@ -40,7 +40,6 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$._primary_expression, $.print_statement],
-    [$._primary_expression, $.exec_statement],
   ],
 
   inline: $ => [
