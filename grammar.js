@@ -423,6 +423,7 @@ module.exports = grammar({
     _expression_within_for_in_clause: $ => choice(
       $._expression,
       alias($.lambda_within_for_in_clause, $.lambda)
+    ),
 
     _expression: $ => choice(
       $.comparison_operator,
