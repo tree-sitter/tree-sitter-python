@@ -356,7 +356,7 @@ module.exports = grammar({
       optional(
         seq(
           'in',
-          $.expression_list
+          commaSep1($._expression)
         )
       )
     ),
