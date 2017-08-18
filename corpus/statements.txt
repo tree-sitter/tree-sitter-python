@@ -81,8 +81,8 @@ assert b, c
 ---
 
 (module
-  (assert_statement (expression_list (identifier)))
-  (assert_statement (expression_list (identifier) (identifier))))
+  (assert_statement (identifier))
+  (assert_statement (identifier) (identifier)))
 
 =====================================
 Expression statements
