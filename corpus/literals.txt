@@ -357,13 +357,15 @@ Tuples
 ()
 (a, b)
 (a, b, c,)
+(print, exec)
 
 ---
 
 (module
   (expression_statement (tuple))
   (expression_statement (tuple (identifier) (identifier)))
-  (expression_statement (tuple (identifier) (identifier) (identifier))))
+  (expression_statement (tuple (identifier) (identifier) (identifier)))
+  (expression_statement (tuple (identifier) (identifier))))
 
 =====================================
 Generator expression
