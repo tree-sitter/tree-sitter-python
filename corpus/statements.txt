@@ -50,15 +50,13 @@ print 0 or 1
 ---
 
 (module
-  (print_statement (expression_list (identifier)))
-  (print_statement (expression_list (identifier) (identifier)))
+  (print_statement (identifier))
+  (print_statement (identifier) (identifier))
   (print_statement
-    (expression_list
-      (boolean_operator (integer) (integer))
-      (boolean_operator (integer) (integer))))
+    (boolean_operator (integer) (integer))
+    (boolean_operator (integer) (integer)))
   (print_statement
-    (expression_list
-      (boolean_operator (integer) (integer)))))
+    (boolean_operator (integer) (integer))))
 
 =====================================
 Print statements with redirection
@@ -71,7 +69,7 @@ print >> a, "b", "c"
 
 (module
   (print_statement (chevron (identifier)))
-  (print_statement (chevron (identifier)) (expression_list (string) (string))))
+  (print_statement (chevron (identifier)) (string) (string)))
 
 =====================================
 Assert statements
