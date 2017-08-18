@@ -283,13 +283,13 @@ Dictionaries
   (expression_statement
     (dictionary))
   (expression_statement
-    (dictionary (dictionary)))
+    (dictionary (dictionary_splat (dictionary))))
   (expression_statement
-    (dictionary (identifier)))
+    (dictionary (dictionary_splat (identifier))))
   (expression_statement
-    (dictionary (attribute (identifier) (identifier))))
+    (dictionary (dictionary_splat (attribute (identifier) (identifier)))))
   (expression_statement
-    (dictionary (attribute (subscript (identifier) (identifier)) (identifier)))))
+    (dictionary (dictionary_splat (attribute (subscript (identifier) (identifier)) (identifier))))))
 
 =====================================
 Dictionary comprehensions
