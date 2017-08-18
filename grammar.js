@@ -6,6 +6,7 @@ const PREC = {
   conditional: -1,
 
   parenthesized_expression: 1,
+  dictionary: 1,
   not: 1,
   compare: 2,
   or: 10,
@@ -632,7 +633,7 @@ module.exports = grammar({
       ']'
     ),
 
-    dictionary: $ => seq(
+    dictionary: $ => prec(PREC.dictionary, seq(
       '{',
       optional(
         commaSep1(
