@@ -269,13 +269,13 @@ for x, in [(1,), (2,), (3,)]:
   (for_statement
     (variables (identifier) (identifier))
     (expression_list (identifier))
-    (print_statement (expression_list (identifier)))
+    (print_statement (identifier))
     (for_statement
       (variables (identifier) (identifier))
       (expression_list (identifier))
-      (print_statement (expression_list (identifier))))
+      (print_statement (identifier)))
     (else_clause
-      (print_statement (expression_list (identifier)))))
+      (print_statement (identifier))))
   (for_statement
     (variables (identifier))
     (expression_list (list (tuple (integer)) (tuple (integer)) (tuple (integer))))
@@ -696,11 +696,11 @@ print c
 ---
 
 (module
-  (print_statement (expression_list (identifier)))
+  (print_statement (identifier))
   (comment)
-  (print_statement (expression_list (identifier)))
+  (print_statement (identifier))
   (comment)
-  (print_statement (expression_list (identifier))))
+  (print_statement (identifier)))
 
 ====================================================
 Comments at different indentation levels
@@ -733,7 +733,7 @@ print "a"
   # We need to recognize the newline *preceding* this comment, because there's no newline after it
 ---
 
-(module (print_statement (expression_list (string))) (comment))
+(module (print_statement (string)) (comment))
 
 ====================================================
 Global statements
