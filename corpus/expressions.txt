@@ -106,6 +106,7 @@ Print used as an identifier
 =====================================
 
 print(a, b=c)
+print(d, e)
 print(d, *e)
 print(*f, **g,)
 a(print)
@@ -119,6 +120,12 @@ a(print)
       (argument_list
         (identifier)
         (keyword_argument (identifier) (identifier)))))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier)
+        (identifier))))
   (expression_statement
     (call
       (identifier)
