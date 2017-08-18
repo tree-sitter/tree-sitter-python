@@ -760,8 +760,8 @@ exec 'x+=1' in a, b
 
 (module
   (exec_statement (string))
-  (exec_statement (string) (expression_list (none)))
-  (exec_statement (string) (expression_list (identifier) (identifier))))
+  (exec_statement (string) (none))
+  (exec_statement (string) (identifier) (identifier)))
 
 ==================================================
 Extra newlines
