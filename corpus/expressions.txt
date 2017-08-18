@@ -163,11 +163,11 @@ def print():
     (expression_statement (identifier)))
   (function_definition
     (identifier)
-    (parameters (list_splat_parameter (identifier)))
+    (parameters (list_splat (identifier)))
     (expression_statement (identifier)))
   (function_definition
     (identifier)
-    (parameters (dictionary_splat_parameter (identifier)))
+    (parameters (dictionary_splat (identifier)))
     (expression_statement (identifier)))
   (function_definition
     (identifier)
@@ -209,20 +209,20 @@ c(d, *e, **g)
 (module
   (expression_statement (call
     (identifier)
-    (argument_list (list_splat_argument (tuple)))))
+    (argument_list (list_splat (tuple)))))
   (expression_statement (call
     (identifier)
-    (argument_list (dictionary_splat_argument (dictionary)))))
+    (argument_list (dictionary_splat (dictionary)))))
   (expression_statement (call
     (identifier)
     (argument_list
-      (list_splat_argument (identifier)))))
+      (list_splat (identifier)))))
   (expression_statement (call
     (identifier)
     (argument_list
       (identifier)
-      (list_splat_argument (identifier))
-      (dictionary_splat_argument (identifier))))))
+      (list_splat (identifier))
+      (dictionary_splat (identifier))))))
 
 =====================================
 Math operators
@@ -438,8 +438,8 @@ lambda (a,b): (a, b)
       (lambda_parameters
         (identifier)
         (default_parameter (identifier) (identifier))
-        (list_splat_parameter (identifier))
-        (dictionary_splat_parameter (identifier)))
+        (list_splat (identifier))
+        (dictionary_splat (identifier)))
       (identifier)))
   (expression_statement
     (lambda
