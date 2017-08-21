@@ -38,10 +38,6 @@ module.exports = grammar({
     $._dedent,
   ],
 
-  conflicts: $ => [
-    [$._primary_expression, $.print_statement],
-  ],
-
   inline: $ => [
     $._simple_statement,
     $._compound_statement,
@@ -120,18 +116,18 @@ module.exports = grammar({
 
     wildcard_import: $ => '*',
 
-    print_statement: $ => seq(
-      'print',
-      choice(
+    print_statement: $ => choice(
+      prec(1, seq(
+        'print',
         $.chevron,
-        seq(
-          optional(seq($.chevron, ',')),
-          commaSep1($._expression)
-        ),
-        $._expression,
-        commaSep1($._expression)
+        repeat(seq(',', $._expression)),
+        optional(','))
       ),
-      optional(',')
+      prec(-1, seq(
+        'print',
+        commaSep1($._expression),
+        optional(','))
+      )
     ),
 
     chevron: $ => seq(

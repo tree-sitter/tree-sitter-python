@@ -105,6 +105,7 @@ i(j, 5,)
 Print used as an identifier
 =====================================
 
+print()
 print(a, b=c)
 print(d, e)
 print(d, *e)
@@ -146,6 +147,7 @@ a(print)
 =====================================
 Print used as a parameter
 =====================================
+
 def a(print):
   b
 def a(printer=print):
