@@ -118,6 +118,10 @@ a(print)
   (expression_statement
     (call
       (identifier)
+      (argument_list)))
+  (expression_statement
+    (call
+      (identifier)
       (argument_list
         (identifier)
         (keyword_argument (identifier) (identifier)))))
