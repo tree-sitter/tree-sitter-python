@@ -263,13 +263,13 @@ module.exports = grammar({
       $._suite
     ),
 
-    with_item: $ => prec.right(seq(
+    with_item: $ => seq(
       $._expression,
       optional(seq(
         'as',
         $._expression
       ))
-    )),
+    ),
 
     async_function_definition: $ => seq(
       'async',
