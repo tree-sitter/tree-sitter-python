@@ -419,14 +419,15 @@ def example():
         (expression_list (identifier))
         (yield (expression_list (integer)))))
     (expression_statement (yield (identifier)))
-    (expression_statement (yield
-      (parenthesized_expression
-        (yield
-          (generator_expression
-            (identifier)
-            (for_in_clause
-            (variables (identifier))
-            (call (identifier) (argument_list (integer) (integer)))))))))))
+    (expression_statement
+      (yield
+        (parenthesized_expression
+          (yield
+            (generator_expression
+              (identifier)
+              (for_in_clause
+              (variables (identifier))
+              (call (identifier) (argument_list (integer) (integer)))))))))))
 
 ====================================================
 lambdas
