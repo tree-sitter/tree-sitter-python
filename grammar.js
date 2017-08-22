@@ -607,11 +607,7 @@ module.exports = grammar({
 
     list: $ => seq(
       '[',
-      optional(
-        commaSep1(
-          $._expression
-        )
-      ),
+      optional(commaSep1($._expression)),
       optional(','),
       ']'
     ),
@@ -633,14 +629,7 @@ module.exports = grammar({
 
     dictionary: $ => prec(PREC.dictionary, seq(
       '{',
-      optional(
-        commaSep1(
-          choice(
-            $.pair,
-            $.dictionary_splat
-          )
-        )
-      ),
+      optional(commaSep1(choice($.pair, $.dictionary_splat))),
       optional(','),
       '}'
     )),
