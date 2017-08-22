@@ -272,6 +272,7 @@ Dictionaries
 {**a}
 {**a.b}
 {**a[b].c}
+{**a()}
 
 ---
 
@@ -289,7 +290,9 @@ Dictionaries
   (expression_statement
     (dictionary (dictionary_splat (attribute (identifier) (identifier)))))
   (expression_statement
-    (dictionary (dictionary_splat (attribute (subscript (identifier) (identifier)) (identifier))))))
+    (dictionary (dictionary_splat (attribute (subscript (identifier) (identifier)) (identifier)))))
+  (expression_statement
+    (dictionary (dictionary_splat (call (identifier) (argument_list))))))
 
 =====================================
 Dictionary comprehensions
