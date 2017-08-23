@@ -8,7 +8,6 @@ const PREC = {
   parenthesized_expression: 1,
   attribute: 1,
   subscript: 1,
-  dictionary: 1,
   not: 1,
   compare: 2,
   or: 10,
@@ -328,16 +327,16 @@ module.exports = grammar({
       $._expression
     )),
 
-    list_splat: $ => prec.right(seq(
+    list_splat: $ => seq(
       '*',
       optional($._expression)
-    )),
+    ),
 
-    dictionary_splat: $ => prec(1, seq(
+    dictionary_splat: $ => seq(
       '*',
       '*',
       $._expression
-    )),
+    ),
 
     global_statement: $ => seq(
       'global',
@@ -373,6 +372,8 @@ module.exports = grammar({
       optional(commaSep1(
         choice(
           $._expression,
+          $.list_splat,
+          $.dictionary_splat,
           $.keyword_argument
         )
       )),
@@ -457,9 +458,7 @@ module.exports = grammar({
       $.tuple,
       $.parenthesized_expression,
       $.generator_expression,
-      $.ellipsis,
-      $.list_splat,
-      $.dictionary_splat
+      $.ellipsis
     ),
 
     not_operator: $ => prec(PREC.not, seq('not', $._expression)),
@@ -607,7 +606,7 @@ module.exports = grammar({
 
     list: $ => seq(
       '[',
-      optional(commaSep1($._expression)),
+      optional(commaSep1(choice($._expression, $.list_splat))),
       optional(','),
       ']'
     ),
@@ -627,12 +626,12 @@ module.exports = grammar({
       ']'
     ),
 
-    dictionary: $ => prec(PREC.dictionary, seq(
+    dictionary: $ => seq(
       '{',
       optional(commaSep1(choice($.pair, $.dictionary_splat))),
       optional(','),
       '}'
-    )),
+    ),
 
     dictionary_comprehension: $ => seq(
       '{',
@@ -649,7 +648,7 @@ module.exports = grammar({
 
     set: $ => seq(
       '{',
-      commaSep1($._expression),
+      commaSep1(choice($._expression, $.list_splat)),
       optional(','),
       '}'
     ),
