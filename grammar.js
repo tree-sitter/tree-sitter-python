@@ -725,7 +725,16 @@ module.exports = grammar({
       '}'
     ),
 
-    escape_sequence: $ => token(seq('\\', /.|\n/)),
+    escape_sequence: $ => token(seq(
+      '\\',
+      choice(
+        /u[a-fA-F\d]{4}/,
+        /U[a-fA-F\d]{8}/,
+        /x[a-fA-F\d]{2}/,
+        /o\d{3}/,
+        /[^uxo]/
+      )
+    )),
 
     type_conversion: $ => /![a-z]/,
 

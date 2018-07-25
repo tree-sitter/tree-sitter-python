@@ -3582,8 +3582,29 @@
             "value": "\\"
           },
           {
-            "type": "PATTERN",
-            "value": ".|\\n"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "u[a-fA-F\\d]{4}"
+              },
+              {
+                "type": "PATTERN",
+                "value": "U[a-fA-F\\d]{8}"
+              },
+              {
+                "type": "PATTERN",
+                "value": "x[a-fA-F\\d]{2}"
+              },
+              {
+                "type": "PATTERN",
+                "value": "o\\d{3}"
+              },
+              {
+                "type": "PATTERN",
+                "value": "[^uxo]"
+              }
+            ]
           }
         ]
       }

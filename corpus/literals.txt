@@ -152,6 +152,20 @@ f"a {b(f'c {e} d')} e"
             (identifier)))))))))
 
 =====================================
+Unicode escape sequences
+=====================================
+
+"\x12 \o123 \u1234"
+
+---
+
+(module
+  (expression_statement (string
+    (escape_sequence)
+    (escape_sequence)
+    (escape_sequence))))
+
+=====================================
 Other primitives
 =====================================
 
