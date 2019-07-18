@@ -514,21 +514,20 @@
   {
     "type": "block",
     "named": true,
-    "fields": {
-      "statement": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "_compound_statement",
-            "named": true
-          },
-          {
-            "type": "_simple_statement",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "_compound_statement",
+          "named": true
+        },
+        {
+          "type": "_simple_statement",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1490,21 +1489,20 @@
   {
     "type": "module",
     "named": true,
-    "fields": {
-      "statement": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "_compound_statement",
-            "named": true
-          },
-          {
-            "type": "_simple_statement",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "_compound_statement",
+          "named": true
+        },
+        {
+          "type": "_simple_statement",
+          "named": true
+        }
+      ]
     }
   },
   {

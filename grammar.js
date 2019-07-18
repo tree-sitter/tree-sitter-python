@@ -59,17 +59,17 @@ module.exports = grammar({
 
     _statement: $ => choice(
       $._simple_statements,
-      field('statement', $._compound_statement)
+      $._compound_statement
     ),
 
     // Simple statements
 
     _simple_statements: $ => seq(
-      field('statement', $._simple_statement),
+      $._simple_statement,
       optional(repeat(seq(
         $._semicolon,
-        field('statement', $._simple_statement))
-      )),
+        $._simple_statement
+      ))),
       optional($._semicolon),
       $._newline
     ),

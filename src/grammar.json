@@ -17,12 +17,8 @@
           "name": "_simple_statements"
         },
         {
-          "type": "FIELD",
-          "name": "statement",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_compound_statement"
-          }
+          "type": "SYMBOL",
+          "name": "_compound_statement"
         }
       ]
     },
@@ -30,12 +26,8 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "statement",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_simple_statement"
-          }
+          "type": "SYMBOL",
+          "name": "_simple_statement"
         },
         {
           "type": "CHOICE",
@@ -50,12 +42,8 @@
                     "name": "_semicolon"
                   },
                   {
-                    "type": "FIELD",
-                    "name": "statement",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "_simple_statement"
-                    }
+                    "type": "SYMBOL",
+                    "name": "_simple_statement"
                   }
                 ]
               }
