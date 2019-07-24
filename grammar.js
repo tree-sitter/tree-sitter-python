@@ -402,6 +402,15 @@ module.exports = grammar({
       field('body', $._suite)
     ),
 
+    _parenthesized_list_splat: $ => seq(
+      '(',
+      choice(
+        $._parenthesized_list_splat,
+        $.list_splat,
+      ),
+      ')',
+    ),
+
     argument_list: $ => seq(
       '(',
       optional(commaSep1(
@@ -409,6 +418,7 @@ module.exports = grammar({
           $._expression,
           $.list_splat,
           $.dictionary_splat,
+          $._parenthesized_list_splat,
           $.keyword_argument
         )
       )),

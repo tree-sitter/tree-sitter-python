@@ -1706,6 +1706,32 @@
         }
       ]
     },
+    "_parenthesized_list_splat": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_parenthesized_list_splat"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "list_splat"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
     "argument_list": {
       "type": "SEQ",
       "members": [
@@ -1736,6 +1762,10 @@
                     },
                     {
                       "type": "SYMBOL",
+                      "name": "_parenthesized_list_splat"
+                    },
+                    {
+                      "type": "SYMBOL",
                       "name": "keyword_argument"
                     }
                   ]
@@ -1763,6 +1793,10 @@
                           {
                             "type": "SYMBOL",
                             "name": "dictionary_splat"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "_parenthesized_list_splat"
                           },
                           {
                             "type": "SYMBOL",
