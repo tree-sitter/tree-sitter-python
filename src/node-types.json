@@ -1577,7 +1577,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "_expression",
@@ -2516,6 +2516,10 @@
   {
     "type": "lambda",
     "named": false
+  },
+  {
+    "type": "list_splat",
+    "named": true
   },
   {
     "type": "none",

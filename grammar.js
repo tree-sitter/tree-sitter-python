@@ -342,7 +342,10 @@ module.exports = grammar({
       $.typed_parameter,
       $.default_parameter,
       $.typed_default_parameter,
-      $.list_splat,
+      choice(
+        $.list_splat,
+        alias('*', $.list_splat),
+      ),
       $.dictionary_splat
     ),
 
@@ -362,12 +365,11 @@ module.exports = grammar({
 
     list_splat: $ => seq(
       '*',
-      optional($._expression)
+      $._expression,
     ),
 
     dictionary_splat: $ => seq(
-      '*',
-      '*',
+      '**',
       $._expression
     ),
 
