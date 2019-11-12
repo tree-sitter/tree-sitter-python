@@ -779,7 +779,7 @@ module.exports = grammar({
       '}'
     ),
 
-    escape_sequence: $ => prec(1, token(seq(
+    escape_sequence: $ => token(prec(1, seq(
       '\\',
       choice(
         /u[a-fA-F\d]{4}/,

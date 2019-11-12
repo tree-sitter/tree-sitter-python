@@ -4101,10 +4101,10 @@
       ]
     },
     "escape_sequence": {
-      "type": "PREC",
-      "value": 1,
+      "type": "TOKEN",
       "content": {
-        "type": "TOKEN",
+        "type": "PREC",
+        "value": 1,
         "content": {
           "type": "SEQ",
           "members": [
