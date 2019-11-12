@@ -4146,11 +4146,8 @@
       }
     },
     "_not_escape_sequence": {
-      "type": "TOKEN",
-      "content": {
-        "type": "STRING",
-        "value": "\\"
-      }
+      "type": "STRING",
+      "value": "\\"
     },
     "format_specifier": {
       "type": "SEQ",

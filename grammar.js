@@ -791,7 +791,7 @@ module.exports = grammar({
       )
     ))),
 
-    _not_escape_sequence: $ => token('\\'),
+    _not_escape_sequence: $ => '\\',
 
     format_specifier: $ => seq(
       ':',
