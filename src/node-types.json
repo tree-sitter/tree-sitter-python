@@ -330,6 +330,10 @@
         {
           "type": "list_splat",
           "named": true
+        },
+        {
+          "type": "parenthesized_expression",
+          "named": true
         }
       ]
     }

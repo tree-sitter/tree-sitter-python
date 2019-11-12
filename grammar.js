@@ -402,10 +402,10 @@ module.exports = grammar({
       field('body', $._suite)
     ),
 
-    _parenthesized_list_splat: $ => seq(
+    parenthesized_list_splat: $ => seq(
       '(',
       choice(
-        $._parenthesized_list_splat,
+        alias($.parenthesized_list_splat, $.parenthesized_expression),
         $.list_splat,
       ),
       ')',
@@ -418,7 +418,7 @@ module.exports = grammar({
           $._expression,
           $.list_splat,
           $.dictionary_splat,
-          $._parenthesized_list_splat,
+          alias($.parenthesized_list_splat, $.parenthesized_expression),
           $.keyword_argument
         )
       )),

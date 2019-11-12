@@ -614,11 +614,11 @@ def h(*a):
          (call function:
            (identifier)
            arguments:
-             (argument_list (list_splat (identifier)))))
+             (argument_list (parenthesized_expression (list_splat (identifier))))))
        (expression_statement
          (call function:
            (identifier)
-           arguments: (argument_list (list_splat (identifier))))))))
+           arguments: (argument_list (parenthesized_expression (parenthesized_expression (list_splat (identifier))))))))))
 
 ====================================================
 Class definitions

@@ -1706,7 +1706,7 @@
         }
       ]
     },
-    "_parenthesized_list_splat": {
+    "parenthesized_list_splat": {
       "type": "SEQ",
       "members": [
         {
@@ -1717,8 +1717,13 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "_parenthesized_list_splat"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "parenthesized_list_splat"
+              },
+              "named": true,
+              "value": "parenthesized_expression"
             },
             {
               "type": "SYMBOL",
@@ -1761,8 +1766,13 @@
                       "name": "dictionary_splat"
                     },
                     {
-                      "type": "SYMBOL",
-                      "name": "_parenthesized_list_splat"
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "parenthesized_list_splat"
+                      },
+                      "named": true,
+                      "value": "parenthesized_expression"
                     },
                     {
                       "type": "SYMBOL",
@@ -1795,8 +1805,13 @@
                             "name": "dictionary_splat"
                           },
                           {
-                            "type": "SYMBOL",
-                            "name": "_parenthesized_list_splat"
+                            "type": "ALIAS",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "parenthesized_list_splat"
+                            },
+                            "named": true,
+                            "value": "parenthesized_expression"
                           },
                           {
                             "type": "SYMBOL",
