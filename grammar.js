@@ -17,7 +17,7 @@ const PREC = {
   plus: 16,
   times: 17,
   unary: 18,
-  power: 19,  
+  power: 19,
   call: 20,
 }
 
