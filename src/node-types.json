@@ -1083,6 +1083,10 @@
         {
           "type": "_expression",
           "named": true
+        },
+        {
+          "type": "list_splat",
+          "named": true
         }
       ]
     }
