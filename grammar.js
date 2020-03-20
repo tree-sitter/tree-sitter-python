@@ -460,15 +460,10 @@ module.exports = grammar({
       optional(',')
     ),
 
-    star_expression: $ => seq(
-      '*',
-      $._expression,
-    ),
-
     expression_list: $ => prec.right(seq(
       commaSep1(choice(
         $._expression,
-        $.star_expression,
+        $.list_splat,
       )),
       optional(',')
     )),

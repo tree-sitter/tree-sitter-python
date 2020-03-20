@@ -467,11 +467,11 @@ a, *b, c = [1, 2, 3]
         (expression_list (identifier)))))
   (expression_statement
     (assignment
-      (expression_list (star_expression (identifier)))
+      (expression_list (list_splat (identifier)))
       (expression_list (list (integer) (integer)))))
   (expression_statement
     (assignment
-      (expression_list (identifier) (star_expression (identifier)) (identifier))
+      (expression_list (identifier) (list_splat (identifier)) (identifier))
       (expression_list (list (integer) (integer) (integer))))))
 
 ====================================================

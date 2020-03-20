@@ -1994,19 +1994,6 @@
         }
       ]
     },
-    "star_expression": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "*"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_expression"
-        }
-      ]
-    },
     "expression_list": {
       "type": "PREC_RIGHT",
       "value": 0,
@@ -2025,7 +2012,7 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "star_expression"
+                    "name": "list_splat"
                   }
                 ]
               },
@@ -2047,7 +2034,7 @@
                         },
                         {
                           "type": "SYMBOL",
-                          "name": "star_expression"
+                          "name": "list_splat"
                         }
                       ]
                     }
