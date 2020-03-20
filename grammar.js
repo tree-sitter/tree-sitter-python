@@ -54,6 +54,10 @@ module.exports = grammar({
     $._parameter,
   ],
 
+  conflicts: $ => [
+    [$.expression_statement, $.expression_list],
+  ],
+
   word: $ => $.identifier,
 
   rules: {
@@ -456,8 +460,16 @@ module.exports = grammar({
       optional(',')
     ),
 
+    star_expression: $ => seq(
+      '*',
+      $._expression,
+    ),
+
     expression_list: $ => prec.right(seq(
-      commaSep1($._expression),
+      commaSep1(choice(
+        $._expression,
+        $.star_expression,
+      )),
       optional(',')
     )),
 

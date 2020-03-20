@@ -431,6 +431,8 @@ a = 1
 a, b = 1, 2
 a, = 1, 2
 a[b] = c = d
+*a = [1, 2]
+a, *b, c = [1, 2, 3]
 
 ---
 
@@ -462,7 +464,15 @@ a[b] = c = d
         (subscript (identifier) (identifier)))
       (assignment
         (expression_list (identifier))
-        (expression_list (identifier))))))
+        (expression_list (identifier)))))
+  (expression_statement
+    (assignment
+      (expression_list (star_expression (identifier)))
+      (expression_list (list (integer) (integer)))))
+  (expression_statement
+    (assignment
+      (expression_list (identifier) (star_expression (identifier)) (identifier))
+      (expression_list (list (integer) (integer) (integer))))))
 
 ====================================================
 Assignments with type annotations
