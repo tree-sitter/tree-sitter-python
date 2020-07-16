@@ -78,6 +78,12 @@
 ">=" @operator
 ">>" @operator
 "|" @operator
+"@=" @operator
+"&=" @operator
+"|=" @operator
+"^=" @operator
+"<<=" @operator
+">>=" @operator
 "~" @operator
 "->" @operator
 "and" @operator
