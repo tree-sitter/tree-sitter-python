@@ -158,10 +158,6 @@
         "named": true
       },
       {
-        "type": "identifier_reference",
-        "named": true
-      },
-      {
         "type": "integer",
         "named": true
       },
@@ -2599,10 +2595,6 @@
   },
   {
     "type": "identifier",
-    "named": true
-  },
-  {
-    "type": "identifier_reference",
     "named": true
   },
   {

@@ -488,7 +488,7 @@ module.exports = grammar({
 
     _primary_expression: $ => choice(
       $.binary_operator,
-      alias($.identifier, $.identifier_reference),
+      $.identifier,
       $.keyword_identifier,
       $.string,
       $.concatenated_string,
