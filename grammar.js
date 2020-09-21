@@ -616,7 +616,9 @@ module.exports = grammar({
       commaSep1(choice(
         $.identifier,
         $.subscript,
-        $.attribute
+        $.attribute,
+        $.list,
+        $.tuple
       )),
       optional(',')
     )),

@@ -1577,7 +1577,15 @@
           "named": true
         },
         {
+          "type": "list",
+          "named": true
+        },
+        {
           "type": "subscript",
+          "named": true
+        },
+        {
+          "type": "tuple",
           "named": true
         }
       ]

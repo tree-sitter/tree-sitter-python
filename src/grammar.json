@@ -3154,6 +3154,14 @@
                   {
                     "type": "SYMBOL",
                     "name": "attribute"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "list"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "tuple"
                   }
                 ]
               },
@@ -3180,6 +3188,14 @@
                         {
                           "type": "SYMBOL",
                           "name": "attribute"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "list"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "tuple"
                         }
                       ]
                     }
