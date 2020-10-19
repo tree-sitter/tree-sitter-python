@@ -17,7 +17,7 @@ raise e
 for i in foo():
 # <- keyword
 #   ^ variable
-#     ^ operator
+#     ^ keyword
 #        ^ function
     continue
     # <- keyword
@@ -25,6 +25,6 @@ for i in foo():
     # <- keyword
 
 a and b or c
-# ^ operator
+# ^ keyword
 #     ^ variable
-#       ^ operator
+#       ^ keyword
