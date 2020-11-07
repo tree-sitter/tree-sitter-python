@@ -2047,6 +2047,14 @@
         {
           "type": "list_splat",
           "named": true
+        },
+        {
+          "type": "parenthesized_list_splat",
+          "named": true
+        },
+        {
+          "type": "yield",
+          "named": true
         }
       ]
     }
@@ -2123,10 +2131,6 @@
         "multiple": true,
         "required": true,
         "types": [
-          {
-            "type": ",",
-            "named": false
-          },
           {
             "type": "expression",
             "named": true

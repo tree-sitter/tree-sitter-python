@@ -59,8 +59,9 @@ module.exports = grammar({
     $._simple_statement,
     $._compound_statement,
     $._suite,
+    $._expressions,
+    $._left_hand_side,
     $.keyword_identifier,
-    $._expression_or_expression_list,
   ],
 
   word: $ => $.identifier,
@@ -195,22 +196,22 @@ module.exports = grammar({
 
     return_statement: $ => seq(
       'return',
-      optional($._expression_or_expression_list)
+      optional($._expressions)
     ),
 
     delete_statement: $ => seq(
       'del',
-      $._expression_or_expression_list
+      $._expressions
     ),
 
-    _expression_or_expression_list: $ => choice(
+    _expressions: $ => choice(
       $.expression,
       $.expression_list
     ),
 
     raise_statement: $ => seq(
       'raise',
-      optional($._expression_or_expression_list),
+      optional($._expressions),
       optional(seq('from', field('cause', $.expression)))
     ),
 
@@ -258,7 +259,7 @@ module.exports = grammar({
       'for',
       field('left', $._left_hand_side),
       'in',
-      field('right', $._expression_or_expression_list),
+      field('right', $._expressions),
       ':',
       field('body', $._suite),
       field('alternative', optional($.else_clause))
@@ -343,74 +344,6 @@ module.exports = grammar({
     ),
 
     lambda_parameters: $ => $._parameters,
-
-    _parameters: $ => seq(
-      commaSep1($.parameter),
-      optional(',')
-    ),
-
-    _patterns: $ => seq(
-      commaSep1($.pattern),
-      optional(',')
-    ),
-
-    parameter: $ => choice(
-      $.identifier,
-      $.keyword_identifier,
-      $.typed_parameter,
-      $.default_parameter,
-      $.typed_default_parameter,
-      $.list_splat_pattern,
-      $.tuple_pattern,
-      alias('*', $.list_splat_pattern),
-      $.dictionary_splat_pattern
-    ),
-
-    pattern: $ => choice(
-      $.identifier,
-      $.keyword_identifier,
-      $.subscript,
-      $.attribute,
-      $.list_splat_pattern,
-      $.tuple_pattern,
-      $.list_pattern
-    ),
-
-    tuple_pattern: $ => seq(
-      '(',
-      optional($._patterns),
-      ')'
-    ),
-
-    list_pattern: $ => seq(
-      '[',
-      optional($._patterns),
-      ']'
-    ),
-
-    default_parameter: $ => seq(
-      field('name', choice($.identifier, $.keyword_identifier)),
-      '=',
-      field('value', $.expression)
-    ),
-
-    typed_default_parameter: $ => prec(PREC.typed_parameter, seq(
-      field('name', choice($.identifier, $.keyword_identifier)),
-      ':',
-      field('type', $.type),
-      '=',
-      field('value', $.expression)
-    )),
-
-    list_splat_pattern: $ => seq(
-      '*',
-      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute)
-    ),
-
-    dictionary_splat_pattern: $ => seq(
-      '**',
-      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute)
-    ),
 
     list_splat: $ => seq(
       '*',
@@ -517,7 +450,78 @@ module.exports = grammar({
 
     dotted_name: $ => sep1($.identifier, '.'),
 
+    // Patterns
+
+    _parameters: $ => seq(
+      commaSep1($.parameter),
+      optional(',')
+    ),
+
+    _patterns: $ => seq(
+      commaSep1($.pattern),
+      optional(',')
+    ),
+
+    parameter: $ => choice(
+      $.identifier,
+      $.keyword_identifier,
+      $.typed_parameter,
+      $.default_parameter,
+      $.typed_default_parameter,
+      $.list_splat_pattern,
+      $.tuple_pattern,
+      alias('*', $.list_splat_pattern),
+      $.dictionary_splat_pattern
+    ),
+
+    pattern: $ => choice(
+      $.identifier,
+      $.keyword_identifier,
+      $.subscript,
+      $.attribute,
+      $.list_splat_pattern,
+      $.tuple_pattern,
+      $.list_pattern
+    ),
+
+    tuple_pattern: $ => seq(
+      '(',
+      optional($._patterns),
+      ')'
+    ),
+
+    list_pattern: $ => seq(
+      '[',
+      optional($._patterns),
+      ']'
+    ),
+
+    default_parameter: $ => seq(
+      field('name', choice($.identifier, $.keyword_identifier)),
+      '=',
+      field('value', $.expression)
+    ),
+
+    typed_default_parameter: $ => prec(PREC.typed_parameter, seq(
+      field('name', choice($.identifier, $.keyword_identifier)),
+      ':',
+      field('type', $.type),
+      '=',
+      field('value', $.expression)
+    )),
+
+    list_splat_pattern: $ => seq(
+      '*',
+      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute)
+    ),
+
+    dictionary_splat_pattern: $ => seq(
+      '**',
+      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute)
+    ),
+
     // Expressions
+
     _expression_within_for_in_clause: $ => choice(
       $.expression,
       alias($.lambda_within_for_in_clause, $.lambda)
@@ -694,7 +698,7 @@ module.exports = grammar({
           'from',
           $.expression
         ),
-        optional($._expression_or_expression_list)
+        optional($._expressions)
       )
     )),
 
@@ -707,7 +711,7 @@ module.exports = grammar({
     subscript: $ => prec(PREC.call, seq(
       field('value', $.primary_expression),
       '[',
-      field('subscript', commaSep1(choice($.expression, $.slice))),
+      commaSep1(field('subscript', choice($.expression, $.slice))),
       optional(','),
       ']'
     )),
@@ -755,19 +759,16 @@ module.exports = grammar({
       ']'
     ),
 
-    _comprehension_clauses: $ => seq(
-      $.for_in_clause,
-      repeat(choice(
-        $.for_in_clause,
-        $.if_clause
-      ))
+    set: $ => seq(
+      '{',
+      $._collection_elements,
+      '}'
     ),
 
-    list_comprehension: $ => seq(
-      '[',
-      field('body', $.expression),
-      $._comprehension_clauses,
-      ']'
+    tuple: $ => seq(
+      '(',
+      optional($._collection_elements),
+      ')'
     ),
 
     dictionary: $ => seq(
@@ -777,23 +778,23 @@ module.exports = grammar({
       '}'
     ),
 
-    dictionary_comprehension: $ => seq(
-      '{',
-      field('body', $.pair),
-      $._comprehension_clauses,
-      '}'
-    ),
-
     pair: $ => seq(
       field('key', $.expression),
       ':',
       field('value', $.expression)
     ),
 
-    set: $ => seq(
+    list_comprehension: $ => seq(
+      '[',
+      field('body', $.expression),
+      $._comprehension_clauses,
+      ']'
+    ),
+
+    dictionary_comprehension: $ => seq(
       '{',
-      commaSep1(choice($.expression, $.list_splat)),
-      optional(','),
+      field('body', $.pair),
+      $._comprehension_clauses,
       '}'
     ),
 
@@ -802,6 +803,21 @@ module.exports = grammar({
       field('body', $.expression),
       $._comprehension_clauses,
       '}'
+    ),
+
+    generator_expression: $ => seq(
+      '(',
+      field('body', $.expression),
+      $._comprehension_clauses,
+      ')'
+    ),
+
+    _comprehension_clauses: $ => seq(
+      $.for_in_clause,
+      repeat(choice(
+        $.for_in_clause,
+        $.if_clause
+      ))
     ),
 
     parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
@@ -815,19 +831,6 @@ module.exports = grammar({
         $.expression, $.yield, $.list_splat, $.parenthesized_list_splat
       )),
       optional(',')
-    ),
-
-    tuple: $ => seq(
-      '(',
-      optional($._collection_elements),
-      ')'
-    ),
-
-    generator_expression: $ => seq(
-      '(',
-      field('body', $.expression),
-      $._comprehension_clauses,
-      ')'
     ),
 
     for_in_clause: $ => seq(
