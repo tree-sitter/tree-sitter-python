@@ -60,6 +60,7 @@ module.exports = grammar({
     $._compound_statement,
     $._suite,
     $.keyword_identifier,
+    $._expression_or_expression_list,
   ],
 
   word: $ => $.identifier,
@@ -194,17 +195,22 @@ module.exports = grammar({
 
     return_statement: $ => seq(
       'return',
-      optional($.expression_list)
+      optional($._expression_or_expression_list)
     ),
 
     delete_statement: $ => seq(
       'del',
+      $._expression_or_expression_list
+    ),
+
+    _expression_or_expression_list: $ => choice(
+      $.expression,
       $.expression_list
     ),
 
     raise_statement: $ => seq(
       'raise',
-      optional($.expression_list),
+      optional($._expression_or_expression_list),
       optional(seq('from', field('cause', $.expression)))
     ),
 
@@ -250,9 +256,9 @@ module.exports = grammar({
     for_statement: $ => seq(
       optional('async'),
       'for',
-      field('left', $.left_hand_side),
+      field('left', $._left_hand_side),
       'in',
-      field('right', $.expression_list),
+      field('right', $._expression_or_expression_list),
       ':',
       field('body', $._suite),
       field('alternative', optional($.else_clause))
@@ -496,8 +502,17 @@ module.exports = grammar({
     ),
 
     expression_list: $ => prec.right(seq(
-      commaSep1($.expression),
-      optional(',')
+      $.expression,
+      choice(
+        ',',
+        seq(
+          repeat1(seq(
+            ',',
+            $.expression
+          )),
+          optional(',')
+        ),
+      )
     )),
 
     dotted_name: $ => sep1($.identifier, '.'),
@@ -628,7 +643,7 @@ module.exports = grammar({
     ),
 
     assignment: $ => seq(
-      field('left', $.left_hand_side),
+      field('left', $._left_hand_side),
       choice(
         seq('=', field('right', $._right_hand_side)),
         seq(':', field('type', $.type)),
@@ -637,7 +652,7 @@ module.exports = grammar({
     ),
 
     augmented_assignment: $ => seq(
-      field('left', $.left_hand_side),
+      field('left', $._left_hand_side),
       field('operator', choice(
         '+=', '-=', '*=', '/=', '@=', '//=', '%=', '**=',
         '>>=', '<<=', '&=', '^=', '|='
@@ -645,25 +660,43 @@ module.exports = grammar({
       field('right', $._right_hand_side)
     ),
 
-    left_hand_side: $ => $._patterns,
+    _left_hand_side: $ => choice(
+      $.pattern,
+      $.pattern_list
+    ),
+
+    pattern_list: $ => seq(
+      $.pattern,
+      choice(
+        ',',
+        seq(
+          repeat1(seq(
+            ',',
+            $.pattern
+          )),
+          optional(',')
+        )
+      )
+    ),
 
     _right_hand_side: $ => choice(
+      $.expression,
       $.expression_list,
       $.assignment,
       $.augmented_assignment,
       $.yield
     ),
 
-    yield: $ => seq(
+    yield: $ => prec.right(seq(
       'yield',
       choice(
         seq(
           'from',
           $.expression
         ),
-        optional($.expression_list)
+        optional($._expression_or_expression_list)
       )
-    ),
+    )),
 
     attribute: $ => prec(PREC.call, seq(
       field('object', $.primary_expression),
@@ -800,7 +833,7 @@ module.exports = grammar({
     for_in_clause: $ => seq(
       optional('async'),
       'for',
-      field('left', $.left_hand_side),
+      field('left', $._left_hand_side),
       'in',
       field('right', commaSep1($._expression_within_for_in_clause)),
       optional(',')
