@@ -573,12 +573,12 @@ module.exports = grammar({
     boolean_operator: $ => choice(
       prec.left(PREC.and, seq(
         field('left', $.expression),
-        field('operator', 'and'),
+        'and',
         field('right', $.expression)
       )),
       prec.left(PREC.or, seq(
         field('left', $.expression),
-        field('operator', 'or'),
+        'or',
         field('right', $.expression)
       ))
     ),
@@ -602,13 +602,13 @@ module.exports = grammar({
 
       return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
         field('left', $.primary_expression),
-        field('operator', operator),
+        operator,
         field('right', $.primary_expression)
       ))));
     },
 
     unary_operator: $ => prec(PREC.unary, seq(
-      field('operator', choice('+', '-', '~')),
+      choice('+', '-', '~'),
       field('argument', $.primary_expression)
     )),
 
@@ -657,10 +657,10 @@ module.exports = grammar({
 
     augmented_assignment: $ => seq(
       field('left', $._left_hand_side),
-      field('operator', choice(
+      choice(
         '+=', '-=', '*=', '/=', '@=', '//=', '%=', '**=',
         '>>=', '<<=', '&=', '^=', '|='
-      )),
+      ),
       field('right', $._right_hand_side)
     ),
 
