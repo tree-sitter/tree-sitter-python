@@ -369,8 +369,8 @@ List comprehensions
     (list_comprehension
       (identifier)
       (for_in_clause (identifier)
-        (lambda (true))
-        (lambda (false)))
+        (lambda_expression (true))
+        (lambda_expression (false)))
       (if_clause (call (identifier) (argument_list))))))
 
 =====================================

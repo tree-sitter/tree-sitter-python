@@ -124,7 +124,7 @@
         "named": true
       },
       {
-        "type": "lambda",
+        "type": "lambda_expression",
         "named": true
       },
       {
@@ -414,7 +414,7 @@
             "named": true
           },
           {
-            "type": "yield",
+            "type": "yield_expression",
             "named": true
           }
         ]
@@ -475,64 +475,6 @@
           }
         ]
       },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "%=",
-            "named": false
-          },
-          {
-            "type": "&=",
-            "named": false
-          },
-          {
-            "type": "**=",
-            "named": false
-          },
-          {
-            "type": "*=",
-            "named": false
-          },
-          {
-            "type": "+=",
-            "named": false
-          },
-          {
-            "type": "-=",
-            "named": false
-          },
-          {
-            "type": "//=",
-            "named": false
-          },
-          {
-            "type": "/=",
-            "named": false
-          },
-          {
-            "type": "<<=",
-            "named": false
-          },
-          {
-            "type": ">>=",
-            "named": false
-          },
-          {
-            "type": "@=",
-            "named": false
-          },
-          {
-            "type": "^=",
-            "named": false
-          },
-          {
-            "type": "|=",
-            "named": false
-          }
-        ]
-      },
       "right": {
         "multiple": false,
         "required": true,
@@ -554,7 +496,7 @@
             "named": true
           },
           {
-            "type": "yield",
+            "type": "yield_expression",
             "named": true
           }
         ]
@@ -587,64 +529,6 @@
           {
             "type": "primary_expression",
             "named": true
-          }
-        ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "%",
-            "named": false
-          },
-          {
-            "type": "&",
-            "named": false
-          },
-          {
-            "type": "*",
-            "named": false
-          },
-          {
-            "type": "**",
-            "named": false
-          },
-          {
-            "type": "+",
-            "named": false
-          },
-          {
-            "type": "-",
-            "named": false
-          },
-          {
-            "type": "/",
-            "named": false
-          },
-          {
-            "type": "//",
-            "named": false
-          },
-          {
-            "type": "<<",
-            "named": false
-          },
-          {
-            "type": ">>",
-            "named": false
-          },
-          {
-            "type": "@",
-            "named": false
-          },
-          {
-            "type": "^",
-            "named": false
-          },
-          {
-            "type": "|",
-            "named": false
           }
         ]
       },
@@ -690,20 +574,6 @@
           {
             "type": "expression",
             "named": true
-          }
-        ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "and",
-            "named": false
-          },
-          {
-            "type": "or",
-            "named": false
           }
         ]
       },
@@ -1181,7 +1051,7 @@
           "named": true
         },
         {
-          "type": "yield",
+          "type": "yield_expression",
           "named": true
         }
       ]
@@ -1605,7 +1475,7 @@
     }
   },
   {
-    "type": "lambda",
+    "type": "lambda_expression",
     "named": true,
     "fields": {
       "body": {
@@ -1666,7 +1536,7 @@
           "named": true
         },
         {
-          "type": "yield",
+          "type": "yield_expression",
           "named": true
         }
       ]
@@ -1893,7 +1763,7 @@
           "named": true
         },
         {
-          "type": "yield",
+          "type": "yield_expression",
           "named": true
         }
       ]
@@ -2053,7 +1923,7 @@
           "named": true
         },
         {
-          "type": "yield",
+          "type": "yield_expression",
           "named": true
         }
       ]
@@ -2208,7 +2078,7 @@
           "named": true
         },
         {
-          "type": "yield",
+          "type": "yield_expression",
           "named": true
         }
       ]
@@ -2327,24 +2197,6 @@
             "named": true
           }
         ]
-      },
-      "operator": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "+",
-            "named": false
-          },
-          {
-            "type": "-",
-            "named": false
-          },
-          {
-            "type": "~",
-            "named": false
-          }
-        ]
       }
     }
   },
@@ -2442,7 +2294,7 @@
     }
   },
   {
-    "type": "yield",
+    "type": "yield_expression",
     "named": true,
     "fields": {},
     "children": {

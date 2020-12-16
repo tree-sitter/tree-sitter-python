@@ -608,17 +608,17 @@ def example():
 
 (module
   (function_definition (identifier) (parameters) (block
-    (expression_statement (yield))
-    (expression_statement (yield (integer)))
+    (expression_statement (yield_expression))
+    (expression_statement (yield_expression (integer)))
     (expression_statement
       (assignment
         (identifier)
-        (yield (integer))))
-    (expression_statement (yield (identifier)))
+        (yield_expression (integer))))
+    (expression_statement (yield_expression (identifier)))
     (expression_statement
-      (yield
+      (yield_expression
         (parenthesized_expression
-          (yield
+          (yield_expression
             (generator_expression
               (identifier)
               (for_in_clause
@@ -638,7 +638,7 @@ lambda (a, b): (a, b)
 
 (module
   (expression_statement
-    (lambda
+    (lambda_expression
       (lambda_parameters
         (identifier)
         (identifier))
@@ -647,9 +647,9 @@ lambda (a, b): (a, b)
         (argument_list
           (binary_operator (string) (identifier))))))
   (expression_statement
-    (lambda (true)))
+    (lambda_expression (true)))
   (expression_statement
-    (lambda
+    (lambda_expression
       (lambda_parameters
         (identifier)
         (default_parameter (identifier) (identifier))
@@ -657,7 +657,7 @@ lambda (a, b): (a, b)
         (dictionary_splat_pattern (identifier)))
       (identifier)))
   (expression_statement
-    (lambda
+    (lambda_expression
       (lambda_parameters (tuple_pattern (identifier) (identifier)))
       (tuple (identifier) (identifier)))))
 
@@ -685,7 +685,7 @@ Tuples with yield
   (expression_statement
     (tuple
       (identifier)
-      (yield (expression_list (identifier) (identifier) (identifier))))))
+      (yield_expression (expression_list (identifier) (identifier) (identifier))))))
 
 =====================================
 Conditional if expressions
