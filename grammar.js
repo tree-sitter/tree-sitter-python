@@ -185,7 +185,7 @@ module.exports = grammar({
       seq(commaSep1($.expression), optional(',')),
       $.assignment,
       $.augmented_assignment,
-      $.yield
+      $.yield_expression
     ),
 
     named_expression: $ => seq(
@@ -524,7 +524,7 @@ module.exports = grammar({
 
     _expression_within_for_in_clause: $ => choice(
       $.expression,
-      alias($.lambda_within_for_in_clause, $.lambda)
+      alias($.lambda_within_for_in_clause, $.lambda_expression)
     ),
 
     expression: $ => choice(
@@ -532,7 +532,7 @@ module.exports = grammar({
       $.not_operator,
       $.boolean_operator,
       $.await,
-      $.lambda,
+      $.lambda_expression,
       $.primary_expression,
       $.conditional_expression,
       $.named_expression
@@ -632,7 +632,7 @@ module.exports = grammar({
       ))
     )),
 
-    lambda: $ => prec(PREC.lambda, seq(
+    lambda_expression: $ => prec(PREC.lambda, seq(
       'lambda',
       field('parameters', optional($.lambda_parameters)),
       ':',
@@ -688,10 +688,10 @@ module.exports = grammar({
       $.expression_list,
       $.assignment,
       $.augmented_assignment,
-      $.yield
+      $.yield_expression
     ),
 
-    yield: $ => prec.right(seq(
+    yield_expression: $ => prec.right(seq(
       'yield',
       choice(
         seq(
@@ -822,13 +822,13 @@ module.exports = grammar({
 
     parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
       '(',
-      choice($.expression, $.yield),
+      choice($.expression, $.yield_expression),
       ')'
     )),
 
     _collection_elements: $ => seq(
       commaSep1(choice(
-        $.expression, $.yield, $.list_splat, $.parenthesized_list_splat
+        $.expression, $.yield_expression, $.list_splat, $.parenthesized_list_splat
       )),
       optional(',')
     ),
