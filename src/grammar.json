@@ -2028,13 +2028,12 @@
           "name": "tuple_pattern"
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "STRING",
-            "value": "*"
-          },
-          "named": true,
-          "value": "list_splat_pattern"
+          "type": "SYMBOL",
+          "name": "keyword_separator"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "positional_separator"
         },
         {
           "type": "SYMBOL",
@@ -4872,6 +4871,14 @@
     "_semicolon": {
       "type": "STRING",
       "value": ";"
+    },
+    "positional_separator": {
+      "type": "STRING",
+      "value": "/"
+    },
+    "keyword_separator": {
+      "type": "STRING",
+      "value": "*"
     }
   },
   "extras": [
