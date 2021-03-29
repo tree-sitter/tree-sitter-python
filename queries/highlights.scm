@@ -84,14 +84,14 @@
   ">>"
   "|"
   "~"
+] @operator
+
+[
   "and"
   "in"
   "is"
   "not"
   "or"
-] @operator
-
-[
   "as"
   "assert"
   "async"
