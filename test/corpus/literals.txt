@@ -182,6 +182,8 @@ Format strings with format specifiers
 f"a {b:2} {c:34.5}"
 f"{b:{c.d}.{d.e}}"
 f"{a:#06x}"
+f"{a=}"
+f"{a=:.2f}"
 
 ---
 
@@ -197,6 +199,11 @@ f"{a:#06x}"
         (format_specifier
           (format_expression (attribute (identifier) (identifier)))
           (format_expression (attribute (identifier) (identifier)))))))
+  (expression_statement
+    (string
+      (interpolation (identifier) (format_specifier))))
+  (expression_statement
+    (string (interpolation (identifier))))
   (expression_statement
     (string
       (interpolation (identifier) (format_specifier)))))
