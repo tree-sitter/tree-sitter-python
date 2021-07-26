@@ -865,7 +865,10 @@ module.exports = grammar({
 
     string: $ => seq(
       alias($._string_start, '"'),
-      repeat(choice($.interpolation, $._escape_interpolation, $.escape_sequence, $._not_escape_sequence, $._string_content)),
+      alias(
+        repeat(choice($.interpolation, $._escape_interpolation, $.escape_sequence, $._not_escape_sequence, $._string_content)),
+        'string_content',
+      ),
       alias($._string_end, '"')
     ),
 

@@ -2143,6 +2143,11 @@
   {
     "type": "string",
     "named": true,
+    "fields": {}
+  },
+  {
+    "type": "string_content",
+    "named": false,
     "fields": {},
     "children": {
       "multiple": true,
