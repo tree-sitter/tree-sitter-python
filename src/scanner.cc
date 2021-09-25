@@ -194,6 +194,10 @@ struct Scanner {
                 }
                 return true;
               }
+            } else {
+              lexer->mark_end(lexer);
+              lexer->result_symbol = STRING_CONTENT;
+              return true;
             }
           } else {
             if (has_content) {

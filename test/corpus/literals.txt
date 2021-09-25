@@ -160,6 +160,7 @@ Format strings
 
 # nested!
 f"a {b(f'c {e} d')} e"
+f"""a"{b}c"""
 f"a {{}} e"
 f"a {b}}}"
 f"a {{{b}"
@@ -179,6 +180,10 @@ f"a {{{b}}}"
             (string
               (interpolation
                 (identifier))))))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier))))
   (expression_statement
     (string))
   (expression_statement
