@@ -13,7 +13,6 @@ function checkout() {
 
   pushd "$repo"
   git fetch && git reset --hard "$sha"
-  rm -rf .git
   popd
 }
 
