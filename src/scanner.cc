@@ -193,6 +193,10 @@ struct Scanner {
                   lexer->result_symbol = STRING_END;
                 }
                 return true;
+              } else {
+                lexer->mark_end(lexer);
+                lexer->result_symbol = STRING_CONTENT;
+                return true;
               }
             } else {
               lexer->mark_end(lexer);
