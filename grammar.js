@@ -29,7 +29,8 @@ module.exports = grammar({
 
   extras: $ => [
     $.comment,
-    /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/
+    $._newline_escape,
+    /[\s\f\uFEFF\u2060\u200B]/
   ],
 
   conflicts: $ => [
@@ -966,6 +967,7 @@ module.exports = grammar({
     )),
 
     comment: $ => token(seq('#', /.*/)),
+    _newline_escape: $ => seq('\\', /\r?\n/),
   }
 })
 

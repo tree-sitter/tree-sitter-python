@@ -4882,6 +4882,19 @@
           }
         ]
       }
+    },
+    "_newline_escape": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "\\"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\r?\\n"
+        }
+      ]
     }
   },
   "extras": [
@@ -4890,8 +4903,12 @@
       "name": "comment"
     },
     {
+      "type": "SYMBOL",
+      "name": "_newline_escape"
+    },
+    {
       "type": "PATTERN",
-      "value": "[\\s\\f\\uFEFF\\u2060\\u200B]|\\\\\\r?\\n"
+      "value": "[\\s\\f\\uFEFF\\u2060\\u200B]"
     }
   ],
   "conflicts": [
