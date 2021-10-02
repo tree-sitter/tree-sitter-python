@@ -4,6 +4,11 @@
 #include <cstring>
 #include <cassert>
 #include <stdio.h>
+
+#ifndef UINT8_MAX
+#define UINT8_MAX 255
+#endif
+
 namespace {
 
 using std::vector;
