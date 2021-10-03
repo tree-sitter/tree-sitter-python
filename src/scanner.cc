@@ -1,3 +1,4 @@
+#define __STDC_LIMIT_MACROS
 #include <tree_sitter/parser.h>
 #include <vector>
 #include <cwctype>
