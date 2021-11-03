@@ -78,12 +78,8 @@ module.exports = grammar({
     // Simple statements
 
     _simple_statements: $ => seq(
-      $._simple_statement,
-      optional(repeat(seq(
-        $._semicolon,
-        $._simple_statement
-      ))),
-      optional($._semicolon),
+      sep1($._simple_statement, ';'),
+      optional(';'),
       $._newline
     ),
 
@@ -968,8 +964,6 @@ module.exports = grammar({
     )),
 
     comment: $ => token(seq('#', /.*/)),
-
-    _semicolon: $ => ';'
   }
 })
 
