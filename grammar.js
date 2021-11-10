@@ -22,6 +22,8 @@ const PREC = {
   call: 20,
 }
 
+const SEMICOLON = ';'
+
 module.exports = grammar({
   name: 'python',
 
@@ -78,8 +80,8 @@ module.exports = grammar({
     // Simple statements
 
     _simple_statements: $ => seq(
-      sep1($._simple_statement, ';'),
-      optional(';'),
+      sep1($._simple_statement, SEMICOLON),
+      optional(SEMICOLON),
       $._newline
     ),
 
