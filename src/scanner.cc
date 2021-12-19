@@ -243,7 +243,11 @@ struct Scanner {
         skip(lexer);
       } else if (lexer->lookahead == '#') {
         if (first_comment_indent_length == -1) {
-          first_comment_indent_length = (int32_t)indent_length;
+          // If we haven't found an EOL yet,
+          // then this is a comment after an expression:
+          //   foo = bar # comment
+          // So it's still under the same indentation level.
+          first_comment_indent_length = found_end_of_line? (int32_t)indent_length : indent_length_stack.back();
         }
         while (lexer->lookahead && lexer->lookahead != '\n') {
           skip(lexer);
