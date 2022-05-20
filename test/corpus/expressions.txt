@@ -503,6 +503,7 @@ Boolean operators
 
 a or b and c
 not d
+not a and b or c
 
 --------------------------------------------------------------------------------
 
@@ -516,6 +517,13 @@ not d
   (expression_statement
     (not_operator
       (identifier))))
+  (expression_statement
+    (boolean_operator
+      (boolean_operator
+        (not_operator
+          (identifier))
+        (identifier))
+      (identifier)))
 
 ================================================================================
 Comparison operators
