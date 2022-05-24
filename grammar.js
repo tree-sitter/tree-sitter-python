@@ -920,6 +920,7 @@ module.exports = grammar({
     escape_sequence: $ => token(prec(1, seq(
       '\\',
       choice(
+        /N\{[a-zA-Z ]+\}/,
         /u[a-fA-F\d]{4}/,
         /U[a-fA-F\d]{8}/,
         /x[a-fA-F\d]{2}/,
