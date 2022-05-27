@@ -7,6 +7,30 @@ Python grammar for [tree-sitter][].
 
 [tree-sitter]: https://github.com/tree-sitter/tree-sitter
 
+### Quickstart
+
+**Install**
+```sh
+npm install
+```
+
+**Build**
+```sh
+npm run build
+```
+
+**Tests**
+```sh
+npm run test
+```
+
+**Explain**
+```sh
+npm run env -- tree-sitter parse path/to/file.py -D
+```
+
+This will produce a file `log.html` which you can open in your browser.
+
 #### References
 
 * [Python 2 Grammar](https://docs.python.org/2/reference/grammar.html)

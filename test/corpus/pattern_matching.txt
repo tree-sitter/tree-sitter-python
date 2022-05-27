@@ -545,6 +545,9 @@ Walrus match (Issue #150)
 ================================================================================
 if match := re.fullmatch(r"(-)?(\d+:)?\d?\d:\d\d(\.\d*)?", time, flags=re.ASCII):
     return 42
+
+if x := 5:
+    f"{x := 5}"
 --------------------------------------------------------------------------------
 
 (module
@@ -565,4 +568,14 @@ if match := re.fullmatch(r"(-)?(\d+:)?\d?\d:\d\d(\.\d*)?", time, flags=re.ASCII)
               (identifier))))))
     (block
       (return_statement
-        (integer)))))
+        (integer))))
+  (if_statement
+    (named_expression
+      (identifier)
+      (integer))
+    (block
+      (expression_statement
+        (string
+          (interpolation
+            (identifier)
+            (format_specifier)))))))
