@@ -1,4 +1,5 @@
 const PREC = {
+  named_expression: -3,
   // this resolves a conflict between the usage of ':' in a lambda vs in a
   // typed parameter. In the case of a lambda, we don't allow typed parameters.
   lambda: -2,
@@ -7,19 +8,19 @@ const PREC = {
 
   parenthesized_expression: 1,
   parenthesized_list_splat: 1,
-  or:          10,
-  and:         11,
-  not:         12,
-  compare:     13,
-  bitwise_or:  14,
+  or: 10,
+  and: 11,
+  not: 12,
+  compare: 13,
+  bitwise_or: 14,
   bitwise_and: 15,
-  xor:         16,
-  shift:       17,
-  plus:        18,
-  times:       19,
-  unary:       20,
-  power:       21,
-  call:        22,
+  xor: 16,
+  shift: 17,
+  plus: 18,
+  times: 19,
+  unary: 20,
+  power: 21,
+  call: 22,
 }
 
 const SEMICOLON = ';'
@@ -38,6 +39,7 @@ module.exports = grammar({
     [$.tuple, $.tuple_pattern],
     [$.list, $.list_pattern],
     [$.with_item, $._collection_elements],
+    [$._named_expresssion_lhs, $.pattern],
     [$.named_expression, $.as_pattern],
     [$.match_statement, $.primary_expression],
   ],
@@ -189,11 +191,11 @@ module.exports = grammar({
       $.yield
     ),
 
-    named_expression: $ => seq(
+    named_expression: $ => prec(PREC.named_expression, seq(
       field('name', $._named_expresssion_lhs),
       ':=',
       field('value', $.expression)
-    ),
+    )),
 
     _named_expresssion_lhs: $ => choice(
       $.identifier,
@@ -900,20 +902,89 @@ module.exports = grammar({
       repeat1($.string)
     ),
 
-    string: $ => seq(
+    string: $ => prec(40, seq(
       alias($._string_start, '"'),
-      repeat(choice($.interpolation, $._escape_interpolation, $.escape_sequence, $._not_escape_sequence, $._string_content)),
+      repeat(
+        choice(
+          $.interpolation,
+          $._escape_interpolation,
+          $.escape_sequence,
+          $._not_escape_sequence,
+          $._string_content
+        )
+      ),
       alias($._string_end, '"')
+    )),
+
+    _interpolation_not_operator: $ => prec(PREC.not, seq(
+      'not',
+      field('argument', $._interpolation_expression)
+    )),
+
+    _interpolation_await: $ => prec(PREC.unary, seq(
+      'await',
+      $._interpolation_expression
+    )),
+
+    _interpolation_boolean_operator: $ => choice(
+      prec.left(PREC.and, seq(
+        field('left', $._interpolation_expression),
+        field('operator', 'and'),
+        field('right', $._interpolation_expression)
+      )),
+      prec.left(PREC.or, seq(
+        field('left', $._interpolation_expression),
+        field('operator', 'or'),
+        field('right', $._interpolation_expression)
+      ))
+    ),
+    
+    _interpolation_conditional_expression: $ => prec.right(PREC.conditional, seq(
+      $._interpolation_expression,
+      'if',
+      $._interpolation_expression,
+      'else',
+      $._interpolation_expression
+    )),
+
+    _interpolation_expression: $ => choice(
+      $.comparison_operator,
+      alias($._interpolation_not_operator, $.not_operator),
+      alias($._interpolation_boolean_operator, $.boolean_operator),
+      alias($._interpolation_await, $.await),
+      $.primary_expression,
+      alias($._interpolation_conditional_expression, $.conditional_expression)
     ),
 
     interpolation: $ => seq(
       '{',
-      $.expression,
+      $._interpolation_expression,
       optional('='),
       optional($.type_conversion),
       optional($.format_specifier),
       '}'
     ),
+
+    format_specifier: $ => prec(5, seq(
+      ':',
+      repeat(choice(
+        token(prec(1, /[^{}\n]+/)),
+        $.format_expression,
+      ))
+    )),
+
+    format_expression: $ => seq(
+      '{',
+      $._interpolation_expression,
+      optional('='),
+      optional($.type_conversion),
+      optional(alias($._literal_format_specifier, $.format_specifier)),
+      '}',
+    ),
+
+    _literal_format_specifier: $ => /:(?:[^{}]?[<>=])?[\+\- ]?\d*[_,]?(?:.\d+)?[bcdeEfFgGnosxX%]?/,
+
+    type_conversion: $ => /![a-z]/,
 
     _escape_interpolation: $ => choice('{{', '}}'),
 
@@ -931,18 +1002,6 @@ module.exports = grammar({
     ))),
 
     _not_escape_sequence: $ => '\\',
-
-    format_specifier: $ => seq(
-      ':',
-      repeat(choice(
-        token(prec(1, /[^{}\n]+/)),
-        $.format_expression
-      ))
-    ),
-
-    format_expression: $ => seq('{', $.expression, '}'),
-
-    type_conversion: $ => /![a-z]/,
 
     integer: $ => token(choice(
       seq(
