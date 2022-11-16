@@ -60,6 +60,19 @@ module.exports = grammar({
     $._string_start,
     $._string_content,
     $._string_end,
+
+    // Mark comments as external tokens so that the external scanner is always
+    // invoked, even if no external token is expected. This allows for better
+    // error recovery, because the external scanner can maintain the overall
+    // structure by returning dedent tokens whenever a dedent occurs, even
+    // if no dedent is expected.
+    $.comment,
+
+    // Allow the external scanner to check for the validity of closing brackets
+    // so that it can avoid returning dedent tokens between brackets.
+    ']',
+    ')',
+    '}',
   ],
 
   inline: $ => [
@@ -313,6 +326,11 @@ module.exports = grammar({
           optional($.else_clause),
           optional($.finally_clause)
         ),
+        seq(
+          repeat1($.except_group_clause),
+          optional($.else_clause),
+          optional($.finally_clause)
+        ),
         $.finally_clause
       )
     ),
@@ -330,7 +348,20 @@ module.exports = grammar({
       $._suite
     ),
 
-    finally_clause: $ => seq(
+   except_group_clause: $ => seq(
+      'except*',
+      seq(
+        $.expression,
+        optional(seq(
+          'as',
+          $.expression
+        ))
+      ),
+      ':',
+      $._suite
+    ),
+
+   finally_clause: $ => seq(
       'finally',
       ':',
       $._suite

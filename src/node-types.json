@@ -1257,6 +1257,25 @@
     }
   },
   {
+    "type": "except_group_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "exec_statement",
     "named": true,
     "fields": {
@@ -2402,6 +2421,10 @@
           "named": true
         },
         {
+          "type": "except_group_clause",
+          "named": true
+        },
+        {
           "type": "finally_clause",
           "named": true
         }
@@ -2928,6 +2951,10 @@
   },
   {
     "type": "except",
+    "named": false
+  },
+  {
+    "type": "except*",
     "named": false
   },
   {
