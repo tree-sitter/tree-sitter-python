@@ -251,6 +251,8 @@ Return statements
 return
 return a + b, c
 return not b
+return *d
+return e,
 
 --------------------------------------------------------------------------------
 
@@ -264,6 +266,12 @@ return not b
       (identifier)))
   (return_statement
     (not_operator
+      (identifier)))
+  (return_statement
+    (ERROR)
+    (identifier))
+  (return_statement
+    (expression_list
       (identifier))))
 
 ================================================================================
