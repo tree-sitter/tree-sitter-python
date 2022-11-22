@@ -238,6 +238,8 @@ f"a {b}}}"
 f"a {{{b}"
 f"a {{b}}"
 f"a {{{b}}}"
+f"{c,}"
+f"{yield d}
 
 --------------------------------------------------------------------------------
 
@@ -275,6 +277,16 @@ f"a {{{b}}}"
   (expression_statement
     (string
       (interpolation
+        (identifier))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier)
+        (ERROR))))
+  (ERROR
+    (interpolation
+      (identifier)
+      (ERROR
         (identifier)))))
 
 ================================================================================
