@@ -1008,6 +1008,10 @@ class C:
   async def f():
     g
 
+@False or True
+def h():
+  pass
+
 --------------------------------------------------------------------------------
 
 (module
@@ -1049,7 +1053,17 @@ class C:
             (parameters)
             (block
               (expression_statement
-                (identifier)))))))))
+                (identifier))))))))
+      (decorated_definition
+        (decorator
+          (ERROR
+            (false))
+          (true))
+        (function_definition
+          (identifier)
+          (parameters)
+          (block
+            (pass_statement)))))
 
 ================================================================================
 Raise statements
