@@ -244,7 +244,7 @@ f"a {{{b}"
 f"a {{b}}"
 f"a {{{b}}}"
 f"{c,}"
-f"{yield d}
+f"{yield d}"
 
 --------------------------------------------------------------------------------
 
@@ -288,11 +288,12 @@ f"{yield d}
       (interpolation
         (identifier)
         (ERROR))))
-  (ERROR
-    (interpolation
-      (identifier)
-      (ERROR
-        (identifier)))))
+  (expression_statement
+    (string
+      (interpolation
+        (identifier)
+        (ERROR
+          (identifier))))))
 
 ================================================================================
 Format strings with format specifiers
