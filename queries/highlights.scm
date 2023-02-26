@@ -28,9 +28,20 @@
 (function_definition
   name: (identifier) @function)
 
+(function_definition 
+    body: (block . (expression_statement (string) @function.docstring))
+)
+
 (identifier) @variable
 (attribute attribute: (identifier) @property)
 (type (identifier) @type)
+
+
+; Class definitions
+
+(class_definition 
+    body: (block . (expression_statement (string) @class.docstring))
+)
 
 ; Literals
 
