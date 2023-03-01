@@ -972,6 +972,7 @@ module.exports = grammar({
         /\d{3}/,
         /\r?\n/,
         /['"abfrntv\\]/,
+        /N\{[^}]+\}/,
       )
     ))),
 
