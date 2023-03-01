@@ -253,6 +253,7 @@ f"a {{b}}"
 f"a {{{b}}}"
 f"{c,}"
 f"{yield d}"
+f"\N{GREEK CAPITAL LETTER DELTA}"
 
 --------------------------------------------------------------------------------
 
@@ -312,7 +313,11 @@ f"{yield d}"
     (string
       (interpolation
         (yield
-          (identifier))))))
+          (identifier)))))
+  (expression_statement
+    (string
+      (string_content
+        (escape_sequence)))))
 
 ================================================================================
 Format strings with format specifiers
@@ -377,6 +382,7 @@ Unicode escape sequences
 ================================================================================
 
 "\x12 \123 \u1234"
+"\N{GREEK CAPITAL LETTER DELTA}"
 
 --------------------------------------------------------------------------------
 
@@ -385,7 +391,10 @@ Unicode escape sequences
     (string (string_content
       (escape_sequence)
       (escape_sequence)
-      (escape_sequence)))))
+      (escape_sequence))))
+  (expression_statement
+        (string (string_content
+          (escape_sequence)))))
 
 ================================================================================
 Other primitives
