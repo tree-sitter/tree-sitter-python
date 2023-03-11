@@ -930,12 +930,12 @@ module.exports = grammar({
     ),
 
     string: $ => seq(
-      field('prefix', alias($._string_start, '"')),
+      field('open', alias($._string_start, '"')),
       repeat(choice(
-        field('interpolation', $.interpolation),
-        field('string_content', $.string_content)
+        field('nested', $.interpolation),
+        field('value', $.string_content),
       )),
-      field('suffix', alias($._string_end, '"'))
+      field('close', alias($._string_end, '"'))
     ),
 
     string_content: $ => prec.right(0, repeat1(

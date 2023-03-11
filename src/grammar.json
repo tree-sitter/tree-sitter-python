@@ -4596,7 +4596,7 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "prefix",
+          "name": "open",
           "content": {
             "type": "ALIAS",
             "content": {
@@ -4614,7 +4614,7 @@
             "members": [
               {
                 "type": "FIELD",
-                "name": "interpolation",
+                "name": "nested",
                 "content": {
                   "type": "SYMBOL",
                   "name": "interpolation"
@@ -4622,7 +4622,7 @@
               },
               {
                 "type": "FIELD",
-                "name": "string_content",
+                "name": "value",
                 "content": {
                   "type": "SYMBOL",
                   "name": "string_content"
@@ -4633,7 +4633,7 @@
         },
         {
           "type": "FIELD",
-          "name": "suffix",
+          "name": "close",
           "content": {
             "type": "ALIAS",
             "content": {

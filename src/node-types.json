@@ -2354,7 +2354,17 @@
     "type": "string",
     "named": true,
     "fields": {
-      "interpolation": {
+      "close": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "\"",
+            "named": false
+          }
+        ]
+      },
+      "nested": {
         "multiple": true,
         "required": false,
         "types": [
@@ -2364,7 +2374,7 @@
           }
         ]
       },
-      "prefix": {
+      "open": {
         "multiple": false,
         "required": true,
         "types": [
@@ -2374,23 +2384,13 @@
           }
         ]
       },
-      "string_content": {
+      "value": {
         "multiple": true,
         "required": false,
         "types": [
           {
             "type": "string_content",
             "named": true
-          }
-        ]
-      },
-      "suffix": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "\"",
-            "named": false
           }
         ]
       }
