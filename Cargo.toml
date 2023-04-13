@@ -25,7 +25,14 @@ include = [
 path = "bindings/rust/lib.rs"
 
 [dependencies]
-tree-sitter = ">= 0.19, < 0.21"
+tree-sitter = { version = ">= 0.19, < 0.21", optional = true }
+tree-sitter-c2rust = { version = ">= 0.19, < 0.21", optional = true }
+bytemuck = { version = "1.13", features = ["derive"] }
 
 [build-dependencies]
 cc = "1.0"
+
+[features]
+default = ["native"]
+native = ["dep:tree-sitter"]
+wasm = ["dep:tree-sitter-c2rust"]

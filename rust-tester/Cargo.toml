@@ -1,0 +1,18 @@
+[package]
+name = "tree-sitter-python-tests"
+version = "0.20.2"
+edition = "2021"
+
+[dependencies]
+tree-sitter = ">= 0.19, < 0.21"
+tree-sitter-python = { path = "../" }
+
+ansi_term = "0.12.1"
+anyhow = "1.0.69"
+difference = "2.0.0"
+lazy_static = "1.4.0"
+regex = "1.7.1"
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
