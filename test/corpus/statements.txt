@@ -161,8 +161,8 @@ print >> a, "b", "c"
   (print_statement
     (chevron
       (identifier))
-    (string)
-    (string)))
+    (string (string_content))
+    (string (string_content))))
 
 ================================================================================
 Assert statements
@@ -583,6 +583,9 @@ with (open('d') as d,
       open('e') as e):
   f
 
+with e as f, g as h,:
+  i
+
 --------------------------------------------------------------------------------
 
 (module
@@ -599,21 +602,36 @@ with (open('d') as d,
   (with_statement
     (with_clause
       (with_item
-        (tuple
-          (as_pattern
-            (call
-              (identifier)
-              (argument_list
-                (string)))
-            (as_pattern_target
-              (identifier)))
-          (as_pattern
-            (call
-              (identifier)
-              (argument_list
-                (string)))
-            (as_pattern_target
-              (identifier))))))
+        (as_pattern
+          (call
+            (identifier)
+            (argument_list
+              (string (string_content))))
+          (as_pattern_target
+            (identifier))))
+      (with_item
+        (as_pattern
+          (call
+            (identifier)
+            (argument_list
+              (string (string_content))))
+          (as_pattern_target
+            (identifier)))))
+    (block
+      (expression_statement
+        (identifier))))
+  (with_statement
+    (with_clause
+      (with_item
+        (as_pattern
+          (identifier)
+          (as_pattern_target
+            (identifier))))
+      (with_item
+        (as_pattern
+          (identifier)
+          (as_pattern_target
+            (identifier)))))
     (block
       (expression_statement
         (identifier)))))
@@ -742,7 +760,7 @@ async def d(a:str="default", b=c) -> None:
         name: (identifier)
         type: (type
           (identifier))
-        value: (string))
+        value: (string string_content: (string_content)))
       (default_parameter
         name: (identifier)
         value: (identifier)))
@@ -1000,6 +1018,10 @@ class C:
   async def f():
     g
 
+@buttons[0].clicked.connect
+def spam():
+    ...
+
 --------------------------------------------------------------------------------
 
 (module
@@ -1041,7 +1063,23 @@ class C:
             (parameters)
             (block
               (expression_statement
-                (identifier)))))))))
+                (identifier))))))))
+  (decorated_definition
+    (decorator
+      (attribute
+        (attribute
+          (subscript
+            (identifier)
+            (integer))
+          (identifier))
+        (identifier)))
+    (function_definition
+      (identifier)
+      (parameters)
+      (block
+        (expression_statement
+          (ellipsis))))))
+
 
 ================================================================================
 Raise statements
@@ -1059,12 +1097,12 @@ raise RunTimeError('NO') from e
     (call
       (identifier)
       (argument_list
-        (string))))
+        (string (string_content)))))
   (raise_statement
     (call
       (identifier)
       (argument_list
-        (string)))
+        (string (string_content))))
     (identifier)))
 
 ================================================================================
@@ -1182,7 +1220,7 @@ print "a"
 
 (module
   (print_statement
-    (string))
+    (string (string_content)))
   (comment))
 
 ================================================================================
@@ -1213,12 +1251,12 @@ exec 'x+=1' in a, b
 
 (module
   (exec_statement
-    (string))
+    (string (string_content)))
   (exec_statement
-    (string)
+    (string (string_content))
     (none))
   (exec_statement
-    (string)
+    (string (string_content))
     (identifier)
     (identifier)))
 
@@ -1285,11 +1323,11 @@ or len("aa")
       (call
         (identifier)
         (argument_list
-          (string)))
+          (string (string_content))))
       (call
         (identifier)
         (argument_list
-          (string))))))
+          (string (string_content)))))))
 
 ================================================================================
 Statements with semicolons
