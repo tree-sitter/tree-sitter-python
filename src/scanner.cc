@@ -4,6 +4,8 @@
 #include <cstring>
 #include <cassert>
 #include <stdio.h>
+#include <stdint.h>
+
 namespace {
 
 using std::vector;
