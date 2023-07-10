@@ -5,10 +5,3 @@ build
 *.log
 /examples/*/
 /target/
-*.a
-*.dylib
-*.so
-*.o
-bindings/c/*.h
-bindings/c/*.pc
-.build/
