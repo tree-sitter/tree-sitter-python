@@ -294,10 +294,10 @@ module.exports = grammar({
       commaSep1(field('subject', $.expression)),
       optional(','),
       ':',
-      field('body', alias($._match_block, $.block)),
+      field('body', $.case_block),
     ),
 
-    _match_block: $ => choice(
+    case_block: $ => choice(
       seq(
         $._indent,
         repeat(field('alternative', $.case_clause)),

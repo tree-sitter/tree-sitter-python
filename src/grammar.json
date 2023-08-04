@@ -962,18 +962,13 @@
           "type": "FIELD",
           "name": "body",
           "content": {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_match_block"
-            },
-            "named": true,
-            "value": "block"
+            "type": "SYMBOL",
+            "name": "case_block"
           }
         }
       ]
     },
-    "_match_block": {
+    "case_block": {
       "type": "CHOICE",
       "members": [
         {

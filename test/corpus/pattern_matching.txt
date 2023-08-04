@@ -22,7 +22,7 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (list
@@ -111,7 +111,7 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (list
@@ -156,7 +156,7 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
-    (block
+    (case_block
       (comment)
       (case_clause
         (case_pattern
@@ -168,7 +168,7 @@ match command.split():
         (block
           (expression_statement
             (ellipsis))
-            (comment)))
+          (comment)))
       (case_clause
         (case_pattern
           (list
@@ -224,7 +224,7 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (binary_operator
@@ -304,7 +304,7 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (list
@@ -512,7 +512,7 @@ match 0:
 (module
   (match_statement
     (integer)
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (integer))
@@ -550,7 +550,7 @@ match (0, 1, 2):
       (integer)
       (integer)
       (integer))
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (integer))
@@ -584,7 +584,7 @@ match x,:
 (module
   (match_statement
     (identifier)
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (list_splat
@@ -609,7 +609,7 @@ match ..., ...:
   (match_statement
     (ellipsis)
     (ellipsis)
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (identifier))
@@ -639,7 +639,7 @@ match match:
         (integer))))
   (match_statement
     (identifier)
-    (block
+    (case_block
       (case_clause
         (case_pattern
           (identifier))

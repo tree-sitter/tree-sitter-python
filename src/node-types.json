@@ -717,18 +717,7 @@
   {
     "type": "block",
     "named": true,
-    "fields": {
-      "alternative": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "case_clause",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": false,
@@ -813,6 +802,22 @@
         "types": [
           {
             "type": "primary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "case_block",
+    "named": true,
+    "fields": {
+      "alternative": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "case_clause",
             "named": true
           }
         ]
@@ -2007,7 +2012,7 @@
         "required": true,
         "types": [
           {
-            "type": "block",
+            "type": "case_block",
             "named": true
           }
         ]
