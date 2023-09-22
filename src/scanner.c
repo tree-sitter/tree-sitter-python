@@ -295,6 +295,7 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
     lexer->mark_end(lexer);
 
     bool found_end_of_line = false;
+    uint16_t current_indent_length = VEC_BACK(scanner->indents);
     uint32_t indent_length = 0;
     int32_t first_comment_indent_length = -1;
     for (;;) {
@@ -311,18 +312,21 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
         } else if (lexer->lookahead == '\t') {
             indent_length += 8;
             skip(lexer);
-        } else if (lexer->lookahead == '#' &&
-                   (valid_symbols[INDENT] || valid_symbols[DEDENT] ||
-                    valid_symbols[NEWLINE])) {
+        } else if (lexer->lookahead == '#') {
             // If we haven't found an EOL yet,
             // then this is a comment after an expression:
             //   foo = bar # comment
             // Just return, since we don't want to generate an indent/dedent
             // token.
-            if (!found_end_of_line) {
+            if (!found_end_of_line ||
+                !(valid_symbols[INDENT] || valid_symbols[DEDENT] ||
+                valid_symbols[NEWLINE])) {
                 return false;
             }
             if (first_comment_indent_length == -1) {
+                if (current_indent_length == indent_length) {
+                  return false;
+                }
                 first_comment_indent_length = (int32_t)indent_length;
             }
             while (lexer->lookahead && lexer->lookahead != '\n') {
@@ -351,8 +355,6 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
 
     if (found_end_of_line) {
         if (scanner->indents.len > 0) {
-            uint16_t current_indent_length = VEC_BACK(scanner->indents);
-
             if (valid_symbols[INDENT] &&
                 indent_length > current_indent_length) {
                 VEC_PUSH(scanner->indents, indent_length);

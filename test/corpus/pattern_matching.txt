@@ -168,8 +168,8 @@ match command.split():
         (identifier)
         (identifier))
       (argument_list))
+    (comment)
     (block
-      (comment)
       (case_clause
         (case_pattern
           (list_pattern
