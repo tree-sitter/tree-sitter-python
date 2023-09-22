@@ -157,6 +157,7 @@ static delimiter_vec delimiter_vec_new() {
 typedef struct {
     indent_vec indents;
     delimiter_vec delimiters;
+    int32_t comment_indent_length;
     bool inside_f_string;
 } Scanner;
 
@@ -311,15 +312,18 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
         } else if (lexer->lookahead == '\t') {
             indent_length += 8;
             skip(lexer);
-        } else if (lexer->lookahead == '#' &&
-                   (valid_symbols[INDENT] || valid_symbols[DEDENT] ||
-                    valid_symbols[NEWLINE])) {
+        } else if (lexer->lookahead == '#') {
             // If we haven't found an EOL yet,
             // then this is a comment after an expression:
             //   foo = bar # comment
             // Just return, since we don't want to generate an indent/dedent
             // token.
-            if (!found_end_of_line) {
+            if (!found_end_of_line ||
+                !(valid_symbols[INDENT] || valid_symbols[DEDENT] ||
+                  valid_symbols[NEWLINE]) ||
+                // we already checked this comment for indent/dedent,
+                // don't need to check again
+                (scanner->comment_indent_length == indent_length)) {
                 return false;
             }
             if (first_comment_indent_length == -1) {
@@ -350,6 +354,13 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
     }
 
     if (found_end_of_line) {
+        if (valid_symbols[INDENT] || valid_symbols[DEDENT]) {
+            // record that we've already checked for indent/dedent
+            // and don't need to check similar lines
+            // FIXME: the Scanner state doesn't get saved if no token is emitted
+            scanner->comment_indent_length = first_comment_indent_length;
+        }
+
         if (scanner->indents.len > 0) {
             uint16_t current_indent_length = VEC_BACK(scanner->indents);
 
@@ -456,6 +467,8 @@ unsigned tree_sitter_python_external_scanner_serialize(void *payload,
     size_t size = 0;
 
     buffer[size++] = (char)scanner->inside_f_string;
+    *(int32_t *)(buffer + size) = scanner->comment_indent_length;
+    size += sizeof(int32_t);
 
     size_t delimiter_count = scanner->delimiters.len;
     if (delimiter_count > UINT8_MAX) {
@@ -486,11 +499,15 @@ void tree_sitter_python_external_scanner_deserialize(void *payload,
     VEC_CLEAR(scanner->delimiters);
     VEC_CLEAR(scanner->indents);
     VEC_PUSH(scanner->indents, 0);
+    scanner->inside_f_string = false;
+    scanner->comment_indent_length = -1;
 
     if (length > 0) {
         size_t size = 0;
 
         scanner->inside_f_string = (bool)buffer[size++];
+        scanner->comment_indent_length = *(int32_t *)(buffer + size);
+        size += sizeof(int32_t);
 
         size_t delimiter_count = (uint8_t)buffer[size++];
         if (delimiter_count > 0) {
