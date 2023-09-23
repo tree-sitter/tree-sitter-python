@@ -158,6 +158,8 @@ typedef struct {
     indent_vec indents;
     delimiter_vec delimiters;
     bool inside_f_string;
+    uint32_t next_indent_byte;
+    uint32_t next_indent_length;
 } Scanner;
 
 static inline void advance(TSLexer *lexer) { lexer->advance(lexer, false); }
@@ -311,19 +313,23 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
         } else if (lexer->lookahead == '\t') {
             indent_length += 8;
             skip(lexer);
-        } else if (lexer->lookahead == '#' &&
-                   (valid_symbols[INDENT] || valid_symbols[DEDENT] ||
-                    valid_symbols[NEWLINE])) {
+        } else if (lexer->lookahead == '#') {
             // If we haven't found an EOL yet,
             // then this is a comment after an expression:
             //   foo = bar # comment
             // Just return, since we don't want to generate an indent/dedent
             // token.
-            if (!found_end_of_line) {
+            if (!(found_end_of_line &&
+                  (valid_symbols[INDENT] || valid_symbols[DEDENT] ||
+                   valid_symbols[NEWLINE]))) {
                 return false;
             }
             if (first_comment_indent_length == -1) {
                 first_comment_indent_length = (int32_t)indent_length;
+                if (lexer->get_byte(lexer) < scanner->next_indent_byte) {
+                    indent_length = scanner->next_indent_length;
+                    break;
+                }
             }
             while (lexer->lookahead && lexer->lookahead != '\n') {
                 skip(lexer);
@@ -347,6 +353,19 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer,
         } else {
             break;
         }
+    }
+
+    if (first_comment_indent_length == -1) {
+        // We only use this cache for comments, so don't create any
+        // extra state changes otherwise:
+        // https://github.com/tree-sitter/tree-sitter-html/issues/23
+        scanner->next_indent_byte = 0;
+        scanner->next_indent_length = 0;
+    } else if (scanner->next_indent_byte == 0) {
+        // Keep the original `next_indent_byte` since that's the
+        // non-short-circuited lookahead.
+        scanner->next_indent_byte = lexer->get_byte(lexer);
+        scanner->next_indent_length = indent_length;
     }
 
     if (found_end_of_line) {
@@ -456,6 +475,10 @@ unsigned tree_sitter_python_external_scanner_serialize(void *payload,
     size_t size = 0;
 
     buffer[size++] = (char)scanner->inside_f_string;
+    *(uint32_t *)(buffer + size) = scanner->next_indent_byte;
+    size += sizeof(uint32_t);
+    *(uint32_t *)(buffer + size) = scanner->next_indent_length;
+    size += sizeof(uint32_t);
 
     size_t delimiter_count = scanner->delimiters.len;
     if (delimiter_count > UINT8_MAX) {
@@ -486,11 +509,18 @@ void tree_sitter_python_external_scanner_deserialize(void *payload,
     VEC_CLEAR(scanner->delimiters);
     VEC_CLEAR(scanner->indents);
     VEC_PUSH(scanner->indents, 0);
+    scanner->inside_f_string = false;
+    scanner->next_indent_byte = 0;
+    scanner->next_indent_length = 0;
 
     if (length > 0) {
         size_t size = 0;
 
         scanner->inside_f_string = (bool)buffer[size++];
+        scanner->next_indent_byte = *(uint32_t *)(buffer + size);
+        size += sizeof(uint32_t);
+        scanner->next_indent_length = *(uint32_t *)(buffer + size);
+        size += sizeof(uint32_t);
 
         size_t delimiter_count = (uint8_t)buffer[size++];
         if (delimiter_count > 0) {
