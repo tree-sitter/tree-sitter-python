@@ -30,10 +30,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-14]
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up the repo
-        uses: tree-sitter/parser-setup-action@v1.1
-        with:
-          node-version: ${{vars.NODE_VERSION}}
+        uses: tree-sitter/setup-action/cli@v1
       - name: Set up examples
         run: |-
           git clone https://github.com/numpy/numpy examples/numpy --single-branch --depth=1 --filter=blob:none
@@ -41,11 +41,13 @@ jobs:
           git clone https://github.com/pallets/flask examples/flask --single-branch --depth=1 --filter=blob:none
           git clone https://github.com/python/cpython examples/cpython --single-branch --depth=1 --filter=blob:none
       - name: Run tests
-        uses: tree-sitter/parser-test-action@v1.2
+        uses: tree-sitter/parser-test-action@v2
         with:
-          lint: ${{runner.os == 'Linux'}}
-          test-library: ${{runner.os == 'Linux'}}
-          corpus-files: |
+          test-rust: ${{runner.os == 'Linux'}}
+      - name: Parse examples
+        uses: tree-sitter/parse-action@v4
+        with:
+          files: |
             examples/**/*.py
             !examples/cpython/Lib/test/test_compile.py
             !examples/cpython/Tools/build/generate_re_casefix.py
