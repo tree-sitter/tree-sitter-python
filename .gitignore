@@ -1,22 +1,25 @@
 # Rust artifacts
-/Cargo.lock
-/target/
+Cargo.lock
+target/
 
 # Node artifacts
-/build/
-/node_modules/
+build/
+prebuilds/
+node_modules/
+*.tgz
 
 # Swift artifacts
-/.build/
+.build/
+
+# Go artifacts
+go.sum
+_obj/
 
 # Python artifacts
-/dist/
+.venv/
+dist/
 *.egg-info
 *.whl
-
-# Zig artifacts
-/zig-cache/
-/zig-out/
 
 # C artifacts
 *.a
@@ -30,7 +33,6 @@
 /examples/*/
 
 # Grammar volatiles
-dsl.d.ts
 *.wasm
 *.obj
 *.o
