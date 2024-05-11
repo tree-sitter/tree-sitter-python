@@ -54,9 +54,10 @@
     {
       "scope": "source.python",
       "file-types": [
-        "py"
+        "mojo",
+        "🔥"
       ],
-      "injection-regex": "py",
+      "injection-regex": "mojo",
       "highlights": "queries/highlights.scm",
       "tags": "queries/tags.scm"
     }

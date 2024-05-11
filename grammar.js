@@ -408,15 +408,22 @@ module.exports = grammar({
 
     function_definition: $ => seq(
       optional('async'),
-      'def',
+      choice('def', 'fn'),
+      optional(seq('[',
+      field('name', $.identifier),
+      field('type_parameters', optional($.type_parameter)),
+      field('parameters', $.parameters),
+      ']')),
       field('name', $.identifier),
       field('type_parameters', optional($.type_parameter)),
       field('parameters', $.parameters),
       optional(
         seq(
+        optional('raises'),
+        seq(
           '->',
           field('return_type', $.type),
-        ),
+        )),
       ),
       ':',
       field('body', $._suite),
@@ -842,6 +849,7 @@ module.exports = grammar({
     ),
 
     assignment: $ => seq(
+      optional('var'),
       field('left', $._left_hand_side),
       choice(
         seq('=', field('right', $._right_hand_side)),
@@ -931,7 +939,7 @@ module.exports = grammar({
 
     typed_parameter: $ => prec(PREC.typed_parameter, seq(
       choice(
-        $.identifier,
+        seq(optional(choice('inout', 'owned', 'borrowed')), $.identifier),
         $.list_splat_pattern,
         $.dictionary_splat_pattern,
       ),

@@ -1,6 +1,6 @@
 [package]
-name = "tree-sitter-python"
-description = "Python grammar for tree-sitter"
+name = "tree-sitter-mojo"
+description = "Mojo grammar for tree-sitter"
 version = "0.21.0"
 authors = [
   "Max Brunsfeld <maxbrunsfeld@gmail.com>",
