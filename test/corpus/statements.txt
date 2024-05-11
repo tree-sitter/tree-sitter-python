@@ -911,6 +911,118 @@ def foo():
   (line_continuation))
 
 ================================================================================
+Mojo Function Definitions
+================================================================================
+
+fn e[IntableType: Intable](a: IntableType) -> Int:
+  return int(a)
+
+fn e(*list: String):
+  pass
+
+fn e(**list: String):
+  pass
+
+fn g[
+  HType: AnyType, IType: AnyType, *, JType: AnyType
+](h: HType, i: IType, /, j: JType, *, k:Int=100, **kwarg) -> (HType,IType,JType,Int):
+  return h,i,j,k,kwarg
+
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+      (constrained_type
+        (type
+          (identifier))
+        (type (identifier)))))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    body: (block
+      (return_statement
+        (call
+          function: (identifier)
+          arguments: (argument_list
+          (identifier))))))
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (list_splat_pattern
+          (identifier))
+        type: (type
+          (identifier))))
+    body: (block
+      (pass_statement)))
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (dictionary_splat_pattern
+          (identifier))
+        type: (type
+          (identifier))))
+    body: (block
+      (pass_statement)))
+  (function_definition
+    name: (identifier)
+    parameters: (parameters)
+    body: (block
+      (nonlocal_statement
+        (identifier))))
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (identifier)
+      (identifier)
+      (positional_separator)
+      (identifier)
+      (keyword_separator)
+      (default_parameter
+        name: (identifier)
+        value: (integer))
+      (dictionary_splat_pattern
+        (identifier)))
+    body: (block
+      (return_statement
+        (expression_list
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)
+          (identifier)))))
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (list_splat_pattern
+        (identifier)))
+    body: (block
+      (expression_statement
+        (call
+          function: (identifier)
+          arguments: (argument_list
+            (parenthesized_expression
+              (list_splat
+                (identifier))))))
+      (expression_statement
+        (call
+          function: (identifier)
+          arguments: (argument_list
+            (parenthesized_expression
+              (parenthesized_expression
+                (list_splat
+                  (identifier))))))))))
+
+================================================================================
 Empty blocks
 ================================================================================
 
