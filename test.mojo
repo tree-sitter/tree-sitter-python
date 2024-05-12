@@ -1,6 +1,11 @@
 alias a = 1
 
 
+fn blah():
+    pass
+
+
+@blah
 def basdf() -> Int:
     return 1
 
