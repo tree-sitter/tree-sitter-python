@@ -1,5 +1,5 @@
 {
-  "name": "python",
+  "name": "mojo",
   "word": "identifier",
   "rules": {
     "module": {

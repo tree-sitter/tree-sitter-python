@@ -36,3 +36,5 @@ dist/
 *.wasm
 *.obj
 *.o
+
+.helix

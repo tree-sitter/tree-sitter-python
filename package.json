@@ -1,8 +1,8 @@
 {
-  "name": "tree-sitter-python",
+  "name": "tree-sitter-mojo",
   "version": "0.21.0",
   "description": "Python grammar for tree-sitter",
-  "repository": "github:tree-sitter/tree-sitter-python",
+  "repository": "github:lsh/tree-sitter-mojo",
   "license": "MIT",
   "author": "Max Brunsfeld",
   "contributors": [
@@ -22,7 +22,7 @@
     "incremental",
     "parsing",
     "tree-sitter",
-    "python"
+    "mojo"
   ],
   "dependencies": {
     "node-addon-api": "^7.1.0",
@@ -52,7 +52,7 @@
   },
   "tree-sitter": [
     {
-      "scope": "source.python",
+      "scope": "source.mojo",
       "file-types": [
         "mojo",
         "🔥"
