@@ -48,6 +48,7 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
+    [$.parameter_list, $.subscript],
     [$.primary_expression, $.pattern],
     [$.primary_expression, $.list_splat_pattern],
     [$.tuple, $.tuple_pattern],
@@ -410,20 +411,20 @@ module.exports = grammar({
       optional('async'),
       choice('def', 'fn'),
       optional(seq('[',
-      field('name', $.identifier),
-      field('type_parameters', optional($.type_parameter)),
-      field('parameters', $.parameters),
-      ']')),
+        field('name', $.identifier),
+        field('type_parameters', optional($.type_parameter)),
+        field('parameters', $.parameters),
+        ']')),
       field('name', $.identifier),
       field('type_parameters', optional($.type_parameter)),
       field('parameters', $.parameters),
       optional(
         seq(
-        optional('raises'),
-        seq(
-          '->',
-          field('return_type', $.type),
-        )),
+          optional('raises'),
+          seq(
+            '->',
+            field('return_type', $.type),
+          )),
       ),
       ':',
       field('body', $._suite),
@@ -512,6 +513,21 @@ module.exports = grammar({
       )),
       optional(','),
       ')',
+    ),
+
+    parameter_list: $ => seq(
+      '[',
+      optional(commaSep1(
+        choice(
+          $.expression,
+          $.list_splat,
+          $.dictionary_splat,
+          alias($.parenthesized_list_splat, $.parenthesized_expression),
+          $.keyword_argument,
+        ),
+      )),
+      optional(','),
+      ']',
     ),
 
     decorated_definition: $ => seq(
@@ -749,8 +765,7 @@ module.exports = grammar({
       $.none,
       $.unary_operator,
       $.attribute,
-      $.subscript,
-      $.call,
+      choice(prec.dynamic(-1, $.subscript), prec.dynamic(1, $.call)),
       $.list,
       $.list_comprehension,
       $.dictionary,
@@ -931,6 +946,7 @@ module.exports = grammar({
 
     call: $ => prec(PREC.call, seq(
       field('function', $.primary_expression),
+      optional($.parameter_list),
       field('arguments', choice(
         $.generator_expression,
         $.argument_list,
