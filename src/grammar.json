@@ -4304,7 +4304,8 @@
               "value": "var"
             },
             {
-              "type": "BLANK"
+              "type": "STRING",
+              "value": "alias"
             }
           ]
         },
