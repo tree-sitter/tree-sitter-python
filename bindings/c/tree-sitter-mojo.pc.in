@@ -2,10 +2,10 @@ prefix=@PREFIX@
 libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
 
-Name: tree-sitter-python
+Name: tree-sitter-mojo
 Description: python grammar for tree-sitter
 URL: @URL@
 Version: @VERSION@
 Requires: @REQUIRES@
-Libs: -L${libdir} @ADDITIONAL_LIBS@ -ltree-sitter-python
+Libs: -L${libdir} @ADDITIONAL_LIBS@ -ltree-sitter-mojo
 Cflags: -I${includedir}

@@ -22,7 +22,7 @@
 use tree_sitter::Language;
 
 extern "C" {
-    fn tree_sitter_python() -> Language;
+    fn tree_sitter_mojo() -> Language;
 }
 
 /// Get the tree-sitter [Language][] for this grammar.
