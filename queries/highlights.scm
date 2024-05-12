@@ -1,12 +1,7 @@
-; Identifier naming conventions
-
-(identifier) @variable
-
-((identifier) @constructor
- (#match? @constructor "^[A-Z]"))
-
-((identifier) @constant
- (#match? @constant "^[A-Z][A-Z_]*$"))
+; adapted from Zed's Python Config
+; https://github.com/zed-industries/zed/blob/6657e301cd0ee9e7b7b5352957ef30728ae2a874/crates/languages/src/python/highlights.scm
+(attribute attribute: (identifier) @property)
+(type (identifier) @type)
 
 ; Function calls
 
@@ -17,21 +12,26 @@
 (call
   function: (identifier) @function)
 
+; Function definitions
+
+(function_definition
+  name: (identifier) @function)
+
+; Identifier naming conventions
+
+((identifier) @type
+ (#match? @type "^[A-Z]"))
+
+((identifier) @constant
+ (#match? @constant "^_*[A-Z][A-Z\\d_]*$"))
+
 ; Builtin functions
 
 ((call
   function: (identifier) @function.builtin)
  (#match?
    @function.builtin
-   "^(abs|all|always_inline|any|ascii|bin|bool|breakpoint|bytearray|bytes|callable|chr|classmethod|compile|complex|delattr|dict|dir|divmod|enumerate|eval|exec|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|issubclass|iter|len|list|locals|map|max|memoryview|min|next|object|oct|open|ord|pow|print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unroll|vars|zip|__import__|__mlir_attr|__mlir_op|__mlir_type)$"))
-
-; Function definitions
-
-(function_definition
-  name: (identifier) @function)
-
-(attribute attribute: (identifier) @property)
-(type (identifier) @type)
+   "^(abs|all|always_inline|any|ascii|bin|bool|breakpoint|bytearray|bytes|callable|chr|classmethod|compile|complex|constrained|delattr|dict|dir|divmod|enumerate|eval|exec|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|issubclass|iter|len|list|locals|map|max|memoryview|min|next|object|oct|open|ord|pow|print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unroll|vars|zip|__mlir_attr|__mlir_op|__mlir_type|__import__)$"))
 
 ; Literals
 
@@ -50,9 +50,26 @@
 (string) @string
 (escape_sequence) @escape
 
+[
+  "("
+  ")"
+  "["
+  "]"
+  "{"
+  "}"
+] @punctuation.bracket
+
 (interpolation
   "{" @punctuation.special
   "}" @punctuation.special) @embedded
+
+; Docstrings.
+(function_definition
+  "async"?
+  "def"
+  name: (_)
+  (parameters)?
+  body: (block (expression_statement (string) @string.doc)))
 
 [
   "-"
@@ -67,17 +84,14 @@
   "//="
   "/="
   "&"
-  "&="
   "%"
   "%="
   "^"
-  "^="
   "+"
   "->"
   "+="
   "<"
   "<<"
-  "<<="
   "<="
   "<>"
   "="
@@ -86,16 +100,15 @@
   ">"
   ">="
   ">>"
-  ">>="
   "|"
-  "|="
   "~"
-  "@="
   "and"
   "in"
   "is"
   "not"
   "or"
+  "is not"
+  "not in"
 ] @operator
 
 [
@@ -115,8 +128,8 @@
   "except"
   "exec"
   "finally"
-  "for"
   "fn"
+  "for"
   "from"
   "global"
   "if"
