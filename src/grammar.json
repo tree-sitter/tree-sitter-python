@@ -4423,12 +4423,20 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": "var"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "var"
+                },
+                {
+                  "type": "STRING",
+                  "value": "alias"
+                }
+              ]
             },
             {
-              "type": "STRING",
-              "value": "alias"
+              "type": "BLANK"
             }
           ]
         },
@@ -4747,12 +4755,34 @@
             "value": "."
           },
           {
-            "type": "FIELD",
-            "name": "attribute",
-            "content": {
-              "type": "SYMBOL",
-              "name": "identifier"
-            }
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "attribute",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                }
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "string_start"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "string_content"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "string_end"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
