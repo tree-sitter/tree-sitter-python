@@ -993,7 +993,18 @@ module.exports = grammar({
       '__mlir_type',
       choice(
         seq('.`', $._mlir_type, '`'),
-        seq('[', commaSep1(choice(seq('`', $._mlir_type, '`'), alias($.identifier, $.type))), optional(','), ']')
+        seq(
+          '[',
+          commaSep1(
+            choice(
+              seq('`', $._mlir_type, '`'),
+              alias($.identifier, $.type),
+              seq('`', choice('<', '>', ','), '`')
+            )
+          ),
+          optional(','),
+          ']'
+        )
       )
     ),
 
@@ -1005,13 +1016,13 @@ module.exports = grammar({
         )
       )
     ),
-    _mlir_type_def: $=> prec.left(choice(seq(
+    _mlir_type_def: $=> prec.left(seq(
       choice(
         seq('!', $.identifier, '.', alias($.identifier, $.type)),
         alias($.identifier, $.type),
       ),
-      optional(choice(seq('<', $._mlir_type, '>'), '<')),
-    ), '>')),
+      optional(seq('<', $._mlir_type, '>')),
+    )),
 
     list: $ => seq(
       '[',
