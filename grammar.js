@@ -777,6 +777,7 @@ module.exports = grammar({
       $.generator_expression,
       $.ellipsis,
       alias($.list_splat_pattern, $.list_splat),
+      $.mlir_type,
     ),
 
     not_operator: $ => prec(PREC.not, seq(
@@ -987,6 +988,30 @@ module.exports = grammar({
     ),
 
     // Literals
+
+    mlir_type: $ => seq(
+      '__mlir_type',
+      choice(
+        seq('.`', $._mlir_type, '`'),
+        seq('[', commaSep1(choice(seq('`', $._mlir_type, '`'), alias($.identifier, $.type))), optional(','), ']')
+      )
+    ),
+
+    _mlir_type: $ => prec.left(
+      seq(
+        optional('>'),
+        choice($._mlir_type_def,
+          seq('(', repeat(seq($._mlir_type_def, optional(','))), ')', '->', $._mlir_type_def)
+        )
+      )
+    ),
+    _mlir_type_def: $=> prec.left(choice(seq(
+      choice(
+        seq('!', $.identifier, '.', alias($.identifier, $.type)),
+        alias($.identifier, $.type),
+      ),
+      optional(choice(seq('<', $._mlir_type, '>'), '<')),
+    ), '>')),
 
     list: $ => seq(
       '[',

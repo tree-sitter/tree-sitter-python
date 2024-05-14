@@ -3,12 +3,7 @@
 (attribute attribute: (identifier) @property)
 (type (identifier) @type)
 
-(attribute object: ((identifier) @function.builtin
-    (#match? @property "__mlir_attr|__mlir_type|__mlir_op"))
-    (string_start)
-    ((string_content) @injection.content
-        (#set! injection.language "mlir"))
-    (string_end))
+
 
 ; Function calls
 
