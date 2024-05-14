@@ -1026,7 +1026,7 @@ module.exports = grammar({
     ),
     _mlir_type_def: $=> prec.left(seq(
       choice(
-        seq('!', $.identifier, '.', alias($.identifier, $.type)),
+        seq('!', sep1(alias($.identifier, $.type), '.')),
         alias($.identifier, $.type),
       ),
     )),

@@ -110,6 +110,7 @@
   "or"
   "is not"
   "not in"
+  "!"
 ] @operator
 
 [
