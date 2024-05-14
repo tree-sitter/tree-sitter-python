@@ -4,7 +4,6 @@
 (type (identifier) @type)
 
 
-
 ; Function calls
 
 (decorator) @function
