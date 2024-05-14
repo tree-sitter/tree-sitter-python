@@ -5276,6 +5276,27 @@
                               "name": "_mlir_type"
                             },
                             {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "CHOICE",
+                                  "members": [
+                                    {
+                                      "type": "STRING",
+                                      "value": "<"
+                                    },
+                                    {
+                                      "type": "STRING",
+                                      "value": ">"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "BLANK"
+                                }
+                              ]
+                            },
+                            {
                               "type": "STRING",
                               "value": "`"
                             }
@@ -5344,6 +5365,27 @@
                                   {
                                     "type": "SYMBOL",
                                     "name": "_mlir_type"
+                                  },
+                                  {
+                                    "type": "CHOICE",
+                                    "members": [
+                                      {
+                                        "type": "CHOICE",
+                                        "members": [
+                                          {
+                                            "type": "STRING",
+                                            "value": "<"
+                                          },
+                                          {
+                                            "type": "STRING",
+                                            "value": ">"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "BLANK"
+                                      }
+                                    ]
                                   },
                                   {
                                     "type": "STRING",

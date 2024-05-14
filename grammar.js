@@ -997,7 +997,7 @@ module.exports = grammar({
           '[',
           commaSep1(
             choice(
-              seq('`', $._mlir_type, '`'),
+              seq('`', $._mlir_type, optional(choice('<', '>')), '`'),
               alias($.identifier, $.type),
               seq('`', choice('<', '>', ','), '`')
             )
