@@ -923,7 +923,6 @@ fn e(*list: String):
 fn e(**list: String):
   pass
 
-
 --------------------------------------------------------------------------------
 
 (module
@@ -967,10 +966,7 @@ fn e(**list: String):
         type: (type
           (identifier))))
     body: (block
-      (pass_statement)))
-  
-  
-  )
+      (pass_statement))))
 
 ================================================================================
 Empty blocks
@@ -1036,7 +1032,7 @@ class D(Sequence[T, U]):
       (function_definition
         (identifier)
         (parameters
-          (identifier))
+          (self_parameter))
         (block
           (return_statement
             (identifier))))))
@@ -1053,7 +1049,7 @@ class D(Sequence[T, U]):
       (function_definition
         (identifier)
         (parameters
-          (identifier))
+          (self_parameter))
         (block
           (return_statement)))))
   (class_definition
@@ -1175,6 +1171,192 @@ def spam():
       (block
         (expression_statement
           (ellipsis))))))
+
+================================================================================
+Trait definitions
+================================================================================
+
+trait A:
+  pass
+
+trait B:
+  fn func(self):
+    ...
+
+trait C:
+  fn func1(inout self):
+    pass
+
+  fn func2(self, inout arg: Arg):
+    pass
+
+trait D:
+  fn func1(inout self, owned existing: Self, /):
+    pass
+
+  fn func2(owned self):
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (trait_definition
+    (identifier)
+    (block
+      (pass_statement)))
+
+  (trait_definition
+    (identifier)
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (expression_statement
+            (ellipsis))))))
+
+  (trait_definition
+    (identifier)
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (pass_statement)))            
+
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter)
+          (typed_parameter
+            (identifier)
+            (type
+              (identifier))))
+        (block
+          (pass_statement)))))
+
+  (trait_definition
+    (identifier)
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter)
+          (typed_parameter
+            (identifier)
+            (type
+              (identifier)))
+          (positional_separator))
+        (block
+          (pass_statement)))            
+
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (pass_statement))))))
+
+================================================================================
+Trait definitions with supertraits
+================================================================================
+
+trait A(B, C):
+  pass
+
+trait D(E):
+  fn func(self):
+    ...
+
+trait F(G, H):
+  fn func1(inout self):
+    pass
+
+  fn func2(self, owned arg: Arg):
+    pass
+
+trait I(J, K, L):
+  fn func1(inout self, owned existing: Self, /):
+    pass
+
+  fn func2(owned self):
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (trait_definition
+    (identifier)
+    (trait_list
+      (identifier)
+      (identifier))
+    (block
+      (pass_statement)))
+
+  (trait_definition
+    (identifier)
+    (trait_list
+      (identifier))
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (expression_statement
+            (ellipsis))))))
+
+  (trait_definition
+    (identifier)
+    (trait_list
+      (identifier)
+      (identifier))
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (pass_statement)))            
+
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter)
+          (typed_parameter
+            (identifier)
+            (type
+              (identifier))))
+        (block
+          (pass_statement)))))
+
+  (trait_definition
+    (identifier)
+    (trait_list
+      (identifier)
+      (identifier)
+      (identifier))
+    (block
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter)
+          (typed_parameter
+            (identifier)
+            (type
+              (identifier)))
+          (positional_separator))
+        (block
+          (pass_statement)))            
+
+      (function_definition
+        (identifier)
+        (parameters
+          (self_parameter))
+        (block
+          (pass_statement))))))
 
 ================================================================================
 Raise statements
