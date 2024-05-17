@@ -1,3 +1,11 @@
+fn blah() escaping capturing raises -> Bool:
+    return True
+
+
+fn parameter_simd[inferred dt: DType, value: Scalar[dt]]():
+    print(value)
+
+
 alias aaa = __mlir_type[`!kgen.pointer<!kgen.pointer<scalar<ui8>>>`]
 alias f = __mlir_type[`!kgen.signature<`, Int, `>() -> !kgen.none`]
 alias _mlir_type = __mlir_type[

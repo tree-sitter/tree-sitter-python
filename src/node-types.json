@@ -3400,6 +3400,10 @@
     }
   },
   {
+    "type": " ",
+    "named": false
+  },
+  {
     "type": "!",
     "named": false
   },
@@ -3624,6 +3628,10 @@
     "named": false
   },
   {
+    "type": "capturing",
+    "named": false
+  },
+  {
     "type": "case",
     "named": false
   },
@@ -3666,6 +3674,10 @@
   {
     "type": "escape_sequence",
     "named": true
+  },
+  {
+    "type": "escaping",
+    "named": false
   },
   {
     "type": "except",
@@ -3721,6 +3733,10 @@
   },
   {
     "type": "in",
+    "named": false
+  },
+  {
+    "type": "inferred",
     "named": false
   },
   {
