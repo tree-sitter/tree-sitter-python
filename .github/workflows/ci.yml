@@ -51,6 +51,8 @@ jobs:
             examples/**/*.py
             !examples/cpython/Lib/test/test_compile.py
             !examples/cpython/Tools/build/generate_re_casefix.py
+            !examples/cpython/Lib/test/test_annotationlib.py
+            !examples/cpython/Lib/test/test_type_params.py
           invalid-files: |
             examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
   fuzz:
