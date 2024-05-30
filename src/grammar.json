@@ -4021,6 +4021,32 @@
         ]
       }
     },
+    "_not_in": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "not"
+        },
+        {
+          "type": "STRING",
+          "value": "in"
+        }
+      ]
+    },
+    "_is_not": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "is"
+        },
+        {
+          "type": "STRING",
+          "value": "not"
+        }
+      ]
+    },
     "comparison_operator": {
       "type": "PREC_LEFT",
       "value": 13,
@@ -4077,17 +4103,8 @@
                       {
                         "type": "ALIAS",
                         "content": {
-                          "type": "SEQ",
-                          "members": [
-                            {
-                              "type": "STRING",
-                              "value": "not"
-                            },
-                            {
-                              "type": "STRING",
-                              "value": "in"
-                            }
-                          ]
+                          "type": "SYMBOL",
+                          "name": "_not_in"
                         },
                         "named": false,
                         "value": "not in"
@@ -4099,17 +4116,8 @@
                       {
                         "type": "ALIAS",
                         "content": {
-                          "type": "SEQ",
-                          "members": [
-                            {
-                              "type": "STRING",
-                              "value": "is"
-                            },
-                            {
-                              "type": "STRING",
-                              "value": "not"
-                            }
-                          ]
+                          "type": "SYMBOL",
+                          "name": "_is_not"
                         },
                         "named": false,
                         "value": "is not"
