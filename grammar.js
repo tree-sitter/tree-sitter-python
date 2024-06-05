@@ -37,6 +37,8 @@ const PREC = {
 };
 
 const SEMICOLON = ';';
+const ARGUMENT_CONVENTIONS = ['borrowed', 'inout', 'owned'];
+const SELF = 'self';
 
 module.exports = grammar({
   name: 'mojo',
@@ -268,6 +270,7 @@ module.exports = grammar({
       $.with_statement,
       $.function_definition,
       $.class_definition,
+      $.trait_definition,
       $.decorated_definition,
       $.match_statement,
     ),
@@ -491,6 +494,21 @@ module.exports = grammar({
       ']',
     ),
 
+    trait_definition: $ => seq(
+      'trait',
+      field('name', $.identifier),
+      field('supertraits', optional($.trait_list)),
+      ':',
+      field('body', seq($._indent, $.block)),
+    ),
+
+    trait_list: $ => seq(
+      '(',
+      optional(commaSep1($.identifier)),
+      optional(','),
+      ')',
+    ),
+
     parenthesized_list_splat: $ => prec(PREC.parenthesized_list_splat, seq(
       '(',
       choice(
@@ -668,6 +686,7 @@ module.exports = grammar({
     ),
 
     parameter: $ => choice(
+      $.self_parameter,
       $.identifier,
       $.typed_parameter,
       $.default_parameter,
@@ -700,6 +719,18 @@ module.exports = grammar({
       optional($._patterns),
       ']',
     ),
+
+    self_parameter: $ => seq(optional(choice(...ARGUMENT_CONVENTIONS)), SELF),
+
+    typed_parameter: $ => prec(PREC.typed_parameter, seq(
+      choice(
+        seq(optional(choice(...ARGUMENT_CONVENTIONS)), $.identifier),
+        $.list_splat_pattern,
+        $.dictionary_splat_pattern,
+      ),
+      ':',
+      field('type', $.type),
+    )),
 
     default_parameter: $ => seq(
       field('name', choice($.identifier, $.tuple_pattern)),
@@ -955,16 +986,6 @@ module.exports = grammar({
         $.generator_expression,
         $.argument_list,
       )),
-    )),
-
-    typed_parameter: $ => prec(PREC.typed_parameter, seq(
-      choice(
-        seq(optional(choice('inout', 'owned', 'borrowed')), $.identifier),
-        $.list_splat_pattern,
-        $.dictionary_splat_pattern,
-      ),
-      ':',
-      field('type', $.type),
     )),
 
     type: $ => choice(

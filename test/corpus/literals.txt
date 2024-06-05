@@ -455,7 +455,7 @@ def test(self):
   (function_definition
     (identifier)
     (parameters
-      (identifier))
+      (self_parameter))
     (block
       (expression_statement
         (call

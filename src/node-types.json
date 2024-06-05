@@ -28,6 +28,10 @@
         "named": true
       },
       {
+        "type": "trait_definition",
+        "named": true
+      },
+      {
         "type": "try_statement",
         "named": true
       },
@@ -175,6 +179,10 @@
       },
       {
         "type": "positional_separator",
+        "named": true
+      },
+      {
+        "type": "self_parameter",
         "named": true
       },
       {
@@ -2766,6 +2774,11 @@
     }
   },
   {
+    "type": "self_parameter",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "set",
     "named": true,
     "fields": {},
@@ -2941,6 +2954,57 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "trait_definition",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "supertraits": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "trait_list",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "trait_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -3812,6 +3876,10 @@
     "named": false
   },
   {
+    "type": "self",
+    "named": false
+  },
+  {
     "type": "string_end",
     "named": true
   },
@@ -3821,6 +3889,10 @@
   },
   {
     "type": "struct",
+    "named": false
+  },
+  {
+    "type": "trait",
     "named": false
   },
   {
