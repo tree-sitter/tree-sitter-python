@@ -425,6 +425,7 @@ module.exports = grammar({
           optional(sep1(choice('raises', 'capturing', 'escaping'), ' ')),
           seq(
             '->',
+            optional($._ref_convention),
             field('return_type', $.type),
           )),
       ),
@@ -719,11 +720,8 @@ module.exports = grammar({
       ']',
     ),
 
-    argument_convention: $ => choice('borrowed', 'inout', 'owned',
-      seq(
-        'ref', '[', $.expression, ']'
-      )
-    ),
+    _ref_convention: $ => seq('ref', '[', $.expression, ']'),
+    argument_convention: $ => choice('borrowed', 'inout', 'owned', $._ref_convention),
 
     self_parameter: $ => seq(optional($.argument_convention), SELF),
 
