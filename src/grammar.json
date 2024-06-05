@@ -3522,6 +3522,44 @@
         }
       ]
     },
+    "argument_convention": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "borrowed"
+        },
+        {
+          "type": "STRING",
+          "value": "inout"
+        },
+        {
+          "type": "STRING",
+          "value": "owned"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "ref"
+            },
+            {
+              "type": "STRING",
+              "value": "["
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            },
+            {
+              "type": "STRING",
+              "value": "]"
+            }
+          ]
+        }
+      ]
+    },
     "self_parameter": {
       "type": "SEQ",
       "members": [
@@ -3529,21 +3567,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "borrowed"
-                },
-                {
-                  "type": "STRING",
-                  "value": "inout"
-                },
-                {
-                  "type": "STRING",
-                  "value": "owned"
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "argument_convention"
             },
             {
               "type": "BLANK"
@@ -3572,21 +3597,8 @@
                     "type": "CHOICE",
                     "members": [
                       {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "STRING",
-                            "value": "borrowed"
-                          },
-                          {
-                            "type": "STRING",
-                            "value": "inout"
-                          },
-                          {
-                            "type": "STRING",
-                            "value": "owned"
-                          }
-                        ]
+                        "type": "SYMBOL",
+                        "name": "argument_convention"
                       },
                       {
                         "type": "BLANK"

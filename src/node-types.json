@@ -366,6 +366,21 @@
     }
   },
   {
+    "type": "argument_convention",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "argument_list",
     "named": true,
     "fields": {},
@@ -2776,7 +2791,17 @@
   {
     "type": "self_parameter",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "argument_convention",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "set",
@@ -3208,9 +3233,13 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "argument_convention",
+          "named": true
+        },
         {
           "type": "dictionary_splat_pattern",
           "named": true
@@ -3869,6 +3898,10 @@
   },
   {
     "type": "raises",
+    "named": false
+  },
+  {
+    "type": "ref",
     "named": false
   },
   {

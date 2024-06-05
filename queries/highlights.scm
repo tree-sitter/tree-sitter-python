@@ -138,7 +138,6 @@
   "global"
   "if"
   "import"
-  "inferred"
   "inout"
   "lambda"
   "nonlocal"
@@ -147,6 +146,7 @@
   "print"
   "raise"
   "raises"
+  "ref"
   "return"
   "struct"
   "trait"
@@ -172,3 +172,4 @@
 (mlir_type "*" @punctuation.special (#set! "priority" 110))
 (mlir_type "," @punctuation (#set! "priority" 110))
 (mlir_type) @type
+; (argument_convention) @keyword

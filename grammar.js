@@ -37,7 +37,6 @@ const PREC = {
 };
 
 const SEMICOLON = ';';
-const ARGUMENT_CONVENTIONS = ['borrowed', 'inout', 'owned'];
 const SELF = 'self';
 
 module.exports = grammar({
@@ -720,11 +719,17 @@ module.exports = grammar({
       ']',
     ),
 
-    self_parameter: $ => seq(optional(choice(...ARGUMENT_CONVENTIONS)), SELF),
+    argument_convention: $ => choice('borrowed', 'inout', 'owned',
+      seq(
+        'ref', '[', $.expression, ']'
+      )
+    ),
+
+    self_parameter: $ => seq(optional($.argument_convention), SELF),
 
     typed_parameter: $ => prec(PREC.typed_parameter, seq(
       choice(
-        seq(optional(choice(...ARGUMENT_CONVENTIONS)), $.identifier),
+        seq(optional($.argument_convention), $.identifier),
         $.list_splat_pattern,
         $.dictionary_splat_pattern,
       ),
