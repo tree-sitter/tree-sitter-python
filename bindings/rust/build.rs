@@ -3,6 +3,9 @@ fn main() {
 
     let mut c_config = cc::Build::new();
     c_config.include(src_dir);
+
+    #[cfg(target_env = "msvc")]
+    c_config.flag("-utf-8");
     let parser_path = src_dir.join("parser.c");
     c_config.file(&parser_path);
 

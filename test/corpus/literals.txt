@@ -126,7 +126,7 @@ B"sup"
 "multiline \
 string"
 b"\x12\u12\U12\x13\N{WINKING FACE}"
-"\xab\123\'\"\a\b\f\r\n\t\v\\"
+"\xab\1\12\123\'\"\a\b\f\r\n\t\v\\"
 "\xgh\o123\p\q\c\d\e\u12\U1234"
 f'\N{GREEK CAPITAL LETTER DELTA}'
 
@@ -191,6 +191,8 @@ f'\N{GREEK CAPITAL LETTER DELTA}'
     (string
       (string_start)
       (string_content
+        (escape_sequence)
+        (escape_sequence)
         (escape_sequence)
         (escape_sequence)
         (escape_sequence)
