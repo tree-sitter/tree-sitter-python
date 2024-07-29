@@ -96,6 +96,8 @@
   "is"
   "not"
   "or"
+  "is not"
+  "not in"
 ] @operator
 
 [
