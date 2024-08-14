@@ -400,6 +400,7 @@ Math operators
 ================================================================================
 
 a + b * c ** d - e / 5
+a // 2
 -5
 +x
 ~x
@@ -419,6 +420,10 @@ a + b * c ** d - e / 5
       (binary_operator
         (identifier)
         (integer))))
+  (expression_statement
+    (binary_operator
+      (identifier)
+      (integer)))
   (expression_statement
     (unary_operator
       (integer)))
@@ -519,7 +524,7 @@ a() + b[c] * c.d.e
 Bitwise operators
 ================================================================================
 
-a << b | c >> d & e
+a << b | c >> d & e ^ f
 
 --------------------------------------------------------------------------------
 
@@ -533,7 +538,9 @@ a << b | c >> d & e
         (binary_operator
           (identifier)
           (identifier))
-        (identifier)))))
+        (binary_operator
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Boolean operators
@@ -579,6 +586,8 @@ a < b <= c == d >= e > f
 not a == b or c == d
 a not in b
 a is not b
+a is b and c != d
+a <> b
 
 --------------------------------------------------------------------------------
 
@@ -604,6 +613,18 @@ a is not b
     (comparison_operator
       (identifier)
       (identifier)))
+  (expression_statement
+    (comparison_operator
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (boolean_operator
+      (comparison_operator
+        (identifier)
+        (identifier))
+      (comparison_operator
+        (identifier)
+        (identifier))))
   (expression_statement
     (comparison_operator
       (identifier)
@@ -697,6 +718,16 @@ Augmented assignments
 a += 1
 b >>= 2
 c //= 1
+d @= e
+f -= 2
+g %= 2
+h /= 5
+i *= 2.2
+j &= 1
+k ^= 0
+l <<= 2
+m |= k
+n **= 3
 
 --------------------------------------------------------------------------------
 
@@ -709,6 +740,46 @@ c //= 1
     (augmented_assignment
       (identifier)
       (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (float)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (integer)))
+  (expression_statement
+    (augmented_assignment
+      (identifier)
+      (identifier)))
   (expression_statement
     (augmented_assignment
       (identifier)
@@ -1106,3 +1177,26 @@ w, x, y, z = 0, *a, c
         (list_splat
           (identifier))
         (identifier)))))
+
+================================================================================
+Type expressions
+================================================================================
+
+a: A[T] | B
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (assignment
+      (identifier)
+      (type
+        (union_type
+          (type
+            (generic_type
+              (identifier)
+              (type_parameter
+                (type
+                  (identifier)))))
+          (type
+            (identifier)))))))
