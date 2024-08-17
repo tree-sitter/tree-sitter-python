@@ -56,6 +56,7 @@ module.exports = grammar({
     [$.named_expression, $.as_pattern],
     [$.print_statement, $.primary_expression],
     [$.type_alias_statement, $.primary_expression],
+    [$.match_statement, $.primary_expression],
   ],
 
   supertypes: $ => [
@@ -1171,11 +1172,13 @@ module.exports = grammar({
           'exec',
           'async',
           'await',
-          'match',
         ),
         $.identifier,
       )),
-      alias('type', $.identifier),
+      alias(
+        choice('type', 'match'),
+        $.identifier,
+      ),
     ),
 
     true: _ => 'True',

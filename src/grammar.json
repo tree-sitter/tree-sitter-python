@@ -6052,10 +6052,6 @@
                 {
                   "type": "STRING",
                   "value": "await"
-                },
-                {
-                  "type": "STRING",
-                  "value": "match"
                 }
               ]
             },
@@ -6066,8 +6062,17 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "STRING",
-            "value": "type"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "type"
+              },
+              {
+                "type": "STRING",
+                "value": "match"
+              }
+            ]
           },
           "named": true,
           "value": "identifier"
@@ -6215,6 +6220,10 @@
     ],
     [
       "type_alias_statement",
+      "primary_expression"
+    ],
+    [
+      "match_statement",
       "primary_expression"
     ]
   ],
