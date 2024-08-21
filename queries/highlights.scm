@@ -11,6 +11,8 @@
 ; Function calls
 
 (decorator) @function
+(decorator
+  (identifier) @function)
 
 (call
   function: (attribute attribute: (identifier) @function.method))
@@ -96,6 +98,8 @@
   "is"
   "not"
   "or"
+  "is not"
+  "not in"
 ] @operator
 
 [

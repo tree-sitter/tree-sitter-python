@@ -6,9 +6,7 @@
  * @see {@link https://docs.python.org/3/reference/grammar.html|Python 3 grammar}
  */
 
-/* eslint-disable arrow-parens */
-/* eslint-disable camelcase */
-/* eslint-disable-next-line spaced-comment */
+
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
@@ -56,6 +54,7 @@ module.exports = grammar({
     [$.named_expression, $.as_pattern],
     [$.print_statement, $.primary_expression],
     [$.type_alias_statement, $.primary_expression],
+    [$.match_statement, $.primary_expression],
   ],
 
   supertypes: $ => [
@@ -806,6 +805,10 @@ module.exports = grammar({
       field('argument', $.primary_expression),
     )),
 
+    _not_in: _ => seq('not', 'in'),
+
+    _is_not: _ => seq('is', 'not'),
+
     comparison_operator: $ => prec.left(PREC.compare, seq(
       $.primary_expression,
       repeat1(seq(
@@ -819,9 +822,9 @@ module.exports = grammar({
             '>',
             '<>',
             'in',
-            alias(seq('not', 'in'), 'not in'),
+            alias($._not_in, 'not in'),
             'is',
-            alias(seq('is', 'not'), 'is not'),
+            alias($._is_not, 'is not'),
           )),
         $.primary_expression,
       )),
@@ -1171,11 +1174,13 @@ module.exports = grammar({
           'exec',
           'async',
           'await',
-          'match',
         ),
         $.identifier,
       )),
-      alias('type', $.identifier),
+      alias(
+        choice('type', 'match'),
+        $.identifier,
+      ),
     ),
 
     true: _ => 'True',
@@ -1203,8 +1208,7 @@ module.exports.PREC = PREC;
  *
  * @param {RuleOrLiteral} rule
  *
- * @return {SeqRule}
- *
+ * @returns {SeqRule}
  */
 function commaSep1(rule) {
   return sep1(rule, ',');
@@ -1217,8 +1221,7 @@ function commaSep1(rule) {
  *
  * @param {RuleOrLiteral} separator
  *
- * @return {SeqRule}
- *
+ * @returns {SeqRule}
  */
 function sep1(rule, separator) {
   return seq(rule, repeat(seq(separator, rule)));

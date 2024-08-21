@@ -2088,6 +2088,11 @@
     }
   },
   {
+    "type": "is not",
+    "named": false,
+    "fields": {}
+  },
+  {
     "type": "keyword_argument",
     "named": true,
     "fields": {
@@ -2408,6 +2413,7 @@
   {
     "type": "module",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -2464,6 +2470,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "not in",
+    "named": false,
+    "fields": {}
   },
   {
     "type": "not_operator",
@@ -3637,10 +3648,6 @@
     "named": false
   },
   {
-    "type": "is not",
-    "named": false
-  },
-  {
     "type": "lambda",
     "named": false
   },
@@ -3662,10 +3669,6 @@
   },
   {
     "type": "not",
-    "named": false
-  },
-  {
-    "type": "not in",
     "named": false
   },
   {
