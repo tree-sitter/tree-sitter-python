@@ -4,9 +4,9 @@
   "description": "Python grammar for tree-sitter",
   "repository": "github:tree-sitter/tree-sitter-python",
   "license": "MIT",
-  "author": "Max Brunsfeld",
+  "author": "Max Brunsfeld <maxbrunsfeld@gmail.com>",
   "contributors": [
-    "Amaan Qureshi"
+    "Amaan Qureshi <amaanq12@gmail.com>"
   ],
   "main": "bindings/node",
   "types": "bindings/node",
@@ -25,20 +25,20 @@
     "python"
   ],
   "dependencies": {
-    "node-addon-api": "^7.1.0",
-    "node-gyp-build": "^4.8.0"
+    "node-addon-api": "^8.1.0",
+    "node-gyp-build": "^4.8.2"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
-    "tree-sitter-cli": "^0.21.0",
-    "prebuildify": "^6.0.0"
+    "tree-sitter-cli": "^0.23.0",
+    "prebuildify": "^6.0.1"
   },
   "peerDependencies": {
     "tree-sitter": "^0.21.0"
   },
   "peerDependenciesMeta": {
-    "tree_sitter": {
+    "tree-sitter": {
       "optional": true
     }
   },
@@ -61,5 +61,47 @@
       "highlights": "queries/highlights.scm",
       "tags": "queries/tags.scm"
     }
-  ]
+  ],
+  "eslintConfig": {
+    "env": {
+      "commonjs": true,
+      "es2021": true
+    },
+    "extends": "google",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "arrow-parens": "off",
+      "camel-case": "off",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 160,
+          "ignoreComments": true,
+          "ignoreUrls": true,
+          "ignoreStrings": true
+        }
+      ],
+      "spaced-comment": [
+        "warn",
+        "always",
+        {
+          "line": {
+            "markers": [
+              "/"
+            ]
+          }
+        }
+      ]
+    }
+  }
 }

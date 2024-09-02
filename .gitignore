@@ -1,5 +1,4 @@
 # Rust artifacts
-Cargo.lock
 target/
 
 # Node artifacts
@@ -10,9 +9,9 @@ node_modules/
 
 # Swift artifacts
 .build/
+Package.resolved
 
 # Go artifacts
-go.sum
 _obj/
 
 # Python artifacts
