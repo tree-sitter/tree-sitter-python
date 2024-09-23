@@ -38,7 +38,7 @@ override CFLAGS += -I$(SRC_DIR) -std=c11 -fPIC
 
 # ABI versioning
 SONAME_MAJOR := $(word 1,$(subst ., ,$(VERSION)))
-SONAME_MINOR := $(shell sed -n 's/#define LANGUAGE_VERSION //p' $(PARSER))
+SONAME_MINOR := $(shell sed -n 's/\#define LANGUAGE_VERSION //p' $(PARSER))
 
 # OS-specific bits
 ifeq ($(shell uname),Darwin)
