@@ -1,14 +1,12 @@
-name: Publish package
+name: Publish packages
 
 on:
   push:
     tags: ["*"]
 
-concurrency:
-  group: ${{github.workflow}}-${{github.ref}}
-  cancel-in-progress: true
-
 jobs:
+  github:
+    uses: tree-sitter/workflows/.github/workflows/release.yml@main
   npm:
     uses: tree-sitter/workflows/.github/workflows/package-npm.yml@main
     secrets:
