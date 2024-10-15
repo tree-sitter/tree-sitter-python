@@ -16,7 +16,8 @@
     "prebuilds/**",
     "bindings/node/*",
     "queries/*",
-    "src/**"
+    "src/**",
+    "*.wasm"
   ],
   "keywords": [
     "incremental",
@@ -25,13 +26,13 @@
     "python"
   ],
   "dependencies": {
-    "node-addon-api": "^8.1.0",
+    "node-addon-api": "^8.2.1",
     "node-gyp-build": "^4.8.2"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-google": "^0.14.0",
-    "tree-sitter-cli": "^0.23.0",
+    "eslint": "^9.12.0",
+    "eslint-config-treesitter": "^1.0.2",
+    "tree-sitter-cli": "^0.24.3",
     "prebuildify": "^6.0.1"
   },
   "peerDependencies": {
@@ -43,10 +44,8 @@
     }
   },
   "scripts": {
-    "lint": "eslint grammar.js",
-    "parse": "tree-sitter parse",
     "install": "node-gyp-build",
-    "prebuildify": "prebuildify --napi --strip",
+    "lint": "eslint grammar.js",
     "prestart": "tree-sitter build --wasm",
     "start": "tree-sitter playground",
     "test": "node --test bindings/node/*_test.js"
@@ -61,47 +60,5 @@
       "highlights": "queries/highlights.scm",
       "tags": "queries/tags.scm"
     }
-  ],
-  "eslintConfig": {
-    "env": {
-      "commonjs": true,
-      "es2021": true
-    },
-    "extends": "google",
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module"
-    },
-    "rules": {
-      "arrow-parens": "off",
-      "camel-case": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "max-len": [
-        "error",
-        {
-          "code": 160,
-          "ignoreComments": true,
-          "ignoreUrls": true,
-          "ignoreStrings": true
-        }
-      ],
-      "spaced-comment": [
-        "warn",
-        "always",
-        {
-          "line": {
-            "markers": [
-              "/"
-            ]
-          }
-        }
-      ]
-    }
-  }
+  ]
 }
