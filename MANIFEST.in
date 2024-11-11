@@ -1,0 +1,6 @@
+include setup.py
+include README.md
+include pyproject.toml
+include LICENSE
+recursive-include src *
+recursive-include bindings/python/tree_sitter_java *
