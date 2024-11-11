@@ -88,7 +88,7 @@ checksum = "e8ddffe35a0e5eeeadf13ff7350af564c6e73993a24db62caee1822b185c2600"
 
 [[package]]
 name = "tree-sitter-python"
-version = "0.23.3"
+version = "0.23.4"
 dependencies = [
  "cc",
  "tree-sitter",
