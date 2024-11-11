@@ -462,9 +462,9 @@ module.exports = grammar({
 
     type_alias_statement: $ => prec.dynamic(1, seq(
       'type',
-      $.type,
+      field('left', $.type),
       '=',
-      $.type,
+      field('right', $.type),
     )),
 
     class_definition: $ => seq(
