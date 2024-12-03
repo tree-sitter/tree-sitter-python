@@ -2153,6 +2153,11 @@
     }
   },
   {
+    "type": "is not",
+    "named": false,
+    "fields": {}
+  },
+  {
     "type": "keyword_argument",
     "named": true,
     "fields": {
@@ -2544,6 +2549,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "not in",
+    "named": false,
+    "fields": {}
   },
   {
     "type": "not_operator",
@@ -3855,10 +3865,6 @@
     "named": false
   },
   {
-    "type": "is not",
-    "named": false
-  },
-  {
     "type": "lambda",
     "named": false
   },
@@ -3871,6 +3877,10 @@
     "named": false
   },
   {
+    "type": "mut",
+    "named": false
+  },
+  {
     "type": "none",
     "named": true
   },
@@ -3880,10 +3890,6 @@
   },
   {
     "type": "not",
-    "named": false
-  },
-  {
-    "type": "not in",
     "named": false
   },
   {
@@ -3908,6 +3914,10 @@
   },
   {
     "type": "raises",
+    "named": false
+  },
+  {
+    "type": "read",
     "named": false
   },
   {

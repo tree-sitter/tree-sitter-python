@@ -1106,3 +1106,20 @@ w, x, y, z = 0, *a, c
         (list_splat
           (identifier))
         (identifier)))))
+
+================================================================================
+A function called match
+================================================================================
+
+match(r1, r2, r3)
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier)
+        (identifier)
+        (identifier)))))

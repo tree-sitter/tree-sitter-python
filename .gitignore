@@ -1,18 +1,15 @@
 # Rust artifacts
-Cargo.lock
 target/
 
 # Node artifacts
 build/
 prebuilds/
 node_modules/
-*.tgz
 
 # Swift artifacts
 .build/
 
 # Go artifacts
-go.sum
 _obj/
 
 # Python artifacts
@@ -37,4 +34,7 @@ dist/
 *.obj
 *.o
 
-.helix
+# Archives
+*.tar.gz
+*.tgz
+*.zip

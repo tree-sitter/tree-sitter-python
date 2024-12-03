@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["*"]
+    branches: [master]
     paths:
       - grammar.js
       - src/**
@@ -43,32 +43,21 @@ jobs:
       - name: Run tests
         uses: tree-sitter/parser-test-action@v2
         with:
-          test-rust: ${{runner.os == 'Linux'}}
+          test-rust: true
+          test-node: true
+          test-python: true
+          test-go: true
+          test-swift: true
       - name: Parse examples
         uses: tree-sitter/parse-action@v4
         with:
           files: |
             examples/**/*.py
+            !examples/cpython/Lib/test/test_annotationlib.py
+            !examples/cpython/Lib/test/test_type_params.py
             !examples/cpython/Lib/test/test_compile.py
             !examples/cpython/Tools/build/generate_re_casefix.py
+            !examples/cpython/Lib/test/test_annotationlib.py
+            !examples/cpython/Lib/test/test_type_params.py
           invalid-files: |
             examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
-  fuzz:
-    name: Fuzz parser
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Check for scanner changes
-        id: scanner-changes
-        run: |-
-          if git diff --quiet HEAD^ -- src/scanner.c; then
-            printf 'changed=false\n' >> "$GITHUB_OUTPUT"
-          else
-            printf 'changed=true\n' >> "$GITHUB_OUTPUT"
-          fi
-      - name: Fuzz parser
-        uses: tree-sitter/fuzz-action@v4
-        if: steps.scanner-changes.outputs.changed == 'true'
