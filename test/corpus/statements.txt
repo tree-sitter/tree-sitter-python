@@ -515,12 +515,12 @@ finally:
       (expression_statement
         (identifier)))
     (except_clause
-      (identifier)
+      value: (identifier)
       (block
         (expression_statement
           (identifier))))
     (except_clause
-      (as_pattern
+      value: (as_pattern
         (identifier)
         alias: (as_pattern_target
           (identifier)))
@@ -528,8 +528,8 @@ finally:
         (expression_statement
           (identifier))))
     (except_clause
-      (identifier)
-      (identifier)
+      value: (identifier)
+      alias: (identifier)
       (block
         (expression_statement
           (identifier))))
@@ -542,7 +542,7 @@ finally:
       (expression_statement
         (identifier)))
     (except_clause
-      (identifier)
+      value: (identifier)
       (block
         (expression_statement
           (identifier))
