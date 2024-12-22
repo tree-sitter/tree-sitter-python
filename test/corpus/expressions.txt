@@ -1200,6 +1200,7 @@ Type expressions
 ================================================================================
 
 a: A[T] | B
+y: type[int] = int
 
 --------------------------------------------------------------------------------
 
@@ -1216,4 +1217,14 @@ a: A[T] | B
                 (type
                   (identifier)))))
           (type
-            (identifier)))))))
+            (identifier))))))
+  (expression_statement
+    (assignment
+      (identifier)
+      (type
+        (generic_type
+          (identifier)
+          (type_parameter
+            (type
+              (identifier)))))
+      (identifier))))
