@@ -1872,16 +1872,24 @@
             "value": "type"
           },
           {
-            "type": "SYMBOL",
-            "name": "type"
+            "type": "FIELD",
+            "name": "left",
+            "content": {
+              "type": "SYMBOL",
+              "name": "type"
+            }
           },
           {
             "type": "STRING",
             "value": "="
           },
           {
-            "type": "SYMBOL",
-            "name": "type"
+            "type": "FIELD",
+            "name": "right",
+            "content": {
+              "type": "SYMBOL",
+              "name": "type"
+            }
           }
         ]
       }
