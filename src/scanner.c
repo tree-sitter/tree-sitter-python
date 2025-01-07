@@ -211,7 +211,7 @@ bool tree_sitter_python_external_scanner_scan(void *payload, TSLexer *lexer, con
     lexer->mark_end(lexer);
 
     bool found_end_of_line = false;
-    uint32_t indent_length = 0;
+    uint16_t indent_length = 0;
     int32_t first_comment_indent_length = -1;
     for (;;) {
         if (lexer->lookahead == '\n') {
@@ -380,7 +380,9 @@ unsigned tree_sitter_python_external_scanner_serialize(void *payload, char *buff
 
     uint32_t iter = 1;
     for (; iter < scanner->indents.size && size < TREE_SITTER_SERIALIZATION_BUFFER_SIZE; ++iter) {
-        buffer[size++] = (char)*array_get(&scanner->indents, iter);
+        uint16_t indent_value = *array_get(&scanner->indents, iter);
+        buffer[size++] = (char)(indent_value & 0xFF);
+        buffer[size++] = (char)((indent_value >> 8) & 0xFF);
     }
 
     return size;
@@ -406,8 +408,9 @@ void tree_sitter_python_external_scanner_deserialize(void *payload, const char *
             size += delimiter_count;
         }
 
-        for (; size < length; size++) {
-            array_push(&scanner->indents, (unsigned char)buffer[size]);
+        for (; size + 1 < length; size += 2) {
+            uint16_t indent_value = (unsigned char)buffer[size] | ((unsigned char)buffer[size + 1] << 8);
+            array_push(&scanner->indents, indent_value);
         }
     }
 }
