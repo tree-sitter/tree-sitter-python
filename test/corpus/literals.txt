@@ -554,6 +554,79 @@ f"{value:{width + padding!r}.{precision}}"
       (string_end))))
 
 ================================================================================
+Template Strings
+================================================================================
+
+t"Hello, {first_name} {last_name}!"
+t"a {b:2} {c:34.5}"
+tr"Path: {path}\n"
+t"""
+Multi-line template
+with {variable}
+"""
+t"Use {{braces}} to escape"
+t"Result: {a + b}"
+
+--------------------------------------------------------------------------------
+
+(module
+  (expression_statement
+    (string
+      (string_start)
+      (string_content)
+      (interpolation
+        (identifier))
+      (string_content)
+      (interpolation
+        (identifier))
+      (string_content)
+      (string_end)))
+  (expression_statement
+    (string
+      (string_start)
+      (string_content)
+      (interpolation
+        (identifier)
+        (format_specifier))
+      (string_content)
+      (interpolation
+        (identifier)
+        (format_specifier))
+      (string_end)))
+  (expression_statement
+    (string
+      (string_start)
+      (string_content)
+      (interpolation
+        (identifier))
+      (string_content)
+      (string_end)))
+  (expression_statement
+    (string
+      (string_start)
+      (string_content)
+      (interpolation
+        (identifier))
+      (string_content)
+      (string_end)))
+  (expression_statement
+    (string
+      (string_start)
+      (string_content
+        (escape_interpolation)
+        (escape_interpolation))
+      (string_end)))
+  (expression_statement
+    (string
+      (string_start)
+      (string_content)
+      (interpolation
+        (binary_operator
+          (identifier)
+          (identifier)))
+      (string_end))))
+
+================================================================================
 Unicode escape sequences
 ================================================================================
 
