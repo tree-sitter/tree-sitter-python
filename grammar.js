@@ -341,19 +341,9 @@ module.exports = grammar({
       'try',
       ':',
       field('body', $._suite),
-      choice(
-        seq(
-          repeat1($.except_clause),
-          optional($.else_clause),
-          optional($.finally_clause),
-        ),
-        seq(
-          repeat1($.except_group_clause),
-          optional($.else_clause),
-          optional($.finally_clause),
-        ),
-        $.finally_clause,
-      ),
+      repeat(choice($.except_clause, $.except_group_clause)),
+      optional($.else_clause),
+      optional($.finally_clause),
     ),
 
     except_clause: $ => seq(

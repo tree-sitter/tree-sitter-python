@@ -477,6 +477,9 @@ Try statements
 
 try:
   a
+
+try:
+  a
 except b:
   c
 except d as e:
@@ -510,6 +513,10 @@ finally:
 --------------------------------------------------------------------------------
 
 (module
+  (try_statement
+    body: (block
+      (expression_statement
+       (identifier))))
   (try_statement
     body: (block
       (expression_statement
