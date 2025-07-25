@@ -408,6 +408,10 @@ module.exports = grammar({
       optional('async'),
       'def',
       field('name', $.identifier),
+      $.function_definition_scope,
+    ),
+
+    function_definition_scope: $ => seq(
       field('type_parameters', optional($.type_parameter)),
       '(',
       field('parameters', optional($.parameters)),
@@ -495,6 +499,9 @@ module.exports = grammar({
     class_definition: $ => seq(
       'class',
       field('name', $.identifier),
+      $.class_definition_scope,
+    ),
+    class_definition_scope: $ => seq(
       field('type_parameters', optional($.type_parameter)),
       field('superclasses', optional($.argument_list)),
       ':',
@@ -570,7 +577,13 @@ module.exports = grammar({
       ),
     )),
 
-    dotted_name: $ => prec(1, sep1($.identifier, '.')),
+    dotted_name: $ => prec(1, seq(
+      $.identifier,
+      repeat(seq(
+        '.',
+        alias($.identifier, $.member_identifier),
+      )),
+    )),
 
     // Match cases
 
@@ -898,7 +911,7 @@ module.exports = grammar({
     attribute: $ => prec(PREC.call, seq(
       field('object', $.primary_expression),
       '.',
-      field('attribute', $.identifier),
+      field('attribute', alias($.identifier, $.member_identifier)),
     )),
 
     subscript: $ => prec(PREC.call, seq(
@@ -944,7 +957,7 @@ module.exports = grammar({
     )),
     union_type: $ => prec.left(seq($.type, '|', $.type)),
     constrained_type: $ => prec.right(seq($.type, ':', $.type)),
-    member_type: $ => seq($.type, '.', $.identifier),
+    member_type: $ => seq($.type, '.', alias($.identifier, $.member_identifier)),
 
     keyword_argument: $ => seq(
       field('name', choice($.identifier, $.keyword_identifier)),
