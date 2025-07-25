@@ -598,7 +598,7 @@ module.exports = grammar({
       '_',
     )),
 
-    _as_pattern: $ => seq($.case_pattern, 'as', $.identifier),
+    _as_pattern: $ => seq($.case_pattern, 'as', field('alias', $.identifier)),
 
     union_pattern: $ => prec.right(seq($._simple_pattern, repeat1(prec.left(seq('|', $._simple_pattern))))),
 
