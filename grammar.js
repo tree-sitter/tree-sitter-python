@@ -52,7 +52,6 @@ module.exports = grammar({
     [$.list, $.list_pattern],
     [$.with_item, $._collection_elements],
     [$.named_expression, $.as_pattern],
-    [$.print_statement, $.primary_expression],
     [$.type_alias_statement, $.primary_expression],
     [$.match_statement, $.primary_expression],
   ],
@@ -121,7 +120,6 @@ module.exports = grammar({
       $.future_import_statement,
       $.import_statement,
       $.import_from_statement,
-      $.print_statement,
       $.assert_statement,
       $.expression_statement,
       $.return_statement,
@@ -188,24 +186,6 @@ module.exports = grammar({
 
     wildcard_import: _ => '*',
 
-    print_statement: $ => choice(
-      prec(1, seq(
-        'print',
-        $.chevron,
-        repeat(seq(',', field('argument', $.expression))),
-        optional(',')),
-      ),
-      prec(-3, prec.dynamic(-1, seq(
-        'print',
-        commaSep1(field('argument', $.expression)),
-        optional(','),
-      ))),
-    ),
-
-    chevron: $ => seq(
-      '>>',
-      $.expression,
-    ),
 
     assert_statement: $ => seq(
       'assert',
@@ -462,9 +442,10 @@ module.exports = grammar({
 
     type_alias_statement: $ => prec.dynamic(1, seq(
       'type',
-      field('left', $.type),
+      field('name', $.identifier),
+      field('type_parameters', optional($.type_parameter)),
       '=',
-      field('right', $.type),
+      field('value', $.type),
     )),
 
     class_definition: $ => seq(
@@ -477,9 +458,28 @@ module.exports = grammar({
     ),
     type_parameter: $ => seq(
       '[',
-      commaSep1($.type),
+      commaSep1($.type_param),
       optional(','),
       ']',
+    ),
+
+    type_param: $ => choice(
+      // T
+      $.identifier,
+      // T: bound
+      seq($.identifier, ':', $.type),
+      // T = default
+      seq($.identifier, '=', $.type),
+      // T: bound = default
+      seq($.identifier, ':', $.type, '=', $.type),
+      // *T (TypeVarTuple)
+      seq('*', $.identifier),
+      // *T = default
+      seq('*', $.identifier, '=', $.type),
+      // **P (ParamSpec)
+      seq('**', $.identifier),
+      // **P = default
+      seq('**', $.identifier, '=', $.type),
     ),
 
     parenthesized_list_splat: $ => prec(PREC.parenthesized_list_splat, seq(
@@ -820,7 +820,6 @@ module.exports = grammar({
             '!=',
             '>=',
             '>',
-            '<>',
             'in',
             alias($._not_in, 'not in'),
             'is',

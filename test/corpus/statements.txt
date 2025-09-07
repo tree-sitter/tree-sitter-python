@@ -117,64 +117,6 @@ from __future__ import (absolute_import, division, print_function,
       (identifier))))
 
 ================================================================================
-Print statements
-================================================================================
-
-print a
-print b, c
-print 0 or 1, 1 or 0,
-print 0 or 1
-print not True
-
---------------------------------------------------------------------------------
-
-(module
-  (print_statement
-    (identifier))
-  (print_statement
-    (identifier)
-    (identifier))
-  (print_statement
-    (boolean_operator
-      (integer)
-      (integer))
-    (boolean_operator
-      (integer)
-      (integer)))
-  (print_statement
-    (boolean_operator
-      (integer)
-      (integer)))
-  (print_statement
-    (not_operator
-      (true))))
-
-================================================================================
-Print statements with redirection
-================================================================================
-
-print >> a
-print >> a, "b", "c"
-
---------------------------------------------------------------------------------
-
-(module
-  (print_statement
-    (chevron
-      (identifier)))
-  (print_statement
-    (chevron
-      (identifier))
-    (string
-      (string_start)
-      (string_content)
-      (string_end))
-    (string
-      (string_start)
-      (string_content)
-      (string_end))))
-
-================================================================================
 Assert statements
 ================================================================================
 
@@ -425,11 +367,11 @@ For statements
 ================================================================================
 
 for line, i in lines:
-  print line
+  print(line)
   for character, j in line:
-    print character
+    print(character)
 else:
-  print x
+  print(x)
 
 for x, in [(1,), (2,), (3,)]:
   x
@@ -443,20 +385,29 @@ for x, in [(1,), (2,), (3,)]:
       (identifier))
     right: (identifier)
     body: (block
-      (print_statement
-        argument: (identifier))
+      (expression_statement
+        (call
+          function: (identifier)
+          arguments: (argument_list
+            (identifier))))
       (for_statement
         left: (pattern_list
           (identifier)
           (identifier))
         right: (identifier)
         body: (block
-          (print_statement
-            argument: (identifier)))))
+          (expression_statement
+            (call
+              function: (identifier)
+              arguments: (argument_list
+                (identifier)))))))
     alternative: (else_clause
       body: (block
-        (print_statement
-          argument: (identifier)))))
+        (expression_statement
+          (call
+            function: (identifier)
+            arguments: (argument_list
+              (identifier)))))))
   (for_statement
     left: (pattern_list
       (identifier))
@@ -738,7 +689,7 @@ async def d(a:str="default", b=c) -> None:
           (generic_type
             (identifier)
             (type_parameter
-              (type
+              (type_param
                 (identifier)))))))
     return_type: (type
       (identifier))
@@ -921,7 +872,7 @@ Empty blocks
 def a(b, c):
 
 if d:
-  print e
+  print(e)
   while f():
 
 --------------------------------------------------------------------------------
@@ -940,8 +891,11 @@ if d:
   (if_statement
     condition: (identifier)
     consequence: (block
-      (print_statement
-        argument: (identifier))
+      (expression_statement
+        (call
+          function: (identifier)
+          arguments: (argument_list
+            (identifier))))
       (while_statement
         condition: (call
           function: (identifier)
@@ -1148,22 +1102,31 @@ raise RunTimeError('NO') from e
 Comments
 ================================================================================
 
-print a
+print(a)
 # hi
-print b # bye
-print c
+print(b) # bye
+print(c)
 
 --------------------------------------------------------------------------------
 
 (module
-  (print_statement
-    (identifier))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier))))
   (comment)
-  (print_statement
-    (identifier))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier))))
   (comment)
-  (print_statement
-    (identifier)))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier)))))
 
 ================================================================================
 Comments at different indentation levels
@@ -1271,16 +1234,19 @@ def a():
 Newline tokens followed by comments
 ================================================================================
 
-print "a"
+print("a")
   # We need to recognize the newline *preceding* this comment, because there's no newline after it
 --------------------------------------------------------------------------------
 
 (module
-  (print_statement
-    (string
-      (string_start)
-      (string_content)
-      (string_end)))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (string
+          (string_start)
+          (string_content)
+          (string_end)))))
   (comment))
 
 ================================================================================
@@ -1454,102 +1420,84 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
 
 (module
   (type_alias_statement
-    (type
-      (identifier))
-    (type
+    name: (identifier)
+    value: (type
       (generic_type
         (identifier)
         (type_parameter
-          (type
+          (type_param
             (identifier))
-          (type
+          (type_param
             (identifier))))))
   (type_alias_statement
-    (type
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
+        (identifier)))
+    value: (type
       (generic_type
         (identifier)
         (type_parameter
-          (type
+          (type_param
+            (identifier))
+          (type_param
+            (identifier))))))
+  (type_alias_statement
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
+        (identifier)))
+    value: (type
+      (generic_type
+        (identifier)
+        (type_parameter
+          (type_param
+            (identifier))
+          (type_param
+            (identifier))))))
+  (comment)
+  (type_alias_statement
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
+        (identifier)))
+    value: (type
+      (generic_type
+        (identifier)
+        (type_parameter
+          (type_param
+            (identifier))
+          (type_param
+            (identifier))))))
+  (comment)
+  (type_alias_statement
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
+        (identifier)
+        (type
+          (identifier))))
+    value: (type
+      (generic_type
+        (identifier)
+        (type_parameter
+          (type_param
+            (identifier))))))
+  (comment)
+  (type_alias_statement
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
+        (identifier)
+        (type
+          (tuple
+            (identifier)
             (identifier)))))
-    (type
+    value: (type
       (generic_type
         (identifier)
         (type_parameter
-          (type
-            (identifier))
-          (type
-            (identifier))))))
-  (type_alias_statement
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (splat_type
-              (identifier))))))
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (identifier))
-          (type
-            (identifier))))))
-  (comment)
-  (type_alias_statement
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (splat_type
-              (identifier))))))
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (identifier))
-          (type
-            (splat_type
-              (identifier)))))))
-  (comment)
-  (type_alias_statement
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (constrained_type
-              (type
-                (identifier))
-              (type
-                (identifier)))))))
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (identifier))))))
-  (comment)
-  (type_alias_statement
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
-            (constrained_type
-              (type
-                (identifier))
-              (type
-                (tuple
-                  (identifier)
-                  (identifier))))))))
-    (type
-      (generic_type
-        (identifier)
-        (type_parameter
-          (type
+          (type_param
             (identifier))))))
   (comment))
 
@@ -1557,72 +1505,42 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
 Generic Function Definitions
 ================================================================================
 
-def more_generic[T, *Ts, **P]():
-    type TA[T2, *Ts2, **P2] = tuple[Callable[P, tuple[T, *Ts]], Callable[P2, tuple[T2, *Ts2]]]
+def more_generic[T, U, V]():
+    type TA[T2, U2] = tuple[T, U, T2, U2]
     return TA
 
 --------------------------------------------------------------------------------
 
 (module
   (function_definition
-    (identifier)
-    (type_parameter
-      (type
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type_param
         (identifier))
-      (type
-        (splat_type
-          (identifier)))
-      (type
-        (splat_type
-          (identifier))))
-    (parameters)
-    (block
+      (type_param
+        (identifier))
+      (type_param
+        (identifier)))
+    parameters: (parameters)
+    body: (block
       (type_alias_statement
-        (type
+        name: (identifier)
+        type_parameters: (type_parameter
+          (type_param
+            (identifier))
+          (type_param
+            (identifier)))
+        value: (type
           (generic_type
             (identifier)
             (type_parameter
-              (type
+              (type_param
                 (identifier))
-              (type
-                (splat_type
-                  (identifier)))
-              (type
-                (splat_type
-                  (identifier))))))
-        (type
-          (generic_type
-            (identifier)
-            (type_parameter
-              (type
-                (generic_type
-                  (identifier)
-                  (type_parameter
-                    (type
-                      (identifier))
-                    (type
-                      (generic_type
-                        (identifier)
-                        (type_parameter
-                          (type
-                            (identifier))
-                          (type
-                            (splat_type
-                              (identifier)))))))))
-              (type
-                (generic_type
-                  (identifier)
-                  (type_parameter
-                    (type
-                      (identifier))
-                    (type
-                      (generic_type
-                        (identifier)
-                        (type_parameter
-                          (type
-                            (identifier))
-                          (type
-                            (splat_type
-                              (identifier)))))))))))))
+              (type_param
+                (identifier))
+              (type_param
+                (identifier))
+              (type_param
+                (identifier))))))
       (return_statement
         (identifier)))))

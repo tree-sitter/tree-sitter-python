@@ -338,7 +338,7 @@ Async / await used as identifiers
 
 async = 4
 await = 5
-print async, await
+print(async, await)
 
 --------------------------------------------------------------------------------
 
@@ -351,9 +351,12 @@ print async, await
     (assignment
       (identifier)
       (integer)))
-  (print_statement
-    (identifier)
-    (identifier)))
+  (expression_statement
+    (call
+      (identifier)
+      (argument_list
+        (identifier)
+        (identifier)))))
 
 ================================================================================
 Calls with splats
@@ -587,7 +590,6 @@ not a == b or c == d
 a not in b
 a is not b
 a is b and c != d
-a <> b
 
 --------------------------------------------------------------------------------
 
@@ -624,11 +626,7 @@ a <> b
         (identifier))
       (comparison_operator
         (identifier)
-        (identifier))))
-  (expression_statement
-    (comparison_operator
-      (identifier)
-      (identifier))))
+        (identifier)))))
 
 ================================================================================
 Assignments
@@ -707,7 +705,7 @@ tail_leaves: List[Leaf] = []
         (generic_type
           (identifier)
           (type_parameter
-            (type
+            (type_param
               (identifier)))))
       (list))))
 
@@ -1214,7 +1212,7 @@ y: type[int] = int
             (generic_type
               (identifier)
               (type_parameter
-                (type
+                (type_param
                   (identifier)))))
           (type
             (identifier))))))
@@ -1225,6 +1223,6 @@ y: type[int] = int
         (generic_type
           (identifier)
           (type_parameter
-            (type
+            (type_param
               (identifier)))))
       (identifier))))
