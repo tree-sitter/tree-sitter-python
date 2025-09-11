@@ -53,11 +53,16 @@ jobs:
         with:
           files: |
             examples/**/*.py
+            !examples/cpython/Lib/annotationlib.py
+            !examples/cpython/Lib/string/templatelib.py
             !examples/cpython/Lib/test/test_annotationlib.py
             !examples/cpython/Lib/test/test_type_params.py
             !examples/cpython/Lib/test/test_compile.py
             !examples/cpython/Tools/build/generate_re_casefix.py
             !examples/cpython/Lib/test/test_annotationlib.py
+            !examples/cpython/Lib/test/test_grammar.py
+            !examples/cpython/Lib/test/test_tstring.py
             !examples/cpython/Lib/test/test_type_params.py
+            !examples/cpython/Lib/test/test_string/test_templatelib.py
           invalid-files: |
             examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
