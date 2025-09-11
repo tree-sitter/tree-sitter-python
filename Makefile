@@ -4,7 +4,7 @@ endif
 
 LANGUAGE_NAME := tree-sitter-python
 HOMEPAGE_URL := https://github.com/tree-sitter/tree-sitter-python
-VERSION := 0.23.6
+VERSION := 0.25.0
 
 # repository
 SRC_DIR := src
