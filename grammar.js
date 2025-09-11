@@ -362,12 +362,12 @@ module.exports = grammar({
     except_clause: $ => seq(
       'except',
       optional('*'),
-      optional(seq(
-        field('value', $.expression),
-        optional(seq(
-          choice('as', ','),
-          field('alias', $.expression),
-        )),
+      optional(choice(
+        seq(
+          field('value', $.expression),
+          optional(seq('as', field('alias', $.expression))),
+        ),
+        commaSep1(field('value', $.expression)),
       )),
       ':',
       $._suite,
