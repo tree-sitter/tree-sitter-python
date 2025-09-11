@@ -1,24 +1,27 @@
 // swift-tools-version:5.3
+
+import Foundation
 import PackageDescription
+
+var sources = ["src/parser.c"]
+if FileManager.default.fileExists(atPath: "src/scanner.c") {
+    sources.append("src/scanner.c")
+}
 
 let package = Package(
     name: "TreeSitterPython",
-    defaultLocalization: "en",
     products: [
         .library(name: "TreeSitterPython", targets: ["TreeSitterPython"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", from: "0.8.0"),
+        .package(name: "SwiftTreeSitter", url: "https://github.com/tree-sitter/swift-tree-sitter", from: "0.9.0"),
     ],
     targets: [
         .target(
             name: "TreeSitterPython",
             dependencies: [],
             path: ".",
-            sources: [
-                "src/parser.c",
-                "src/scanner.c",
-            ],
+            sources: sources,
             resources: [
                 .copy("queries")
             ],
