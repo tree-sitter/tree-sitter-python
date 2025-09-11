@@ -52,6 +52,7 @@ module.exports = grammar({
     [$.list, $.list_pattern],
     [$.with_item, $._collection_elements],
     [$.named_expression, $.as_pattern],
+    [$.print_statement, $.primary_expression],
     [$.type_alias_statement, $.primary_expression],
     [$.match_statement, $.primary_expression],
   ],
@@ -120,6 +121,7 @@ module.exports = grammar({
       $.future_import_statement,
       $.import_statement,
       $.import_from_statement,
+      $.print_statement,
       $.assert_statement,
       $.expression_statement,
       $.return_statement,
@@ -185,6 +187,24 @@ module.exports = grammar({
     ),
 
     wildcard_import: _ => '*',
+
+    print_statement: $ => choice(
+      prec(1, seq(
+        'print',
+        $.chevron,
+        repeat(seq(',', field('argument', $.expression))),
+        optional(','))),
+      prec(-3, prec.dynamic(-1, seq(
+        'print',
+        commaSep1(field('argument', $.expression)),
+        optional(','),
+      ))),
+    ),
+
+    chevron: $ => seq(
+      '>>',
+      $.expression,
+    ),
 
 
     assert_statement: $ => seq(
@@ -442,10 +462,9 @@ module.exports = grammar({
 
     type_alias_statement: $ => prec.dynamic(1, seq(
       'type',
-      field('name', $.identifier),
-      field('type_parameters', optional($.type_parameter)),
+      field('left', $.type),
       '=',
-      field('value', $.type),
+      field('right', $.type),
     )),
 
     class_definition: $ => seq(
@@ -456,7 +475,8 @@ module.exports = grammar({
       ':',
       field('body', $._suite),
     ),
-    type_parameter: $ => seq(
+    // Type parameters for declarations (PEP 695)
+    type_params: $ => seq(
       '[',
       commaSep1($.type_param),
       optional(','),
@@ -480,6 +500,14 @@ module.exports = grammar({
       seq('**', $.identifier),
       // **P = default
       seq('**', $.identifier, '=', $.type),
+    ),
+
+    // Type arguments in usage (existing behavior)
+    type_parameter: $ => seq(
+      '[',
+      commaSep1($.type),
+      optional(','),
+      ']',
     ),
 
     parenthesized_list_splat: $ => prec(PREC.parenthesized_list_splat, seq(
@@ -818,6 +846,7 @@ module.exports = grammar({
             '<=',
             '==',
             '!=',
+            '<>',
             '>=',
             '>',
             'in',
@@ -1170,7 +1199,7 @@ module.exports = grammar({
       ));
     },
 
-    identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
+    identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
 
     keyword_identifier: $ => choice(
       prec(-3, alias(
