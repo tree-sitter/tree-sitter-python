@@ -354,13 +354,14 @@ module.exports = grammar({
       'try',
       ':',
       field('body', $._suite),
-      repeat(choice($.except_clause, $.except_group_clause)),
+      repeat($.except_clause),
       optional($.else_clause),
       optional($.finally_clause),
     ),
 
     except_clause: $ => seq(
       'except',
+      optional('*'),
       optional(seq(
         field('value', $.expression),
         optional(seq(
@@ -368,19 +369,6 @@ module.exports = grammar({
           field('alias', $.expression),
         )),
       )),
-      ':',
-      $._suite,
-    ),
-
-    except_group_clause: $ => seq(
-      'except*',
-      seq(
-        $.expression,
-        optional(seq(
-          'as',
-          $.expression,
-        )),
-      ),
       ':',
       $._suite,
     ),
