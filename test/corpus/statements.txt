@@ -529,7 +529,7 @@ finally:
           (identifier))))
     (except_clause
       value: (identifier)
-      alias: (identifier)
+      value: (identifier)
       (block
         (expression_statement
           (identifier))))
@@ -560,13 +560,13 @@ finally:
     body: (block
       (expression_statement
         (identifier)))
-    (except_group_clause
-      (identifier)
+    (except_clause
+      value: (identifier)
       (block
         (expression_statement
           (identifier))))
-    (except_group_clause
-      (as_pattern
+    (except_clause
+      value: (as_pattern
         (identifier)
         alias: (as_pattern_target
           (identifier)))
