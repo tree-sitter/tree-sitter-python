@@ -33,17 +33,17 @@
     "*.wasm"
   ],
   "dependencies": {
-    "node-addon-api": "^8.3.0",
+    "node-addon-api": "^8.5.0",
     "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
-    "eslint": "^9.17.0",
+    "eslint": "^9.35.0",
     "eslint-config-treesitter": "^1.0.2",
     "prebuildify": "^6.0.1",
-    "tree-sitter-cli": "^0.24.5"
+    "tree-sitter-cli": "^0.25.9"
   },
   "peerDependencies": {
-    "tree-sitter": "^0.22.1"
+    "tree-sitter": "^0.25.0"
   },
   "peerDependenciesMeta": {
     "tree-sitter": {
