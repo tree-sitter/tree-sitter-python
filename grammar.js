@@ -361,7 +361,7 @@ module.exports = grammar({
 
     except_clause: $ => seq(
       'except',
-      optional('*'),
+      optional(token(prec(1, '*'))),
       optional(choice(
         seq(
           field('value', $.expression),
