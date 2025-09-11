@@ -1514,7 +1514,7 @@
         ]
       },
       "value": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -1530,25 +1530,6 @@
       "types": [
         {
           "type": "block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "except_group_clause",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block",
-          "named": true
-        },
-        {
-          "type": "expression",
           "named": true
         }
       ]
@@ -2921,10 +2902,6 @@
           "named": true
         },
         {
-          "type": "except_group_clause",
-          "named": true
-        },
-        {
           "type": "finally_clause",
           "named": true
         }
@@ -3611,10 +3588,6 @@
   },
   {
     "type": "except",
-    "named": false
-  },
-  {
-    "type": "except*",
     "named": false
   },
   {
