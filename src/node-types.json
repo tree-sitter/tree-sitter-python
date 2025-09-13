@@ -150,6 +150,32 @@
     ]
   },
   {
+    "type": "expression_statement",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "assignment",
+        "named": true
+      },
+      {
+        "type": "augmented_assignment",
+        "named": true
+      },
+      {
+        "type": "expression",
+        "named": true
+      },
+      {
+        "type": "tuple_expression",
+        "named": true
+      },
+      {
+        "type": "yield",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "parameter",
     "named": true,
     "subtypes": [
@@ -1581,33 +1607,6 @@
     }
   },
   {
-    "type": "expression_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "assignment",
-          "named": true
-        },
-        {
-          "type": "augmented_assignment",
-          "named": true
-        },
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "yield",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "finally_clause",
     "named": true,
     "fields": {},
@@ -2930,6 +2929,21 @@
         },
         {
           "type": "yield",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tuple_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
