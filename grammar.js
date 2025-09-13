@@ -60,6 +60,7 @@ module.exports = grammar({
   supertypes: $ => [
     $._simple_statement,
     $._compound_statement,
+    $.expression_statement,
     $.expression,
     $.primary_expression,
     $.pattern,
@@ -227,11 +228,14 @@ module.exports = grammar({
 
     expression_statement: $ => choice(
       $.expression,
-      seq(commaSep1($.expression), optional(',')),
+      $.tuple_expression,
       $.assignment,
       $.augmented_assignment,
       $.yield,
     ),
+
+    tuple_expression: $ =>
+      seq($.expression, ',', optional(seq(commaSep1($.expression), optional(',')))),
 
     named_expression: $ => seq(
       field('name', $._named_expression_lhs),
