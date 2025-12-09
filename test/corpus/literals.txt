@@ -427,6 +427,8 @@ f"{a:#06x}"
 f"{a=}"
 f"{a=:.2f}"
 f"{value:{width + padding!r}.{precision}}"
+f"{num=:=10d}"
+f"{a:=.3f}s"
 
 --------------------------------------------------------------------------------
 
@@ -485,6 +487,19 @@ f"{value:{width + padding!r}.{precision}}"
           (type_conversion))
         (format_expression
           (identifier))))
+    (string_end))
+  (string
+    (string_start)
+    (interpolation
+      (identifier)
+      (format_specifier))
+    (string_end))
+  (string
+    (string_start)
+    (interpolation
+      (identifier)
+      (format_specifier))
+    (string_content)
     (string_end)))
 
 ================================================================================

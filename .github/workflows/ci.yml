@@ -58,3 +58,5 @@ jobs:
             !examples/cpython/Lib/test/test_type_params.py
           invalid-files: |
             examples/cpython/Lib/test/tokenizedata/badsyntax_3131.py
+            examples/cpython/Misc/mypy/_colorize.py
+            examples/cpython/Misc/mypy/token.py

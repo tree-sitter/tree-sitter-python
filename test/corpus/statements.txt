@@ -670,7 +670,7 @@ async def d(a:str="default", b=c) -> None:
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (identifier)
+        name: (identifier)
         type: (type
           (identifier))))
     body: (block
@@ -679,7 +679,7 @@ async def d(a:str="default", b=c) -> None:
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (identifier)
+        name: (identifier)
         type: (type
           (attribute
             object: (identifier)
@@ -690,12 +690,12 @@ async def d(a:str="default", b=c) -> None:
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (identifier)
+        name: (identifier)
         type: (type
           (generic_type
-            (identifier)
-            (type_parameter
-              (type
+            type: (identifier)
+            type_parameters: (type_parameters
+              type_parameter: (type
                 (identifier)))))))
     return_type: (type
       (identifier))
@@ -709,16 +709,16 @@ async def d(a:str="default", b=c) -> None:
         name: (identifier)
         value: (identifier))
       (list_splat_pattern
-        (identifier))
+        expression: (identifier))
       (dictionary_splat_pattern
-        (identifier)))
+        expression: (identifier)))
     body: (block
       (identifier)))
   (function_definition
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (identifier)
+        name: (identifier)
         type: (type
           (identifier))))
     return_type: (type
@@ -792,8 +792,8 @@ def foo():
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (list_splat_pattern
-          (identifier))
+        name: (list_splat_pattern
+          expression: (identifier))
         type: (type
           (identifier))))
     body: (block
@@ -802,8 +802,8 @@ def foo():
     name: (identifier)
     parameters: (parameters
       (typed_parameter
-        (dictionary_splat_pattern
-          (identifier))
+        name: (dictionary_splat_pattern
+          expression: (identifier))
         type: (type
           (identifier))))
     body: (block
@@ -826,7 +826,7 @@ def foo():
         name: (identifier)
         value: (integer))
       (dictionary_splat_pattern
-        (identifier)))
+        expression: (identifier)))
     body: (block
       (return_statement
         (expression_list
@@ -839,21 +839,21 @@ def foo():
     name: (identifier)
     parameters: (parameters
       (list_splat_pattern
-        (identifier)))
+        expression: (identifier)))
     body: (block
       (call
         function: (identifier)
         arguments: (argument_list
-          (parenthesized_expression
+          argument: (parenthesized_expression
             (list_splat
-              (identifier)))))
+              expression: (identifier)))))
       (call
         function: (identifier)
         arguments: (argument_list
-          (parenthesized_expression
+          argument: (parenthesized_expression
             (parenthesized_expression
               (list_splat
-                (identifier))))))))
+                expression: (identifier))))))))
   (function_definition
     name: (identifier)
     parameters: (parameters)
@@ -1389,7 +1389,7 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))
           (type
@@ -1398,13 +1398,13 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier)))))
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))
           (type
@@ -1413,14 +1413,14 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (splat_type
               (identifier))))))
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))
           (type
@@ -1430,14 +1430,14 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (splat_type
               (identifier))))))
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))
           (type
@@ -1448,7 +1448,7 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (constrained_type
               (type
@@ -1458,7 +1458,7 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))))))
   (comment)
@@ -1466,7 +1466,7 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (constrained_type
               (type
@@ -1478,7 +1478,7 @@ type IntOrStrSequence[T: (int, str)] = Sequence[T]  # TypeVar with constraints
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier))))))
   (comment))
@@ -1496,7 +1496,7 @@ def more_generic[T, *Ts, **P]():
 (module
   (function_definition
     (identifier)
-    (type_parameter
+    (type_parameters
       (type
         (identifier))
       (type
@@ -1511,7 +1511,7 @@ def more_generic[T, *Ts, **P]():
         (type
           (generic_type
             (identifier)
-            (type_parameter
+            (type_parameters
               (type
                 (identifier))
               (type
@@ -1523,17 +1523,17 @@ def more_generic[T, *Ts, **P]():
         (type
           (generic_type
             (identifier)
-            (type_parameter
+            (type_parameters
               (type
                 (generic_type
                   (identifier)
-                  (type_parameter
+                  (type_parameters
                     (type
                       (identifier))
                     (type
                       (generic_type
                         (identifier)
-                        (type_parameter
+                        (type_parameters
                           (type
                             (identifier))
                           (type
@@ -1542,13 +1542,13 @@ def more_generic[T, *Ts, **P]():
               (type
                 (generic_type
                   (identifier)
-                  (type_parameter
+                  (type_parameters
                     (type
                       (identifier))
                     (type
                       (generic_type
                         (identifier)
-                        (type_parameter
+                        (type_parameters
                           (type
                             (identifier))
                           (type

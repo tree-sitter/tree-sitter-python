@@ -581,6 +581,9 @@ a, *c = 1, 2, 3
 a, = 1, 2
 a[b] = c = d
 a, *b.c = d
+w = r, *(2,) * 100
+m = type(e).__module__
+type(e).__module__ = "notsklearn"
 
 --------------------------------------------------------------------------------
 
@@ -624,13 +627,42 @@ a, *b.c = d
         (attribute
           (identifier)
           (identifier))))
-    (identifier)))
+    (identifier))
+  (assignment
+    (identifier)
+    (expression_list
+      (identifier)
+      (binary_operator
+        (list_splat
+          (tuple
+            (integer)))
+        (integer))))
+  (assignment
+    (identifier)
+    (attribute
+      (call
+        (identifier)
+        (argument_list
+          (identifier)))
+      (identifier)))
+  (assignment
+    (attribute
+      (call
+        (identifier)
+        (argument_list
+          (identifier)))
+      (identifier))
+    (string
+      (string_start)
+      (string_content)
+      (string_end))))
 
 ================================================================================
 Assignments with type annotations
 ================================================================================
 
 tail_leaves: List[Leaf] = []
+v: Annotated[K, T[F]()]
 
 --------------------------------------------------------------------------------
 
@@ -640,10 +672,24 @@ tail_leaves: List[Leaf] = []
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier)))))
-    (list)))
+    (list))
+  (assignment
+    (identifier)
+    (type
+      (generic_type
+        (identifier)
+        (type_parameters
+          (type
+            (identifier))
+          (type
+            (call
+              (subscript
+                (identifier)
+                (identifier))
+              (argument_list))))))))
 
 ================================================================================
 Augmented assignments
@@ -1049,6 +1095,7 @@ Splat Inside of Expression List
 
 a,c = [1,2],3
 w, x, y, z = 0, *a, c
+x, y, z = a, *(b or ())
 
 --------------------------------------------------------------------------------
 
@@ -1072,7 +1119,19 @@ w, x, y, z = 0, *a, c
       (integer)
       (list_splat
         (identifier))
-      (identifier))))
+      (identifier)))
+  (assignment
+    (pattern_list
+      (identifier)
+      (identifier)
+      (identifier))
+    (expression_list
+      (identifier)
+      (list_splat
+        (parenthesized_expression
+          (boolean_operator
+            (identifier)
+            (tuple)))))))
 
 ================================================================================
 A function called match
@@ -1107,7 +1166,7 @@ y: type[int] = int
         (type
           (generic_type
             (identifier)
-            (type_parameter
+            (type_parameters
               (type
                 (identifier)))))
         (type
@@ -1117,7 +1176,36 @@ y: type[int] = int
     (type
       (generic_type
         (identifier)
-        (type_parameter
+        (type_parameters
           (type
             (identifier)))))
     (identifier)))
+
+================================================================================
+Splats with comprehensions
+================================================================================
+
+b[*(i for i in items)]
+b[*[c[i] for i in items]]
+
+--------------------------------------------------------------------------------
+
+(module
+  (subscript
+    (identifier)
+    (list_splat
+      (generator_expression
+        (identifier)
+        (for_in_clause
+          (identifier)
+          (identifier)))))
+  (subscript
+    (identifier)
+    (list_splat
+      (list_comprehension
+        (subscript
+          (identifier)
+          (identifier))
+        (for_in_clause
+          (identifier)
+          (identifier))))))

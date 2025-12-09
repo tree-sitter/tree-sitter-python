@@ -53,8 +53,8 @@ module.exports = grammar({
     [$.with_item, $._collection_elements],
     [$.named_expression, $.as_pattern],
     [$.print_statement, $.primary_expression],
-    [$.type_alias_statement, $.primary_expression],
     [$.match_statement, $.primary_expression],
+    [$.primary_expression, $.generic_type],
   ],
 
   supertypes: $ => [
@@ -404,7 +404,7 @@ module.exports = grammar({
       optional('async'),
       'def',
       field('name', $.identifier),
-      field('type_parameters', optional($.type_parameter)),
+      field('type_parameters', optional($.type_parameters)),
       field('parameters', $.parameters),
       optional(
         seq(
@@ -426,12 +426,12 @@ module.exports = grammar({
 
     list_splat: $ => seq(
       '*',
-      $.expression,
+      field('expression', $.expression),
     ),
 
     dictionary_splat: $ => seq(
       '**',
-      $.expression,
+      field('expression', $.expression),
     ),
 
     global_statement: $ => seq(
@@ -455,24 +455,30 @@ module.exports = grammar({
       ),
     ),
 
-    type_alias_statement: $ => prec.dynamic(1, seq(
+    type_alias_statement: $ => seq(
       'type',
-      field('left', $.type),
+      field('left', alias($._type_alias_left_hand_side, $.type)),
       '=',
       field('right', $.type),
-    )),
+    ),
+    _type_alias_left_hand_side: $ => seq(
+      field('type', choice(
+        $.generic_type,
+        $.identifier,
+      )),
+    ),
 
     class_definition: $ => seq(
       'class',
       field('name', $.identifier),
-      field('type_parameters', optional($.type_parameter)),
+      field('type_parameters', optional($.type_parameters)),
       field('superclasses', optional($.argument_list)),
       ':',
       field('body', $._suite),
     ),
-    type_parameter: $ => seq(
+    type_parameters: $ => seq(
       '[',
-      commaSep1($.type),
+      commaSep1(field('type_parameter', $.type)),
       optional(','),
       ']',
     ),
@@ -489,13 +495,13 @@ module.exports = grammar({
     argument_list: $ => seq(
       '(',
       optional(commaSep1(
-        choice(
+        field('argument', choice(
           $.expression,
           $.list_splat,
           $.dictionary_splat,
           alias($.parenthesized_list_splat, $.parenthesized_expression),
           $.keyword_argument,
-        ),
+        )),
       )),
       optional(','),
       ')',
@@ -605,7 +611,7 @@ module.exports = grammar({
       field('value', $.case_pattern),
     ),
 
-    keyword_pattern: $ => seq($.identifier, '=', $._simple_pattern),
+    keyword_pattern: $ => seq(field('name', $.identifier), '=', $._simple_pattern),
 
     splat_pattern: $ => prec(1, seq(choice('*', '**'), choice($.identifier, '_'))),
 
@@ -688,12 +694,21 @@ module.exports = grammar({
 
     list_splat_pattern: $ => seq(
       '*',
-      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute),
+      field('expression', choice(
+        $.identifier,
+        $.keyword_identifier,
+        $.subscript,
+        $.attribute,
+        $.generator_expression,
+        $.list_comprehension,
+        $.parenthesized_expression,
+        $.tuple,
+      )),
     ),
 
     dictionary_splat_pattern: $ => seq(
       '**',
-      choice($.identifier, $.keyword_identifier, $.subscript, $.attribute),
+      field('expression', choice($.identifier, $.keyword_identifier, $.subscript, $.attribute)),
     ),
 
     // Extended patterns (patterns allowed in match statement are far more flexible than simple patterns though still a subset of "expression")
@@ -928,11 +943,11 @@ module.exports = grammar({
     )),
 
     typed_parameter: $ => prec(PREC.typed_parameter, seq(
-      choice(
+      field('name', choice(
         $.identifier,
         $.list_splat_pattern,
         $.dictionary_splat_pattern,
-      ),
+      )),
       ':',
       field('type', $.type),
     )),
@@ -946,12 +961,11 @@ module.exports = grammar({
       $.member_type,
     ),
     splat_type: $ => prec(1, seq(choice('*', '**'), $.identifier)),
-    generic_type: $ => prec(1, seq(
-      choice(
-        $.identifier,
-        alias('type', $.identifier),
-      ),
-      $.type_parameter,
+    generic_type: $ => prec.dynamic(1, seq(
+      field('type', choice(
+        $.identifier, alias('type', $.identifier),
+      )),
+      field('type_parameters', $.type_parameters),
     )),
     union_type: $ => prec.left(seq($.type, '|', $.type)),
     constrained_type: $ => prec.right(seq($.type, ':', $.type)),
@@ -1118,7 +1132,7 @@ module.exports = grammar({
     _not_escape_sequence: _ => token.immediate('\\'),
 
     format_specifier: $ => seq(
-      ':',
+      token(prec(1, ':')),
       repeat(choice(
         token(prec(1, /[^{}\n]+/)),
         alias($.interpolation, $.format_expression),
