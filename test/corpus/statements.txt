@@ -3006,3 +3006,839 @@ fn update() unified {ref[lifetime] data} -> None:
       (none))
     body: (block
       (pass_statement))))
+
+================================================================================
+Function with single where clause
+================================================================================
+
+fn test() -> Int where x == y:
+    return 1
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters)
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (identifier)))
+    body: (block
+      (return_statement
+        (integer)))))
+
+================================================================================
+Function with multiple where clauses
+================================================================================
+
+fn copy(dst: UnsafePointer, src: UnsafePointer) raises -> Int where src.address_space == dst.address_space where src.mut:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier)))
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (attribute
+          object: (identifier)
+          attribute: (identifier))
+        (attribute
+          object: (identifier)
+          attribute: (identifier))))
+    (where_clause
+      (attribute
+        object: (identifier)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with where clause - simple condition
+================================================================================
+
+fn process[T](value: T) -> T where T.is_copyable:
+    return value
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (identifier)))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (attribute
+        object: (identifier)
+        attribute: (identifier)))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with where clause and unified closure
+================================================================================
+
+fn foo() unified {read x} -> Int where x > 0:
+    return x
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters)
+    (unified_clause
+      (argument_convention)
+      (identifier))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (integer)))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with where clause and typed raises
+================================================================================
+
+fn validate(x: Int) raises ValueError -> Bool where x >= 0 where x < 100:
+    return true
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    raises_type: (type
+      (identifier))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (integer)))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (integer)))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with where clause - complex expression
+================================================================================
+
+fn compute(a: Int, b: Int) -> Int where a + b < 100 where a > b:
+    return a + b
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier)))
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (binary_operator
+          left: (identifier)
+          right: (identifier))
+        (integer)))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (identifier)))
+    body: (block
+      (return_statement
+        (binary_operator
+          left: (identifier)
+          right: (identifier))))))
+
+================================================================================
+Async function with where clause
+================================================================================
+
+async fn fetch[T](url: String) -> T where T.is_json_decodable:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (identifier)))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (attribute
+        object: (identifier)
+        attribute: (identifier)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with where clause - no return type
+================================================================================
+
+fn log(msg: String) where msg.len > 0:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    (where_clause
+      (comparison_operator
+        (attribute
+          object: (identifier)
+          attribute: (identifier))
+        (integer)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with where clause using keyword as attribute
+================================================================================
+
+fn check(x: Pointer) -> Bool where x.var where x.ref:
+    return true
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (attribute
+        object: (identifier)))
+    (where_clause
+      (attribute
+        object: (identifier)))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with everything - unified, effects, and where clauses
+================================================================================
+
+fn ultimate[T, U](x: T, y: U) unified {read config, mut state} capturing raises Error -> Result[T] where T.is_valid where U == Int:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (identifier))
+      (type
+        (identifier)))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier)))
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    (unified_clause
+      (argument_convention)
+      (identifier)
+      (argument_convention)
+      (identifier))
+    raises_type: (type
+      (identifier))
+    return_type: (type
+      (generic_type
+        (identifier)
+        (type_parameter
+          (type
+            (identifier)))))
+    (where_clause
+      (attribute
+        object: (identifier)
+        attribute: (identifier)))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (identifier)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with type parameter where clause - single parameter
+================================================================================
+
+fn foo[i: Int where i > 5]():
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (identifier)
+          (integer))))
+    parameters: (parameters)
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with type parameter where clause - multiple parameters
+================================================================================
+
+fn foo[i: Int where i > 5, j: Float32]():
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier)))))
+    parameters: (parameters)
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with type parameter where clause - all parameters have where
+================================================================================
+
+fn bar[T: SomeTrait where T.is_copyable, U: AnotherTrait where U.size > 0]() -> None:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier)))
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (attribute
+            object: (identifier)
+            attribute: (identifier))
+          (integer))))
+    parameters: (parameters)
+    return_type: (type
+      (none))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with type parameter where - complex condition
+================================================================================
+
+fn compute[N: Int where N > 0 where N < 100](value: Int) -> Int:
+    return value
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (where_clause
+        (comparison_operator
+          (identifier)
+          (integer))))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with both type parameter where and function where
+================================================================================
+
+fn process[T: Type where T.is_valid](x: T) -> T where x != null:
+    return x
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier))))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    return_type: (type
+      (identifier))
+    (where_clause
+      (comparison_operator
+        (identifier)
+        (identifier)))
+    body: (block
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Function with type parameter where - no constraint type
+================================================================================
+
+fn simple[T where T.is_movable]() -> None:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (identifier))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier))))
+    parameters: (parameters)
+    return_type: (type
+      (none))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Struct with type parameter where clause
+================================================================================
+
+struct Vector[T: Numeric where T.is_floating_point]:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (class_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier))))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Function with trailing comma in type parameters with where
+================================================================================
+
+fn test[T: Type where T.is_valid,]():
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier))))
+    parameters: (parameters)
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Complex function with all features and type parameter where
+================================================================================
+
+async fn ultimate[T: Trait where T.is_valid, U: Other where U.size == 8](x: T) unified {read config} raises Error -> Result[T, U] where x.ready:
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (attribute
+          object: (identifier)
+          attribute: (identifier)))
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (attribute
+            object: (identifier)
+            attribute: (identifier))
+          (integer))))
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    (unified_clause
+      (argument_convention)
+      (identifier))
+    raises_type: (type
+      (identifier))
+    return_type: (type
+      (generic_type
+        (identifier)
+        (type_parameter
+          (type
+            (identifier))
+          (type
+            (identifier)))))
+    (where_clause
+      (attribute
+        object: (identifier)
+        attribute: (identifier)))
+    body: (block
+      (pass_statement))))
+
+================================================================================
+Comptime assert - simple condition
+================================================================================
+
+__comptime_assert x > 5
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (comparison_operator
+      (identifier)
+      (integer))))
+
+================================================================================
+Comptime assert - boolean literal
+================================================================================
+
+__comptime_assert True
+__comptime_assert False
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (true))
+  (comptime_assert_statement
+    (false)))
+
+================================================================================
+Comptime assert - equality comparison
+================================================================================
+
+__comptime_assert value == 10
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (comparison_operator
+      (identifier)
+      (integer))))
+
+================================================================================
+Comptime assert - complex expression
+================================================================================
+
+__comptime_assert x + y < 100
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (comparison_operator
+      (binary_operator
+        (identifier)
+        (identifier))
+      (integer))))
+
+================================================================================
+Comptime assert - attribute access
+================================================================================
+
+__comptime_assert obj.is_valid
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (attribute
+      object: (identifier)
+      attribute: (identifier))))
+
+================================================================================
+Comptime assert - in function
+================================================================================
+
+fn foo(x: Int):
+    __comptime_assert x > 0
+    return x
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters
+      (typed_parameter
+        (identifier)
+        type: (type
+          (identifier))))
+    body: (block
+      (comptime_assert_statement
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (return_statement
+        (identifier)))))
+
+================================================================================
+Comptime assert - with type parameters
+================================================================================
+
+fn process[N: Int where N > 0]():
+    __comptime_assert N < 100
+    pass
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    type_parameters: (type_parameter
+      (type
+        (constrained_type
+          (type
+            (identifier))
+          (type
+            (identifier))))
+      (where_clause
+        (comparison_operator
+          (identifier)
+          (integer))))
+    parameters: (parameters)
+    body: (block
+      (comptime_assert_statement
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (pass_statement))))
+
+================================================================================
+Comptime assert - logical operators
+================================================================================
+
+__comptime_assert x > 0 and x < 100
+__comptime_assert not is_negative
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (boolean_operator
+      (comparison_operator
+        (identifier)
+        (integer))
+      (comparison_operator
+        (identifier)
+        (integer))))
+  (comptime_assert_statement
+    (not_operator
+      (identifier))))
+
+================================================================================
+Comptime assert - multiple in block
+================================================================================
+
+fn validate():
+    __comptime_assert x > 0
+    __comptime_assert y > 0
+    __comptime_assert x + y > 0
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    name: (identifier)
+    parameters: (parameters)
+    body: (block
+      (comptime_assert_statement
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (comptime_assert_statement
+        (comparison_operator
+          (identifier)
+          (integer)))
+      (comptime_assert_statement
+        (comparison_operator
+          (binary_operator
+            left: (identifier)
+            right: (identifier))
+          (integer))))))
+
+================================================================================
+Comptime assert - with parentheses
+================================================================================
+
+__comptime_assert (x > 0)
+
+--------------------------------------------------------------------------------
+
+(module
+  (comptime_assert_statement
+    (parenthesized_expression
+      (comparison_operator
+        (identifier)
+        (integer)))))

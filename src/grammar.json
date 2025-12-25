@@ -3799,15 +3799,15 @@
       "members": [
         {
           "type": "STRING",
-          "value": "read"
+          "value": "borrowed"
         },
         {
           "type": "STRING",
-          "value": "mut"
+          "value": "inout"
         },
         {
           "type": "STRING",
-          "value": "var"
+          "value": "owned"
         },
         {
           "type": "STRING",
@@ -3815,7 +3815,11 @@
         },
         {
           "type": "STRING",
-          "value": "deinit"
+          "value": "read"
+        },
+        {
+          "type": "STRING",
+          "value": "mut"
         },
         {
           "type": "SYMBOL",

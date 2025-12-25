@@ -3894,6 +3894,10 @@
     "named": false
   },
   {
+    "type": "borrowed",
+    "named": false
+  },
+  {
     "type": "break",
     "named": false
   },
@@ -4019,6 +4023,10 @@
     "named": false
   },
   {
+    "type": "inout",
+    "named": false
+  },
+  {
     "type": "integer",
     "named": true
   },
@@ -4061,6 +4069,10 @@
   },
   {
     "type": "out",
+    "named": false
+  },
+  {
+    "type": "owned",
     "named": false
   },
   {

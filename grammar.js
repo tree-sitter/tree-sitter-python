@@ -819,11 +819,12 @@ module.exports = grammar({
     _ref_convention: ($) => seq("ref", "[", $.expression, "]"),
     argument_convention: ($) =>
       choice(
+        "borrowed",
+        "inout",
+        "owned",
+        "out",
         "read",
         "mut",
-        "var",
-        "out",
-        "deinit",
         $._ref_convention,
       ),
 
