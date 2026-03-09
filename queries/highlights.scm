@@ -35,6 +35,14 @@
 (attribute attribute: (identifier) @property)
 (type (identifier) @type)
 
+; Class definitions
+(class_definition
+  name: (identifier) @type)
+
+; Generics
+(generic_type (identifier) @type)
+
+
 ; Literals
 
 [
