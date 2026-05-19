@@ -117,6 +117,44 @@ from __future__ import (absolute_import, division, print_function,
       (identifier))))
 
 ================================================================================
+Lazy import statements
+================================================================================
+
+lazy import json
+lazy import numpy as np
+lazy from pathlib import Path
+lazy from os.path import join, exists
+lazy = True
+x = lazy
+
+--------------------------------------------------------------------------------
+
+(module
+  (lazy_import_statement
+    (import_statement
+      (dotted_name (identifier))))
+  (lazy_import_statement
+    (import_statement
+      (aliased_import
+        (dotted_name (identifier))
+        (identifier))))
+  (lazy_import_statement
+    (import_from_statement
+      (dotted_name (identifier))
+      (dotted_name (identifier))))
+  (lazy_import_statement
+    (import_from_statement
+      (dotted_name (identifier) (identifier))
+      (dotted_name (identifier))
+      (dotted_name (identifier))))
+  (assignment
+    (identifier)
+    (true))
+  (assignment
+    (identifier)
+    (identifier)))
+
+================================================================================
 Print statements
 ================================================================================
 
