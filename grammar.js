@@ -134,6 +134,7 @@ module.exports = grammar({
     _simple_statement: $ => choice(
       $.future_import_statement,
       $.import_statement,
+      $.lazy_import_statement,
       $.import_from_statement,
       $.print_statement,
       $.assert_statement,
@@ -192,6 +193,14 @@ module.exports = grammar({
         $.aliased_import,
       ))),
       optional(','),
+    ),
+
+    lazy_import_statement: $ => seq(
+      'lazy',
+      choice(
+        $.import_statement,
+        $.import_from_statement,
+      ),
     ),
 
     aliased_import: $ => seq(
@@ -1179,7 +1188,7 @@ module.exports = grammar({
         $.identifier,
       )),
       alias(
-        choice('type', 'match'),
+        choice('type', 'match', 'lazy'),
         $.identifier,
       ),
     ),
