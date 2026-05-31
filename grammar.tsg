@@ -1,0 +1,845 @@
+// Python grammar for tree-sitter - native DSL version
+
+grammar {
+    language: "python",
+    extras: [comment, regexp(r"[\s\f\uFEFF\u2060\u200B]|\r?\n"), line_continuation],
+    conflicts: [
+        [primary_expression, pattern],
+        [primary_expression, list_splat_pattern],
+        [tuple, tuple_pattern],
+        [list, list_pattern],
+        [with_item, _collection_elements],
+        [named_expression, as_pattern],
+        [print_statement, primary_expression],
+        [type_alias_statement, primary_expression],
+        [match_statement, primary_expression],
+    ],
+    supertypes: [_simple_statement, _compound_statement, expression_statement, expression, primary_expression, pattern, parameter],
+    externals: [
+        _newline, _indent, _dedent,
+        string_start, _string_content, escape_interpolation, string_end,
+        comment,
+        "]", ")", "}", "except",
+    ],
+    inline: [_simple_statement, _compound_statement, _suite, _expressions, _left_hand_side, keyword_identifier],
+    reserved: {
+        global: [
+            "False", "await", "else", "import", "pass",
+            "None", "break", "except", "in", "raise",
+            "True", "class", "finally", "is", "return",
+            "and", "continue", "for", "lambda", "try",
+            "as", "def", "from", "nonlocal", "while",
+            "assert", "del", "global", "not", "with",
+            "async", "elif", "if", "or", "yield",
+        ],
+    },
+    word: identifier,
+}
+
+let PREC = {
+    lambda: -2, typed_parameter: -1, conditional: -1,
+    parenthesized_expression: 1, parenthesized_list_splat: 1,
+    or: 10, and: 11, not: 12, compare: 13,
+    bitwise_or: 14, bitwise_and: 15, xor: 16, shift: 17,
+    plus: 18, times: 19, unary: 20, power: 21, call: 22,
+}
+
+macro comma_sep1(item: rule_t) rule_t {
+    seq(item, repeat(seq(",", item)))
+}
+
+macro sep1(item: rule_t, separator: rule_t) rule_t {
+    seq(item, repeat(seq(separator, item)))
+}
+
+// ---------------------------------------------------------------------------
+// Top-level
+// ---------------------------------------------------------------------------
+
+rule module { repeat(_statement) }
+
+rule _statement { choice(_simple_statements, _compound_statement) }
+
+rule _simple_statements {
+    seq(sep1(_simple_statement, ";"), optional(";"), _newline)
+}
+
+rule _simple_statement {
+    choice(
+        future_import_statement,
+        import_statement,
+        import_from_statement,
+        print_statement,
+        assert_statement,
+        expression_statement,
+        return_statement,
+        delete_statement,
+        raise_statement,
+        pass_statement,
+        break_statement,
+        continue_statement,
+        global_statement,
+        nonlocal_statement,
+        exec_statement,
+        type_alias_statement,
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Import statements
+// ---------------------------------------------------------------------------
+
+rule import_statement { seq("import", _import_list) }
+
+rule import_prefix { repeat1(".") }
+
+rule relative_import { seq(import_prefix, optional(dotted_name)) }
+
+rule future_import_statement {
+    seq("from", "__future__", "import", choice(_import_list, seq("(", _import_list, ")")))
+}
+
+rule import_from_statement {
+    seq(
+        "from",
+        field(module_name, choice(relative_import, dotted_name)),
+        "import",
+        choice(wildcard_import, _import_list, seq("(", _import_list, ")")),
+    )
+}
+
+rule _import_list {
+    seq(comma_sep1(field(name, choice(dotted_name, aliased_import))), optional(","))
+}
+
+rule aliased_import {
+    seq(field(name, dotted_name), "as", field(alias, identifier))
+}
+
+rule wildcard_import { "*" }
+
+// ---------------------------------------------------------------------------
+// Simple statements
+// ---------------------------------------------------------------------------
+
+rule print_statement {
+    choice(
+        prec(1, seq(
+            "print",
+            chevron,
+            repeat(seq(",", field(argument, expression))),
+            optional(","),
+        )),
+        prec(-3, prec_dynamic(-1, seq(
+            "print",
+            comma_sep1(field(argument, expression)),
+            optional(","),
+        ))),
+    )
+}
+
+rule chevron { seq(">>", expression) }
+
+rule assert_statement { seq("assert", comma_sep1(expression)) }
+
+rule expression_statement {
+    choice(expression, tuple_expression, assignment, augmented_assignment, yield)
+}
+
+rule tuple_expression {
+    seq(expression, ",", optional(seq(comma_sep1(expression), optional(","))))
+}
+
+rule named_expression {
+    seq(field(name, _named_expression_lhs), ":=", field(value, expression))
+}
+
+rule _named_expression_lhs { choice(identifier, keyword_identifier) }
+
+rule return_statement { seq("return", optional(_expressions)) }
+rule delete_statement { seq("del", _expressions) }
+
+rule _expressions { choice(expression, expression_list) }
+
+rule raise_statement {
+    seq("raise", optional(_expressions), optional(seq("from", field(cause, expression))))
+}
+
+rule pass_statement { prec_left(0, "pass") }
+rule break_statement { prec_left(0, "break") }
+rule continue_statement { prec_left(0, "continue") }
+
+// ---------------------------------------------------------------------------
+// Compound statements
+// ---------------------------------------------------------------------------
+
+rule _compound_statement {
+    choice(
+        if_statement, for_statement, while_statement, try_statement,
+        with_statement, function_definition, class_definition,
+        decorated_definition, match_statement,
+    )
+}
+
+rule if_statement {
+    seq(
+        "if",
+        field(condition, expression),
+        ":",
+        field(consequence, _suite),
+        repeat(field(alternative, elif_clause)),
+        optional(field(alternative, else_clause)),
+    )
+}
+
+rule elif_clause {
+    seq("elif", field(condition, expression), ":", field(consequence, _suite))
+}
+
+rule else_clause { seq("else", ":", field(body, _suite)) }
+
+rule match_statement {
+    seq(
+        "match",
+        comma_sep1(field(subject, expression)),
+        optional(","),
+        ":",
+        field(body, alias(_match_block, block)),
+    )
+}
+
+rule _match_block {
+    choice(
+        seq(_indent, repeat(field(alternative, case_clause)), _dedent),
+        _newline,
+    )
+}
+
+rule case_clause {
+    seq(
+        "case",
+        comma_sep1(case_pattern),
+        optional(","),
+        optional(field(guard, if_clause)),
+        ":",
+        field(consequence, _suite),
+    )
+}
+
+rule for_statement {
+    seq(
+        optional("async"),
+        "for",
+        field(left, _left_hand_side),
+        "in",
+        field(right, _expressions),
+        ":",
+        field(body, _suite),
+        field(alternative, optional(else_clause)),
+    )
+}
+
+rule while_statement {
+    seq(
+        "while",
+        field(condition, expression),
+        ":",
+        field(body, _suite),
+        optional(field(alternative, else_clause)),
+    )
+}
+
+rule try_statement {
+    seq(
+        "try", ":",
+        field(body, _suite),
+        repeat(except_clause),
+        optional(else_clause),
+        optional(finally_clause),
+    )
+}
+
+rule except_clause {
+    seq(
+        "except",
+        optional(token(prec(1, "*"))),
+        optional(choice(
+            seq(field(value, expression), optional(seq("as", field(alias, expression)))),
+            comma_sep1(field(value, expression)),
+        )),
+        ":",
+        _suite,
+    )
+}
+
+rule finally_clause { seq("finally", ":", _suite) }
+
+rule with_statement {
+    seq(optional("async"), "with", with_clause, ":", field(body, _suite))
+}
+
+rule with_clause {
+    choice(
+        seq(comma_sep1(with_item), optional(",")),
+        seq("(", comma_sep1(with_item), optional(","), ")"),
+    )
+}
+
+rule with_item { prec_dynamic(1, seq(field(value, expression))) }
+
+rule function_definition {
+    seq(
+        optional("async"),
+        "def",
+        field(name, identifier),
+        field(type_parameters, optional(type_parameter)),
+        field(parameters, parameters),
+        optional(seq("->", field(return_type, type))),
+        ":",
+        field(body, _suite),
+    )
+}
+
+rule parameters { seq("(", optional(_parameters), ")") }
+rule lambda_parameters { _parameters }
+
+rule list_splat { seq("*", expression) }
+rule dictionary_splat { seq("**", expression) }
+
+rule global_statement { seq("global", comma_sep1(identifier)) }
+rule nonlocal_statement { seq("nonlocal", comma_sep1(identifier)) }
+
+rule exec_statement {
+    seq(
+        "exec",
+        field(code, choice(string, identifier)),
+        optional(seq("in", comma_sep1(expression))),
+    )
+}
+
+rule type_alias_statement {
+    prec_dynamic(1, seq("type", field(left, type), "=", field(right, type)))
+}
+
+rule class_definition {
+    seq(
+        "class",
+        field(name, identifier),
+        field(type_parameters, optional(type_parameter)),
+        field(superclasses, optional(argument_list)),
+        ":",
+        field(body, _suite),
+    )
+}
+
+rule type_parameter { seq("[", comma_sep1(type), optional(","), "]") }
+
+rule parenthesized_list_splat {
+    prec(PREC.parenthesized_list_splat, seq(
+        "(",
+        choice(alias(parenthesized_list_splat, parenthesized_expression), list_splat),
+        ")",
+    ))
+}
+
+rule argument_list {
+    seq(
+        "(",
+        optional(comma_sep1(choice(
+            expression, list_splat, dictionary_splat,
+            alias(parenthesized_list_splat, parenthesized_expression),
+            keyword_argument,
+        ))),
+        optional(","),
+        ")",
+    )
+}
+
+rule decorated_definition {
+    seq(
+        repeat1(decorator),
+        field(definition, choice(class_definition, function_definition)),
+    )
+}
+
+rule decorator { seq("@", expression, _newline) }
+
+rule _suite {
+    choice(
+        alias(_simple_statements, block),
+        seq(_indent, block),
+        alias(_newline, block),
+    )
+}
+
+rule block { seq(repeat(_statement), _dedent) }
+
+rule expression_list {
+    prec_right(0, seq(
+        expression,
+        choice(
+            ",",
+            seq(repeat1(seq(",", expression)), optional(",")),
+        ),
+    ))
+}
+
+rule dotted_name { prec(1, sep1(identifier, ".")) }
+
+// ---------------------------------------------------------------------------
+// Match patterns
+// ---------------------------------------------------------------------------
+
+rule case_pattern {
+    prec(1, choice(
+        alias(_as_pattern, as_pattern),
+        keyword_pattern,
+        _simple_pattern,
+    ))
+}
+
+rule _simple_pattern {
+    prec(1, choice(
+        class_pattern,
+        splat_pattern,
+        union_pattern,
+        alias(_list_pattern, list_pattern),
+        alias(_tuple_pattern, tuple_pattern),
+        dict_pattern,
+        string,
+        concatenated_string,
+        true,
+        false,
+        none,
+        seq(optional("-"), choice(integer, float)),
+        complex_pattern,
+        dotted_name,
+        "_",
+    ))
+}
+
+rule _as_pattern { seq(case_pattern, "as", identifier) }
+
+rule union_pattern {
+    prec_right(0, seq(_simple_pattern, repeat1(prec_left(0, seq("|", _simple_pattern)))))
+}
+
+rule _list_pattern {
+    seq("[", optional(seq(comma_sep1(case_pattern), optional(","))), "]")
+}
+
+rule _tuple_pattern {
+    seq("(", optional(seq(comma_sep1(case_pattern), optional(","))), ")")
+}
+
+rule dict_pattern {
+    seq("{", optional(seq(comma_sep1(choice(_key_value_pattern, splat_pattern)), optional(","))), "}")
+}
+
+rule _key_value_pattern {
+    seq(field(key, _simple_pattern), ":", field(value, case_pattern))
+}
+
+rule keyword_pattern { seq(identifier, "=", _simple_pattern) }
+
+rule splat_pattern { prec(1, seq(choice("*", "**"), choice(identifier, "_"))) }
+
+rule class_pattern {
+    seq(dotted_name, "(", optional(seq(comma_sep1(case_pattern), optional(","))), ")")
+}
+
+rule complex_pattern {
+    prec(1, seq(optional("-"), choice(integer, float), choice("+", "-"), choice(integer, float)))
+}
+
+// ---------------------------------------------------------------------------
+// Parameters / patterns
+// ---------------------------------------------------------------------------
+
+rule _parameters { seq(comma_sep1(parameter), optional(",")) }
+rule _patterns { seq(comma_sep1(pattern), optional(",")) }
+
+rule parameter {
+    choice(
+        identifier, typed_parameter, default_parameter, typed_default_parameter,
+        list_splat_pattern, tuple_pattern, keyword_separator, positional_separator,
+        dictionary_splat_pattern,
+    )
+}
+
+rule pattern {
+    choice(
+        identifier, keyword_identifier, subscript, attribute,
+        list_splat_pattern, tuple_pattern, list_pattern,
+    )
+}
+
+rule tuple_pattern { seq("(", optional(_patterns), ")") }
+rule list_pattern { seq("[", optional(_patterns), "]") }
+
+rule default_parameter {
+    seq(field(name, choice(identifier, tuple_pattern)), "=", field(value, expression))
+}
+
+rule typed_default_parameter {
+    prec(PREC.typed_parameter, seq(
+        field(name, identifier), ":", field(type, type), "=", field(value, expression),
+    ))
+}
+
+rule list_splat_pattern {
+    seq("*", choice(identifier, keyword_identifier, subscript, attribute))
+}
+
+rule dictionary_splat_pattern {
+    seq("**", choice(identifier, keyword_identifier, subscript, attribute))
+}
+
+rule as_pattern {
+    prec_left(0, seq(
+        expression, "as", field(alias, alias(expression, as_pattern_target)),
+    ))
+}
+
+// ---------------------------------------------------------------------------
+// Expressions
+// ---------------------------------------------------------------------------
+
+rule _expression_within_for_in_clause {
+    choice(expression, alias(lambda_within_for_in_clause, lambda))
+}
+
+rule expression {
+    choice(
+        comparison_operator, not_operator, boolean_operator,
+        lambda, primary_expression, conditional_expression,
+        named_expression, as_pattern,
+    )
+}
+
+rule primary_expression {
+    choice(
+        await, binary_operator, identifier, keyword_identifier,
+        string, concatenated_string, integer, float,
+        true, false, none,
+        unary_operator, attribute, subscript, call,
+        list, list_comprehension, dictionary, dictionary_comprehension,
+        set, set_comprehension, tuple, parenthesized_expression,
+        generator_expression, ellipsis,
+        alias(list_splat_pattern, list_splat),
+    )
+}
+
+rule not_operator {
+    prec(PREC.not, seq("not", field(argument, expression)))
+}
+
+rule boolean_operator {
+    choice(
+        prec_left(PREC.and, seq(field(left, expression), field(operator, "and"), field(right, expression))),
+        prec_left(PREC.or, seq(field(left, expression), field(operator, "or"), field(right, expression))),
+    )
+}
+
+rule binary_operator {
+    choice(
+        for (op: str_t, p: int_t) in [
+            ("+", PREC.plus), ("-", PREC.plus),
+            ("*", PREC.times), ("@", PREC.times), ("/", PREC.times),
+            ("%", PREC.times), ("//", PREC.times),
+        ] {
+            prec_left(p, seq(field(left, primary_expression), field(operator, op), field(right, primary_expression)))
+        },
+        prec_right(PREC.power, seq(field(left, primary_expression), field(operator, "**"), field(right, primary_expression))),
+        for (op: str_t, p: int_t) in [
+            ("|", PREC.bitwise_or), ("&", PREC.bitwise_and),
+            ("^", PREC.xor), ("<<", PREC.shift), (">>", PREC.shift),
+        ] {
+            prec_left(p, seq(field(left, primary_expression), field(operator, op), field(right, primary_expression)))
+        },
+    )
+}
+
+rule unary_operator {
+    prec(PREC.unary, seq(field(operator, choice("+", "-", "~")), field(argument, primary_expression)))
+}
+
+rule _not_in { seq("not", "in") }
+rule _is_not { seq("is", "not") }
+
+rule comparison_operator {
+    prec_left(PREC.compare, seq(
+        primary_expression,
+        repeat1(seq(
+            field(operators, choice(
+                "<", "<=", "==", "!=", ">=", ">", "<>",
+                "in",
+                alias(_not_in, "not in"),
+                "is",
+                alias(_is_not, "is not"),
+            )),
+            primary_expression,
+        )),
+    ))
+}
+
+rule lambda {
+    prec(PREC.lambda, seq(
+        "lambda", field(parameters, optional(lambda_parameters)), ":", field(body, expression),
+    ))
+}
+
+rule lambda_within_for_in_clause {
+    seq(
+        "lambda",
+        field(parameters, optional(lambda_parameters)),
+        ":",
+        field(body, _expression_within_for_in_clause),
+    )
+}
+
+rule assignment {
+    seq(
+        field(left, _left_hand_side),
+        choice(
+            seq("=", field(right, _right_hand_side)),
+            seq(":", field(type, type)),
+            seq(":", field(type, type), "=", field(right, _right_hand_side)),
+        ),
+    )
+}
+
+rule augmented_assignment {
+    seq(
+        field(left, _left_hand_side),
+        field(operator, choice(
+            "+=", "-=", "*=", "/=", "@=", "//=", "%=", "**=",
+            ">>=", "<<=", "&=", "^=", "|=",
+        )),
+        field(right, _right_hand_side),
+    )
+}
+
+rule _left_hand_side { choice(pattern, pattern_list) }
+
+rule pattern_list {
+    seq(
+        pattern,
+        choice(
+            ",",
+            seq(repeat1(seq(",", pattern)), optional(",")),
+        ),
+    )
+}
+
+rule _right_hand_side {
+    choice(expression, expression_list, assignment, augmented_assignment, pattern_list, yield)
+}
+
+rule yield {
+    prec_right(0, seq("yield", choice(seq("from", expression), optional(_expressions))))
+}
+
+rule attribute {
+    prec(PREC.call, seq(field(object, primary_expression), ".", field(attribute, identifier)))
+}
+
+rule subscript {
+    prec(PREC.call, seq(
+        field(value, primary_expression),
+        "[",
+        comma_sep1(field(subscript, choice(expression, slice))),
+        optional(","),
+        "]",
+    ))
+}
+
+rule slice {
+    seq(optional(expression), ":", optional(expression), optional(seq(":", optional(expression))))
+}
+
+rule ellipsis { "..." }
+
+rule call {
+    prec(PREC.call, seq(
+        field(function, primary_expression),
+        field(arguments, choice(generator_expression, argument_list)),
+    ))
+}
+
+rule typed_parameter {
+    prec(PREC.typed_parameter, seq(
+        choice(identifier, list_splat_pattern, dictionary_splat_pattern),
+        ":",
+        field(type, type),
+    ))
+}
+
+rule type {
+    choice(
+        prec(1, expression),
+        splat_type,
+        generic_type,
+        union_type,
+        constrained_type,
+        member_type,
+    )
+}
+
+rule splat_type { prec(1, seq(choice("*", "**"), identifier)) }
+
+rule generic_type {
+    prec(1, seq(choice(identifier, alias("type", identifier)), type_parameter))
+}
+
+rule union_type { prec_left(0, seq(type, "|", type)) }
+rule constrained_type { prec_right(0, seq(type, ":", type)) }
+rule member_type { seq(type, ".", identifier) }
+
+rule keyword_argument {
+    seq(field(name, choice(identifier, keyword_identifier)), "=", field(value, expression))
+}
+
+// ---------------------------------------------------------------------------
+// Literals / collections
+// ---------------------------------------------------------------------------
+
+rule list { seq("[", optional(_collection_elements), "]") }
+rule set { seq("{", _collection_elements, "}") }
+rule tuple { seq("(", optional(_collection_elements), ")") }
+
+rule dictionary {
+    seq("{", optional(comma_sep1(choice(pair, dictionary_splat))), optional(","), "}")
+}
+
+rule pair { seq(field(key, expression), ":", field(value, expression)) }
+
+rule list_comprehension { seq("[", field(body, expression), _comprehension_clauses, "]") }
+rule dictionary_comprehension { seq("{", field(body, pair), _comprehension_clauses, "}") }
+rule set_comprehension { seq("{", field(body, expression), _comprehension_clauses, "}") }
+rule generator_expression { seq("(", field(body, expression), _comprehension_clauses, ")") }
+
+rule _comprehension_clauses {
+    seq(for_in_clause, repeat(choice(for_in_clause, if_clause)))
+}
+
+rule parenthesized_expression {
+    prec(PREC.parenthesized_expression, seq("(", choice(expression, yield), ")"))
+}
+
+rule _collection_elements {
+    seq(comma_sep1(choice(expression, yield, list_splat, parenthesized_list_splat)), optional(","))
+}
+
+rule for_in_clause {
+    prec_left(0, seq(
+        optional("async"),
+        "for",
+        field(left, _left_hand_side),
+        "in",
+        field(right, comma_sep1(_expression_within_for_in_clause)),
+        optional(","),
+    ))
+}
+
+rule if_clause { seq("if", expression) }
+
+rule conditional_expression {
+    prec_right(PREC.conditional, seq(expression, "if", expression, "else", expression))
+}
+
+rule concatenated_string { seq(string, repeat1(string)) }
+
+rule string {
+    seq(string_start, repeat(choice(interpolation, string_content)), string_end)
+}
+
+rule string_content {
+    prec_right(0, repeat1(choice(
+        escape_interpolation, escape_sequence, _not_escape_sequence, _string_content,
+    )))
+}
+
+rule interpolation {
+    seq(
+        "{",
+        field(expression, _f_expression),
+        optional("="),
+        optional(field(type_conversion, type_conversion)),
+        optional(field(format_specifier, format_specifier)),
+        "}",
+    )
+}
+
+rule _f_expression { choice(expression, expression_list, pattern_list, yield) }
+
+rule escape_sequence {
+    token_immediate(prec(1, seq(
+        "\\",
+        choice(
+            regexp(r"u[a-fA-F\d]{4}"),
+            regexp(r"U[a-fA-F\d]{8}"),
+            regexp(r"x[a-fA-F\d]{2}"),
+            regexp(r"\d{1,3}"),
+            regexp(r"\r?\n"),
+            regexp(r#"['"abfrntv\\]"#),
+            regexp(r"N\{[^}]+\}"),
+        ),
+    )))
+}
+
+rule _not_escape_sequence { token_immediate("\\") }
+
+rule format_specifier {
+    seq(
+        ":",
+        repeat(choice(
+            token(prec(1, regexp(r"[^{}\n]+"))),
+            alias(interpolation, format_expression),
+        )),
+    )
+}
+
+rule type_conversion { regexp(r"![a-z]") }
+
+rule integer {
+    token(choice(
+        seq(choice("0x", "0X"), repeat1(regexp(r"_?[A-Fa-f0-9]+")), optional(regexp(r"[Ll]"))),
+        seq(choice("0o", "0O"), repeat1(regexp(r"_?[0-7]+")), optional(regexp(r"[Ll]"))),
+        seq(choice("0b", "0B"), repeat1(regexp(r"_?[0-1]+")), optional(regexp(r"[Ll]"))),
+        seq(repeat1(regexp(r"[0-9]+_?")), choice(optional(regexp(r"[Ll]")), optional(regexp(r"[jJ]")))),
+    ))
+}
+
+rule float {
+    token(seq(
+        choice(
+            seq(repeat1(regexp(r"[0-9]+_?")), ".", optional(repeat1(regexp(r"[0-9]+_?"))), optional(seq(regexp(r"[eE][\+-]?"), repeat1(regexp(r"[0-9]+_?"))))),
+            seq(optional(repeat1(regexp(r"[0-9]+_?"))), ".", repeat1(regexp(r"[0-9]+_?")), optional(seq(regexp(r"[eE][\+-]?"), repeat1(regexp(r"[0-9]+_?"))))),
+            seq(repeat1(regexp(r"[0-9]+_?")), seq(regexp(r"[eE][\+-]?"), repeat1(regexp(r"[0-9]+_?")))),
+        ),
+        optional(regexp(r"[jJ]")),
+    ))
+}
+
+rule identifier { regexp(r"[_\p{XID_Start}][_\p{XID_Continue}]*") }
+
+rule keyword_identifier {
+    choice(
+        prec(-3, alias(choice("print", "exec", "async", "await"), identifier)),
+        alias(choice("type", "match"), identifier),
+    )
+}
+
+rule true { "True" }
+rule false { "False" }
+rule none { "None" }
+
+rule await { prec(PREC.unary, seq("await", primary_expression)) }
+
+rule comment { token(seq("#", regexp(r".*"))) }
+
+rule line_continuation { token(seq("\\", choice(seq(optional("\r"), "\n"), "\0"))) }
+
+rule positional_separator { "/" }
+rule keyword_separator { "*" }
