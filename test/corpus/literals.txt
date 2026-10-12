@@ -718,22 +718,22 @@ Lists
     (list_splat
       (identifier)))
   (list
-    (attribute
-      (list_splat
-        (identifier))
-      (identifier)))
+    (list_splat
+      (attribute
+        (identifier)
+        (identifier))))
   (list
-    (attribute
-      (subscript
-        (list_splat
+    (list_splat
+      (attribute
+        (subscript
+          (identifier)
           (identifier))
-        (identifier))
-      (identifier)))
+        (identifier))))
   (list
-    (call
-      (list_splat
-        (identifier))
-      (argument_list))))
+    (list_splat
+      (call
+        (identifier)
+        (argument_list)))))
 
 ================================================================================
 List comprehensions
@@ -997,3 +997,170 @@ dict((a, b) for a, b in d)
         (argument_list
           (integer)
           (integer))))))
+
+================================================================================
+Unpacking list comprehensions (PEP 798)
+================================================================================
+
+[*x for x in xs]
+[*(x, x) for x in xs]
+[*f(x) for xs in xss for x in xs if x]
+[*x async for x in xs]
+
+--------------------------------------------------------------------------------
+
+(module
+  (list_comprehension
+    (list_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (list_comprehension
+    (list_splat
+      (tuple
+        (identifier)
+        (identifier)))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (list_comprehension
+    (list_splat
+      (call
+        (identifier)
+        (argument_list
+          (identifier))))
+    (for_in_clause
+      (identifier)
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier))
+    (if_clause
+      (identifier)))
+  (list_comprehension
+    (list_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier))))
+
+================================================================================
+Unpacking set comprehensions (PEP 798)
+================================================================================
+
+{*x for x in xs}
+{*(x, x) for x in xs}
+{*f(x) for x in xs if x}
+
+--------------------------------------------------------------------------------
+
+(module
+  (set_comprehension
+    (list_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (set_comprehension
+    (list_splat
+      (tuple
+        (identifier)
+        (identifier)))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (set_comprehension
+    (list_splat
+      (call
+        (identifier)
+        (argument_list
+          (identifier))))
+    (for_in_clause
+      (identifier)
+      (identifier))
+    (if_clause
+      (identifier))))
+
+================================================================================
+Unpacking dictionary comprehensions (PEP 798)
+================================================================================
+
+{**x for x in xs}
+{**f(x) for x in xs if x}
+{**x async for x in xs}
+
+--------------------------------------------------------------------------------
+
+(module
+  (dictionary_comprehension
+    (dictionary_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (dictionary_comprehension
+    (dictionary_splat
+      (call
+        (identifier)
+        (argument_list
+          (identifier))))
+    (for_in_clause
+      (identifier)
+      (identifier))
+    (if_clause
+      (identifier)))
+  (dictionary_comprehension
+    (dictionary_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier))))
+
+================================================================================
+Unpacking generator expressions (PEP 798)
+================================================================================
+
+(*x for x in xs)
+(*(x, x) for x in xs)
+(*f(x) for x in xs if x)
+f(*(x, x) for x in xs)
+
+--------------------------------------------------------------------------------
+
+(module
+  (generator_expression
+    (list_splat
+      (identifier))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (generator_expression
+    (list_splat
+      (tuple
+        (identifier)
+        (identifier)))
+    (for_in_clause
+      (identifier)
+      (identifier)))
+  (generator_expression
+    (list_splat
+      (call
+        (identifier)
+        (argument_list
+          (identifier))))
+    (for_in_clause
+      (identifier)
+      (identifier))
+    (if_clause
+      (identifier)))
+  (call
+    (identifier)
+    (generator_expression
+      (list_splat
+        (tuple
+          (identifier)
+          (identifier)))
+      (for_in_clause
+        (identifier)
+        (identifier)))))
