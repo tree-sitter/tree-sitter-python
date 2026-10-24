@@ -250,7 +250,7 @@ module.exports = grammar({
 
     return_statement: $ => seq(
       'return',
-      optional($._expressions),
+      optional($._return_expressions),
     ),
 
     delete_statement: $ => seq(
@@ -262,6 +262,25 @@ module.exports = grammar({
       $.expression,
       $.expression_list,
     ),
+
+    _return_expressions: $ => choice(
+      $.expression,
+      alias($.return_expression_list, $.expression_list),
+    ),
+
+    return_expression_list: $ => prec.right(seq(
+      choice($.expression, $.list_splat),
+      choice(
+        ',',
+        seq(
+          repeat1(seq(
+            ',',
+            choice($.expression, $.list_splat),
+          )),
+          optional(','),
+        ),
+      ),
+    )),
 
     raise_statement: $ => seq(
       'raise',

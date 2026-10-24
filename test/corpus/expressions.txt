@@ -81,6 +81,66 @@ a.b.c
     (identifier)))
 
 ================================================================================
+Return tuples with splats
+================================================================================
+
+def f():
+    return 1, *[None]
+
+def g():
+    return 1, *([None] * 5)
+
+def h(g_xs, n):
+    return *[None] * 3, *g_xs, *[None] * n
+
+--------------------------------------------------------------------------------
+
+(module
+  (function_definition
+    (identifier)
+    (parameters)
+    (block
+      (return_statement
+        (expression_list
+          (integer)
+          (list_splat
+            (list
+              (none)))))))
+  (function_definition
+    (identifier)
+    (parameters)
+    (block
+      (return_statement
+        (expression_list
+          (integer)
+          (list_splat
+            (parenthesized_expression
+              (binary_operator
+                (list
+                  (none))
+                (integer))))))))
+  (function_definition
+    (identifier)
+    (parameters
+      (identifier)
+      (identifier))
+    (block
+      (return_statement
+        (expression_list
+          (list_splat
+            (binary_operator
+              (list
+                (none))
+              (integer)))
+          (list_splat
+            (identifier))
+          (list_splat
+            (binary_operator
+              (list
+                (none))
+              (identifier))))))))
+
+================================================================================
 Await expressions
 ================================================================================
 
