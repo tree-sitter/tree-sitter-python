@@ -31,7 +31,8 @@ const PREC = {
   times: 19,
   unary: 20,
   power: 21,
-  call: 22,
+  await: 22,
+  call: 23,
 };
 
 const SEMICOLON = ';';
@@ -1188,7 +1189,7 @@ module.exports = grammar({
     false: _ => 'False',
     none: _ => 'None',
 
-    await: $ => prec(PREC.unary, seq(
+    await: $ => prec(PREC.await, seq(
       'await',
       $.primary_expression,
     )),

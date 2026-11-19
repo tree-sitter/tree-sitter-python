@@ -4507,7 +4507,7 @@
     },
     "attribute": {
       "type": "PREC",
-      "value": 22,
+      "value": 23,
       "content": {
         "type": "SEQ",
         "members": [
@@ -4536,7 +4536,7 @@
     },
     "subscript": {
       "type": "PREC",
-      "value": 22,
+      "value": 23,
       "content": {
         "type": "SEQ",
         "members": [
@@ -4690,7 +4690,7 @@
     },
     "call": {
       "type": "PREC",
-      "value": 22,
+      "value": 23,
       "content": {
         "type": "SEQ",
         "members": [
@@ -6112,7 +6112,7 @@
     },
     "await": {
       "type": "PREC",
-      "value": 20,
+      "value": 22,
       "content": {
         "type": "SEQ",
         "members": [

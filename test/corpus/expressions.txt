@@ -134,6 +134,33 @@ assert await a(b) == c
       (identifier))))
 
 ================================================================================
+Await binds tighter than the power operator
+================================================================================
+
+await f() ** 2
+await a.b(1) ** -c
+
+--------------------------------------------------------------------------------
+
+(module
+  (binary_operator
+    (await
+      (call
+        (identifier)
+        (argument_list)))
+    (integer))
+  (binary_operator
+    (await
+      (call
+        (attribute
+          (identifier)
+          (identifier))
+        (argument_list
+          (integer))))
+    (unary_operator
+      (identifier))))
+
+================================================================================
 Call expressions
 ================================================================================
 
