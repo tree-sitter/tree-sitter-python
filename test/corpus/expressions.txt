@@ -487,11 +487,11 @@ a << b | c >> d & e ^ f
       (identifier))
     (binary_operator
       (binary_operator
-        (identifier)
+        (binary_operator
+          (identifier)
+          (identifier))
         (identifier))
-      (binary_operator
-        (identifier)
-        (identifier)))))
+      (identifier))))
 
 ================================================================================
 Boolean operators
